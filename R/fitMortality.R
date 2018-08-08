@@ -7,24 +7,23 @@
 #' @param y Vector of years.
 #' @param data.type Type of data in 'data' argument. Options: 
 #' \code{"qx", "mx", "dx"}.
-#' @param ... Further argumets to be passed to other methods.
+#' @param ... Arguments to be passed to or from other methods.
 #' @examples 
 #' x = 0:110
-#' y = 1960:2016
+#' y = 1960:1980
 #' dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
 #' dx  <- apply(dxm, 2, function(x) x/sum(x))
 #' 
-#' M <- getMortalityModels(data = dx, x, y, data.type = "dx")
-#' P <- predict(M, h = 16, ci = 95, jumpchoice = "actual")
+#' M <- doMortalityModels(data = dx, x, y, data.type = "dx")
+#' P <- doForecasts(M, h = 16, ci = 95, jumpchoice = "actual")
 #' 
-#' 
-#' fmx <- fitted(M, type = "dx")
-#' fex <- fitted(M, type = "ex")
-#' 
-#' pex <- predicted(P, type = "ex") 
+#' oex <- getObserved(M, type = "ex")
+#' fex <- getFitted(M, type = "ex")
+#' rex <- getResiduals(M, type = "ex")
+#' pex <- getForecasts(P, type = "ex")
 #' @export
 #' 
-getMortalityModels <- function(data, x, y, 
+doMortalityModels <- function(data, x, y, 
                                data.type = c("qx", "mx", "dx"), ...) {
   input <- as.list(environment())
   data.type <- match.arg(data.type)
@@ -54,15 +53,15 @@ getMortalityModels <- function(data, x, y,
 }
 
 
-#' Get Fitted values
+#' Get Fitted Values
 #' 
 #' @param object An object of the class \code{MortalityModels}.
-#' @param type Specify the type of fitted values to be extracted. 
-#' @inheritParams getMortalityModels
+#' @param type Specify the type of values to be extracted. 
+#' @inheritParams doMortalityModels
 #' @export
-fitted.MortalityModels <- function(object, 
-                                   type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                                   ...) {
+getFitted <- function(object, 
+                      type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                      ...) {
   type <- match.arg(type)
   x    <- object$x
   
@@ -77,3 +76,42 @@ fitted.MortalityModels <- function(object,
   names(out) <- c("PLC", "codaLC", "LC")
   return(out)
 }
+
+#' Get Observed Values
+#' 
+#' @inheritParams getFitted
+#' @export
+getObserved <- function(object, 
+                        type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                        ...) {
+  type <- match.arg(type)
+  x    <- object$x
+  data <- object$input$data
+  In   <- object$input$data.type 
+  if (In == type) {
+    out <- data
+  } else {
+    out <- fx2gx(x, data, In, Out = type, lx0 = 1)
+  }
+  return(out)
+}
+
+
+#' Get Deviance Residuals
+#' 
+#' @inheritParams getFitted
+#' @export
+getResiduals <- function(object,
+                         type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                         ...) {
+  ov  <- getObserved(object, type, ...)
+  fv  <- getFitted(object, type, ...)
+  fn  <- function(X) ov - X
+  out <- lapply(fv, fn)
+  return(out)
+}
+
+
+
+
+

@@ -1,7 +1,7 @@
 Package: MortalityAccuracy
 Type: Package
 Title: Standard tools to compare and evaluate mortality forecasting methods
-Version: 0.0.1
+Version: 0.0.2
 Date: 2018-08-08
 Authors@R: c(
   person("Marius D.", "Pascariu", role = c("aut", "cre"), 

@@ -8,18 +8,19 @@ library(gnm)
 x = 0:110
 y = 1960:2016
 dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
-dx  <- apply(dxm, 2, function(x) x/sum(x))
 
-M <- getMortalityModels(data = dx, x, y, data.type = "dx")
+M <- getMortalityModels(data = dxm, x, y, data.type = "dx")
 P <- predict(M, h = 16, ci = 95, jumpchoice = "actual")
 
 
-fmx <- fitted(M, type = "dx")
-fex <- fitted(M, type = "ex")
+oex <- getObserved(M, type = "ex")
+fex <- getFitted(M, type = "ex")
+rex <- getResiduals(M, type = "ex")
+pex <- getPredicted(P, type = "ex")
 
-pex <- predicted(P, type = "ex")
 
-
+class(P$LC)
+P$LC$kt.f$lower
 
 # plot(M2)
 # plot(M3)
