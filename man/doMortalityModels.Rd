@@ -4,7 +4,8 @@
 \alias{doMortalityModels}
 \title{Wrapper for function dealing with mortality models}
 \usage{
-doMortalityModels(data, x, y, data.type = c("qx", "mx", "dx"), ...)
+doMortalityModels(data, x, y, data.type = c("qx", "mx", "dx"),
+  exogen = NULL, ...)
 }
 \arguments{
 \item{data}{Mortality data}
@@ -16,6 +17,8 @@ doMortalityModels(data, x, y, data.type = c("qx", "mx", "dx"), ...)
 \item{data.type}{Type of data in 'data' argument. Options: 
 \code{"qx", "mx", "dx"}.}
 
+\item{exogen}{Inlusion of exogenous variables.}
+
 \item{...}{Arguments to be passed to or from other methods.}
 }
 \description{
@@ -23,14 +26,23 @@ Wrapper for function dealing with mortality models
 }
 \examples{
 x = 0:110
-y = 1960:1980
+y = 1980:1999
+h = 17
 dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
+ex <- dxForecast::dxForecast.data$ex$male
+exogen <- ex[paste(y)]
 
-M <- doMortalityModels(data = dxm, x, y, data.type = "dx")
-P <- doForecasts(M, h = 16, ci = 95, jumpchoice = "actual")
+M <- doMortalityModels(data = dxm, x, y, data.type = "dx", exogen = exogen)
+P <- doForecasts(M, h, ci = 95, jumpchoice = "actual")
+
 
 oex <- getObserved(M, type = "ex")
 fex <- getFitted(M, type = "ex")
 rex <- getResiduals(M, type = "ex")
 pex <- getForecasts(P, type = "ex")
+
+
+y2 <- max(y) + 1:h
+Tdata <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
+doBackTesting(Tdata, P, data.type = "dx", type = "ex")
 }

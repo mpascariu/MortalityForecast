@@ -19,10 +19,11 @@ doForecasts <- function(object, h, ci = 95,
   M2 <- forecast(object$M2, h = h, jumpchoice = jumpchoice, level = ci)
   M3 <- predict( object$M3, h = h, jumpchoice = jumpchoice, ci = ci)
   M4 <- predict( object$M4, h = h, jumpchoice = jumpchoice, ci = ci)
+  M5 <- predict( object$M5, h = h, jumpchoice = jumpchoice, ci = ci)
   
   out <- list(call = match.call(), input = input, x = x, y = y,
               # M1 = M1, M2 = M2, M3 = M3, M4 = M4, 
-              M2 = M2, M3 = M3, M4 = M4, 
+              M2 = M2, M3 = M3, M4 = M4, M5 = M5,
               model.names = object$model.names)
   out <- structure(class = "doForecasts", out)
   return(out)
@@ -46,9 +47,10 @@ getForecasts <- function(object,
   dx2 <- fx2gx(x, mx2, In = "mx", Out = "dx", lx0 = 1)
   dx3 <- object$M3$predicted.values
   dx4 <- object$M4$predicted.values
+  dx5 <- object$M5$predicted.values
   
   # dx  <- list(dx1, dx2, dx3, dx4)
-  dx  <- list(dx2, dx3, dx4)
+  dx  <- list(dx2, dx3, dx4, dx5)
   fn  <- function(Z) fx2gx(x, Z, In = "dx", Out = type, lx0 = 1)
   out <- lapply(dx, fn)
   names(out) <- object$model.names

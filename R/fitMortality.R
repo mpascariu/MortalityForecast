@@ -8,22 +8,32 @@
 #' @param data.type Type of data in 'data' argument. Options: 
 #' \code{"qx", "mx", "dx"}.
 #' @param ... Arguments to be passed to or from other methods.
+#' @inheritParams dxForecast::lenart
 #' @examples 
 #' x = 0:110
-#' y = 1960:1980
+#' y = 1980:1999
+#' h = 17
 #' dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
+#' ex <- dxForecast::dxForecast.data$ex$male
+#' exogen <- ex[paste(y)]
 #' 
-#' M <- doMortalityModels(data = dxm, x, y, data.type = "dx")
-#' P <- doForecasts(M, h = 16, ci = 95, jumpchoice = "actual")
+#' M <- doMortalityModels(data = dxm, x, y, data.type = "dx", exogen = exogen)
+#' P <- doForecasts(M, h, ci = 95, jumpchoice = "actual")
+#' 
 #' 
 #' oex <- getObserved(M, type = "ex")
 #' fex <- getFitted(M, type = "ex")
 #' rex <- getResiduals(M, type = "ex")
 #' pex <- getForecasts(P, type = "ex")
+#' 
+#' 
+#' y2 <- max(y) + 1:h
+#' Tdata <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
+#' doBackTesting(Tdata, P, data.type = "dx", type = "ex")
 #' @export
 #' 
 doMortalityModels <- function(data, x, y, 
-                               data.type = c("qx", "mx", "dx"), ...) {
+                              data.type = c("qx", "mx", "dx"), exogen = NULL, ...) {
   input <- as.list(environment())
   data.type <- match.arg(data.type)
   
@@ -45,18 +55,22 @@ doMortalityModels <- function(data, x, y,
   M2  <- StMoMo::fit(lc(), Dxt = Dx, Ext = Ex, ages = x, 
              years = y, ages.fit = x, wxt = wxt, verbose = FALSE)
   
-  # Mortality Moments Model - PLC (2018)
-  M3 <- dxForecast::lenart(data = dx.data, x, y, n = 5)
-  
   # CoDa-LC (2008)
-  M4 <- CoDa::coda(data = dx.data, x, y)
+  M3 <- CoDa::coda(data = dx.data, x, y)
+  
+  # Mortality Moments Model - PLC (2018)
+  M4 <- dxForecast::lenart(data = dx.data, x, y, n = 5)
+  
+  # Mortality Moments Model - PLC (2018)
+  M5 <- dxForecast::lenart(data = dx.data, x, y, n = 5, exogen = exogen)
+  
 
   # Mn <- c("RWD", "Lee-Carter", "CoDa-LC", "PLC")  
-  # Mn <- c("Lee-Carter", "CoDa-LC", "PLC")  
-  Mn <- c("M2", "M3", "M4")  
+  # Mn <- c("Lee-Carter", "PLC", "CoDa-LC")  
+  Mn <- c("M2", "M3", "M4", "M5")  
   out <- list(call = match.call(), input = input, x = x, y = y,
               # M1 = M1, M2 = M2, M3 = M3, M4 = M4, model.names = Mn)
-              M2 = M2, M3 = M3, M4 = M4, model.names = Mn)
+              M2 = M2, M3 = M3, M4 = M4, M5 = M5, model.names = Mn)
   out <- structure(class = "MortalityModels", out)
   return(out)
 }
@@ -80,9 +94,10 @@ getFitted <- function(object,
   dx2 <- fx2gx(x, mx2, In = "mx", Out = "dx", lx0 = 1)
   dx3 <- fitted(object$M3)
   dx4 <- fitted(object$M4)
+  dx5 <- fitted(object$M5)
   
   # dx  <- list(dx1, dx2, dx3, dx4)
-  dx  <- list(dx2, dx3, dx4)
+  dx  <- list(dx2, dx3, dx4, dx5)
   fn  <- function(Z) fx2gx(x, Z, In = "dx", Out = type, lx0 = 1)
   out <- lapply(dx, fn)
   names(out) <- object$model.names

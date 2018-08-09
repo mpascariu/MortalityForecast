@@ -2,16 +2,19 @@
 # Tue Aug  7 12:55:21 2018 --------- Marius D. Pascariu ---
 remove(list = ls())
 library(MortalityAccuracy)
+library(MortalityLaws)
 library(gnm)
 # library(StMoMo)
 
 x = 0:110
-y = 1960:1980
+y = 1980:1999
+h = 17
 dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
+ex <- dxForecast::dxForecast.data$ex$male
+exogen <- ex[paste(y)]
 
-M <- doMortalityModels(data = dxm, x, y, data.type = "dx")
-P <- doForecasts(M, h = 16, ci = 95, jumpchoice = "actual")
-
+M <- doMortalityModels(data = dxm, x, y, data.type = "dx", exogen = exogen)
+P <- doForecasts(M, h, ci = 95, jumpchoice = "actual")
 
 
 oex <- getObserved(M, type = "ex")
@@ -20,8 +23,11 @@ rex <- getResiduals(M, type = "ex")
 pex <- getForecasts(P, type = "ex")
 
 
-aex <- getAccuracy(P, type = "ex")
-aex
+y2 <- max(y) + 1:h
+Tdata <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
+doBackTesting(Tdata, P, data.type = "dx", type = "ex")
+doBackTesting(Tdata, P, data.type = "dx", type = "mx")
+doBackTesting(Tdata, P, data.type = "dx", type = "qx")
 
 
 # plot(M2)
@@ -43,15 +49,4 @@ aex
 #   legend("topleft", legend = c("Mom", "CoDa-LC", "LC"), col = 2:4, lwd = 2)
 #   Sys.sleep(1)
 # }
-
-
-fit1 <- rwf(EuStockMarkets[1:200,1],h=100)
-fit2 <- meanf(EuStockMarkets[1:200,1],h=100)
-accuracy(fit1)
-accuracy(fit2)
-accuracy(fit1,EuStockMarkets[201:300,1])
-accuracy(fit2,EuStockMarkets[201:300,1])
-plot(fit1)
-lines(EuStockMarkets[1:300,1])
-
 

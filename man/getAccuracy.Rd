@@ -4,9 +4,11 @@
 \alias{getAccuracy}
 \title{Get Accuracy Measures}
 \usage{
-getAccuracy(object, type, by = NULL, na.rm = TRUE, ...)
+getAccuracy(data, object, type, by = NULL, na.rm = TRUE, ...)
 }
 \arguments{
+\item{data}{Observed data.}
+
 \item{object}{An object of the class \code{doForecasts}.}
 
 \item{type}{Specify the type of values to be extracted.}
@@ -25,3 +27,4 @@ before the computation proceeds.}
 \description{
 Get Accuracy Measures
 }
+\keyword{internal}

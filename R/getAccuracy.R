@@ -1,6 +1,7 @@
 
 #' Get Accuracy Measures
 #' 
+#' @param data Observed data.
 #' @param by The accuracy measures are available in different output formats.
 #' Option 1: \code{by = NULL} the agregated measure over ages and and years will 
 #' be return. This is the default option. 
@@ -8,14 +9,12 @@
 #' Option 3: \code{by = "y"} measures for all years (aggregated over ages) are returned.
 #' @inheritParams getForecasts
 #' @inheritParams computeAccuracy
-#' @export
-getAccuracy <- function(object, type, by = NULL, na.rm = TRUE, ...) {
-  O <- getObserved(object$input$object, type)
-  # H <- getForecasts(object, type)
-  H <- getFitted(object$input$object, type)
+#' @keywords internal
+getAccuracy <- function(data, object, type, by = NULL, na.rm = TRUE, ...) {
+  H <- getForecasts(object, type)
   B <- H$M2 # Benchmark: Lee-Carter for now.
     
-  fn <- function(X) core.Accuracy(u = O, u.hat = X, b = B, by, na.rm)
+  fn <- function(X) core.Accuracy(u = data, u.hat = X, b = B, by, na.rm)
   A  <- lapply(H, fn)
   out <- A
   
@@ -29,7 +28,7 @@ getAccuracy <- function(object, type, by = NULL, na.rm = TRUE, ...) {
     zz <- z
     zz[, "ME"] <- abs(zz[, "ME"])
     r <- apply(zz, 2, rank)
-    s <- sort(round(apply(r, 1, mean), 2))
+    s <- sort(round(apply(r, 1, mean), 1))
     out <- list(measures = z, rank = r, score = s)
   }
   
@@ -159,11 +158,13 @@ computeAccuracy <- function(u, u.hat, b, na.rm = TRUE){
   ASE <- abs(SE)
   # 15.Mean Absolute Scaled Error
   MASE <- mean(ASE, na.rm = N)
+  # 16.Median Absolute Scaled Error
+  MdASE <- median(ASE, na.rm = N)
   
   # ---------------------------------------------------------------
   out <- data.frame(ME, MSE, RMSE, MAE, MdAE,
                     MAPE, MdAPE, RMSPE, RMdSPE, sMAPE, sMdAPE,
-                    MRAE, MdRAE, GMRAE, MASE)
+                    MRAE, MdRAE, GMRAE, MASE, MdASE)
   out <- as.matrix(out)
   return(out)
 }
