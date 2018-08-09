@@ -25,9 +25,8 @@ Wrapper for function dealing with mortality models
 x = 0:110
 y = 1960:1980
 dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
-dx  <- apply(dxm, 2, function(x) x/sum(x))
 
-M <- doMortalityModels(data = dx, x, y, data.type = "dx")
+M <- doMortalityModels(data = dxm, x, y, data.type = "dx")
 P <- doForecasts(M, h = 16, ci = 95, jumpchoice = "actual")
 
 oex <- getObserved(M, type = "ex")

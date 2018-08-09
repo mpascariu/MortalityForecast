@@ -9,27 +9,28 @@
 #' @export
 doForecasts <- function(object, h, ci = 95, 
                         jumpchoice = c("actual", "fit"), ...) {
+  input <- as.list(environment())
   jumpchoice <- match.arg(jumpchoice)
   
   x <- object$x
   y <- max(object$y) + 1:h
-  M1 <- object$PLC
-  M2 <- object$codaLC
-  M3 <- object$LC
   
-  P1 <- predict(M1, h = h, jumpchoice = jumpchoice, ci = ci)
-  P2 <- predict(M2, h = h, jumpchoice = jumpchoice, ci = ci)
-  P3 <- forecast(M3, h = h, jumpchoice = jumpchoice, level = ci)
+  # M1 <- forecast(object$M1, h = h, level = ci)
+  M2 <- forecast(object$M2, h = h, jumpchoice = jumpchoice, level = ci)
+  M3 <- predict( object$M3, h = h, jumpchoice = jumpchoice, ci = ci)
+  M4 <- predict( object$M4, h = h, jumpchoice = jumpchoice, ci = ci)
   
-  out <- list(call = match.call(), PLC = P1, codaLC = P2, LC = P3, 
-              x = x, y = y)
+  out <- list(call = match.call(), input = input, x = x, y = y,
+              # M1 = M1, M2 = M2, M3 = M3, M4 = M4, 
+              M2 = M2, M3 = M3, M4 = M4, 
+              model.names = object$model.names)
   out <- structure(class = "doForecasts", out)
   return(out)
 }
 
 #' Get Predicted Values
 #' 
-#' @param object An object of class \code{predict.MortalityModels}
+#' @param object An object of the class \code{doForecasts}.
 #' @inheritParams getFitted
 #' @export
 #' 
@@ -39,14 +40,18 @@ getForecasts <- function(object,
   type <- match.arg(type)
   x    <- object$x
   
-  dx1 <- object$PLC$predicted.values
-  dx2 <- object$codaLC$predicted.values
-  mx3 <- object$LC$rates
-  dx3 <- fx2gx(x, mx3, In = "mx", Out = "dx", lx0 = 1)
+  # mx1 <- object$M1$mean
+  # dx1 <- fx2gx(x, mx1, In = "mx", Out = "dx", lx0 = 1)
+  mx2 <- object$M2$rates
+  dx2 <- fx2gx(x, mx2, In = "mx", Out = "dx", lx0 = 1)
+  dx3 <- object$M3$predicted.values
+  dx4 <- object$M4$predicted.values
   
-  dx  <- list(dx1, dx2, dx3)
+  # dx  <- list(dx1, dx2, dx3, dx4)
+  dx  <- list(dx2, dx3, dx4)
   fn  <- function(Z) fx2gx(x, Z, In = "dx", Out = type, lx0 = 1)
   out <- lapply(dx, fn)
-  names(out) <- c("PLC", "codaLC", "LC")
+  names(out) <- object$model.names
+  out <- structure(class = "getForecasts", out)
   return(out)
 }

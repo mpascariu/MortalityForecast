@@ -12,9 +12,8 @@
 #' x = 0:110
 #' y = 1960:1980
 #' dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
-#' dx  <- apply(dxm, 2, function(x) x/sum(x))
 #' 
-#' M <- doMortalityModels(data = dx, x, y, data.type = "dx")
+#' M <- doMortalityModels(data = dxm, x, y, data.type = "dx")
 #' P <- doForecasts(M, h = 16, ci = 95, jumpchoice = "actual")
 #' 
 #' oex <- getObserved(M, type = "ex")
@@ -32,22 +31,32 @@ doMortalityModels <- function(data, x, y,
   dx.data <- fx2gx(x, data, In = data.type, Out = "dx", lx0 = 1)
   qx.data <- fx2gx(x, data, In = data.type, Out = "qx", lx0 = 1)
 
-  # Mortality Moments Model - PLC (2018)
-  M1 <- dxForecast::lenart(data = dx.data, x, y, n = 5)
-  
-  # CoDa-LC (2008)
-  M2 <- CoDa::coda(data = dx.data, x, y)
+  # # The Naive model
+  # M0 <- list(fitted.values = dx.data * 0 + dx.data[, length(y)])
+
+  # Random Walk with drift
+  # M1 <- StMoMo::mrwd(mx.data)
   
   # LC (1992)
   lx0 <- 1e5
   Dx  <- mx.data * lx0
   Ex  <- Dx * 0 + lx0
   wxt <- genWeightMat(ages = x, years = y, clip = 3) # weighting matrix
-  M3  <- StMoMo::fit(lc(), Dxt = Dx, Ext = Ex, ages = x, 
+  M2  <- StMoMo::fit(lc(), Dxt = Dx, Ext = Ex, ages = x, 
              years = y, ages.fit = x, wxt = wxt, verbose = FALSE)
   
-  out <- list(call = match.call(), input = input,
-              PLC = M1, codaLC = M2, LC = M3, x = x, y = y)
+  # Mortality Moments Model - PLC (2018)
+  M3 <- dxForecast::lenart(data = dx.data, x, y, n = 5)
+  
+  # CoDa-LC (2008)
+  M4 <- CoDa::coda(data = dx.data, x, y)
+
+  # Mn <- c("RWD", "Lee-Carter", "CoDa-LC", "PLC")  
+  # Mn <- c("Lee-Carter", "CoDa-LC", "PLC")  
+  Mn <- c("M2", "M3", "M4")  
+  out <- list(call = match.call(), input = input, x = x, y = y,
+              # M1 = M1, M2 = M2, M3 = M3, M4 = M4, model.names = Mn)
+              M2 = M2, M3 = M3, M4 = M4, model.names = Mn)
   out <- structure(class = "MortalityModels", out)
   return(out)
 }
@@ -65,15 +74,19 @@ getFitted <- function(object,
   type <- match.arg(type)
   x    <- object$x
   
-  dx1 <- fitted(object$PLC)
-  dx2 <- fitted(object$codaLC)
-  mx3 <- exp(fitted(object$LC))
-  dx3 <- fx2gx(x, mx3, In = "mx", Out = "dx", lx0 = 1)
+  # mx1 <- fitted(object$M1)
+  # dx1 <- fx2gx(x, mx1, In = "mx", Out = "dx", lx0 = 1)
+  mx2 <- exp(fitted(object$M2))
+  dx2 <- fx2gx(x, mx2, In = "mx", Out = "dx", lx0 = 1)
+  dx3 <- fitted(object$M3)
+  dx4 <- fitted(object$M4)
   
-  dx  <- list(dx1, dx2, dx3)
+  # dx  <- list(dx1, dx2, dx3, dx4)
+  dx  <- list(dx2, dx3, dx4)
   fn  <- function(Z) fx2gx(x, Z, In = "dx", Out = type, lx0 = 1)
   out <- lapply(dx, fn)
-  names(out) <- c("PLC", "codaLC", "LC")
+  names(out) <- object$model.names
+  out <- structure(class = "getFitted", out)
   return(out)
 }
 
@@ -96,20 +109,6 @@ getObserved <- function(object,
   return(out)
 }
 
-
-#' Get Deviance Residuals
-#' 
-#' @inheritParams getFitted
-#' @export
-getResiduals <- function(object,
-                         type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                         ...) {
-  ov  <- getObserved(object, type, ...)
-  fv  <- getFitted(object, type, ...)
-  fn  <- function(X) ov - X
-  out <- lapply(fv, fn)
-  return(out)
-}
 
 
 

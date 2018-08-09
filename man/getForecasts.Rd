@@ -7,7 +7,7 @@
 getForecasts(object, type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"), ...)
 }
 \arguments{
-\item{object}{An object of class \code{predict.MortalityModels}}
+\item{object}{An object of the class \code{doForecasts}.}
 
 \item{type}{Specify the type of values to be extracted.}
 
