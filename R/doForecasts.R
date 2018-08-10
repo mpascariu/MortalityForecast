@@ -21,6 +21,7 @@ doForecasts <- function(object, h, ci = 95,
   for (i in 3:9) {
     Mi <- with(object, get(paste0("M", i)))
     assign(paste0("M", i), predict(Mi, h = h, jumpchoice = jumpchoice, ci = ci))
+    cat(i, "\n")
   }
   
   remove(object, h, ci, jumpchoice, Mi, i)

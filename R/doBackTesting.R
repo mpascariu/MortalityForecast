@@ -99,6 +99,7 @@ computeAccuracy <- function(u, u.hat, b, na.rm = TRUE){
   
   # 1.Mean Error
   ME  <- mean(E, na.rm = N)
+  MdE <- median(E, na.rm = N)
   # 2.Mean Square Error
   MSE  <- mean(E^2, na.rm = N)
   # 3.Root Mean Square Error
@@ -151,7 +152,6 @@ computeAccuracy <- function(u, u.hat, b, na.rm = TRUE){
   # 14.Geometric Mean Relative Absolute Error
   # geometric mean function for positive values
   gm_mean = function(z) exp(mean(log(z[z > 0]), na.rm = N))
-  
   GMRAE <- gm_mean(RAE) 
   
   # ---------------------------------------------------------------
@@ -165,9 +165,12 @@ computeAccuracy <- function(u, u.hat, b, na.rm = TRUE){
   MdASE <- median(ASE, na.rm = N)
   
   # ---------------------------------------------------------------
-  out <- data.frame(ME, MSE, RMSE, MAE, MdAE,
-                    MAPE, MdAPE, RMSPE, RMdSPE, sMAPE, sMdAPE,
-                    MRAE, MdRAE, GMRAE, MASE, MdASE)
+  # Absolute errors and square errors tell the same thing. Because we do not 
+  # want to receive the same information multiple times we do not export
+  # MSE, RMSE, RMSPE and RMdSPE.
+  # Ignore for now GMRAE too.
+  out <- data.frame(ME,   MAE,  MAPE,  sMAPE,  MRAE,  MASE, # means
+                    MdE, MdAE, MdAPE, sMdAPE, MdRAE, MdASE) # medians
   out <- as.matrix(out)
   return(out)
 }

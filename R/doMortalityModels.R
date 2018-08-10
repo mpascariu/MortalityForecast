@@ -60,25 +60,18 @@ doMortalityModels <- function(data, x, y,
                 ages.fit = x, wxt = wxt, verbose = FALSE)
   }
   M2 <- lcm()
-  
   # CoDa-LC (2008)
   M3 <- CoDa::coda(data = dx.data, x, y)
-  
   # Mortality Moments Model - PLC (2018)
   M4 <- dxForecast::lenart(data = dx.data, x, y, n = 4)
-  
   # Mortality Moments Model - PLC (2018)
   M5 <- dxForecast::lenart(data = dx.data, x, y, n = 4, exogen = exogen)
-  
   # Mortality Moments Model - PLC (2018)
   M6 <- dxForecast::lenart(data = dx.data, x, y, n = 5)
-  
   # Mortality Moments Model - PLC (2018)
   M7 <- dxForecast::lenart(data = dx.data, x, y, n = 5, exogen = exogen)
-  
   # Mortality Moments Model - PLC (2018)
   M8 <- dxForecast::lenart(data = dx.data, x, y, n = 6)
-  
   # Mortality Moments Model - PLC (2018)
   M9 <- dxForecast::lenart(data = dx.data, x, y, n = 6, exogen = exogen)
   
