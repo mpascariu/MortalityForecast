@@ -5,7 +5,7 @@
 \title{Performe back-testing}
 \usage{
 doBackTesting(Tdata, object, data.type = c("qx", "mx", "dx"), type = c("qx",
-  "mx", "dx", "lx", "Lx", "Tx", "ex"), ...)
+  "mx", "dx", "lx", "Lx", "Tx", "ex"), by = NULL, na.rm = TRUE, ...)
 }
 \arguments{
 \item{Tdata}{Test data}
@@ -13,9 +13,18 @@ doBackTesting(Tdata, object, data.type = c("qx", "mx", "dx"), type = c("qx",
 \item{object}{An object of the class \code{doForecasts}.}
 
 \item{data.type}{Type of data in 'data' argument. Options: 
-\code{"qx", "mx", "dx"}.}
+\code{"qx", "mx", "dx", "lx"}.}
 
 \item{type}{Specify the type of values to be extracted.}
+
+\item{by}{The accuracy measures are available in different output formats.
+Option 1: \code{by = NULL} the agregated measure over ages and and years will 
+be return. This is the default option. 
+Option 2: \code{by = "x"} measure for all ages (agregated over time) are returned.
+Option 3: \code{by = "y"} measures for all years (aggregated over ages) are returned.}
+
+\item{na.rm}{A logical value indicating whether NA values should be stripped 
+before the computation proceeds.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }

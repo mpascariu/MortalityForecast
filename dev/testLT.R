@@ -6,7 +6,7 @@ library(MortalityLaws)
 library(gnm)
 # library(StMoMo)
 
-x = 0:110
+x = 65:100
 y = 1980:1999
 h = 17
 dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
@@ -14,8 +14,11 @@ ex <- dxForecast::dxForecast.data$ex$male
 exogen <- ex[paste(y)]
 
 M <- doMortalityModels(data = dxm, x, y, data.type = "dx", exogen = exogen)
+
+
 P <- doForecasts(M, h, ci = 95, jumpchoice = "actual")
 
+ls(P)
 
 oex <- getObserved(M, type = "ex")
 fex <- getFitted(M, type = "ex")
@@ -25,9 +28,19 @@ pex <- getForecasts(P, type = "ex")
 
 y2 <- max(y) + 1:h
 Tdata <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
-doBackTesting(Tdata, P, data.type = "dx", type = "ex")
+
 doBackTesting(Tdata, P, data.type = "dx", type = "mx")
 doBackTesting(Tdata, P, data.type = "dx", type = "qx")
+doBackTesting(Tdata, P, data.type = "dx", type = "dx")
+
+
+doBackTesting(Tdata, P, data.type = "dx", type = "ex")
+doBackTesting(Tdata, P, data.type = "dx", type = "lx")
+
+
+u   <- convertFx(Tdata, Tdata, In = "dx", Out = "dx", lx0 = 1)
+pex <- getForecasts(P, type = "dx")
+u.hat = pex$LC
 
 
 # plot(M2)
