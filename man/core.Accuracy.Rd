@@ -4,7 +4,7 @@
 \alias{core.Accuracy}
 \title{Generate different types of output}
 \usage{
-core.Accuracy(u, u.hat, b, by = NULL, na.rm = TRUE)
+core.Accuracy(u, u.hat, b, measures, by = NULL, na.rm = TRUE)
 }
 \arguments{
 \item{u}{Observed data}
@@ -12,6 +12,8 @@ core.Accuracy(u, u.hat, b, by = NULL, na.rm = TRUE)
 \item{u.hat}{In-sample Forecast data}
 
 \item{b}{Benchmark forecast data. Usualy a naive or rwd forecast.}
+
+\item{measures}{What accurracy measure to compute?}
 
 \item{by}{The accuracy measures are available in different output formats.
 Option 1: \code{by = NULL} the agregated measure over ages and and years will 

@@ -14,13 +14,15 @@
 doBackTesting <- function(Tdata, object, 
                           data.type = c("qx", "mx", "dx"),
                           type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                          measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
                           by = NULL, na.rm = TRUE, ...) {
   x <- object$x
+  y <- object$y
   O <- convertFx(x, Tdata, In = data.type, Out = type, lx0 = 1)
   H <- getForecasts(object, type)
   B <- H$LC # Benchmark: Lee-Carter for now.
   
-  fn <- function(X) core.Accuracy(u = O, u.hat = X, b = B, by, na.rm)
+  fn <- function(X) core.Accuracy(u = O, u.hat = X, b = B, measures, by, na.rm)
   A  <- lapply(H, fn)
   out <- A
   
@@ -36,8 +38,8 @@ doBackTesting <- function(Tdata, object,
     r <- apply(zz, 2, rank)
     s1 <- sort(round(apply(r, 1, mean), 1))
     s2 <- sort(floor(apply(r, 1, median)))
-    out <- list(measures = z, rank = r, 
-                rankMean = s1, rankMedian = s2)
+    out <- list(index = type, x = x, y = y, observed.data = O, forecasts = H, 
+                accuracy = z, rank = r, rankMean = s1, rankMedian = s2)
   }
   return(out)
 }
@@ -48,7 +50,7 @@ doBackTesting <- function(Tdata, object,
 #' @inheritParams doBackTesting
 #' @inheritParams computeAccuracy
 #' @keywords internal
-core.Accuracy <- function(u, u.hat, b, by = NULL, na.rm = TRUE) {
+core.Accuracy <- function(u, u.hat, b, measures, by = NULL, na.rm = TRUE) {
   A <- NULL
   
   if (is.null(by)) {
@@ -57,7 +59,7 @@ core.Accuracy <- function(u, u.hat, b, by = NULL, na.rm = TRUE) {
     
     if (by == "y") {
       for (i in 1:ncol(u.hat)) {
-        a <- computeAccuracy(u[, i], u.hat[, i], b[, i])
+        a <- computeAccuracy(u[, i], u.hat[, i], b[, i], measures)
         A <- rbind(A, a)
       }
       rownames(A) <- colnames(u.hat)
@@ -65,7 +67,7 @@ core.Accuracy <- function(u, u.hat, b, by = NULL, na.rm = TRUE) {
     
     if (by == "x") {
       for (j in 1:nrow(u.hat)) {
-        a <- computeAccuracy(u[j, ], u.hat[j, ], b[j, ])
+        a <- computeAccuracy(u[j, ], u.hat[j, ], b[j, ], measures)
         A <- rbind(A, a)
       }
       rownames(A) <- rownames(u.hat)
@@ -79,14 +81,15 @@ core.Accuracy <- function(u, u.hat, b, by = NULL, na.rm = TRUE) {
 #' @param u Observed data
 #' @param u.hat In-sample Forecast data
 #' @param b Benchmark forecast data. Usualy a naive or rwd forecast.
-#' @param what What accurracy measure to compute? If \code{what = NULL} all 
-#' 15 measures will be generated.
+#' @param measures What accurracy measure to compute? 
 #' @param na.rm A logical value indicating whether NA values should be stripped 
 #' before the computation proceeds.
 #' @source Hyndman and Koehler, 2006
 #' @keywords internal
 #' @export
-computeAccuracy <- function(u, u.hat, b, na.rm = TRUE){
+computeAccuracy <- function(u, u.hat, b, 
+                            measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
+                            na.rm = TRUE){
 
   u.hat <- as.matrix(u.hat)
   u <- as.matrix(u)
@@ -99,27 +102,28 @@ computeAccuracy <- function(u, u.hat, b, na.rm = TRUE){
   
   # 1.Mean Error
   ME  <- mean(E, na.rm = N)
+  # 2.Median Error
   MdE <- median(E, na.rm = N)
-  # 2.Mean Square Error
+  # 3.Mean Square Error
   MSE  <- mean(E^2, na.rm = N)
-  # 3.Root Mean Square Error
+  # 4.Root Mean Square Error
   RMSE <- sqrt(MSE)
-  # 4.Mean Absolute Error
+  # 5.Mean Absolute Error
   MAE  <- mean(AE, na.rm = N)
-  # 5.Median Absolute Error
+  # 6.Median Absolute Error
   MdAE <- median(AE, na.rm = N)
   
   # ---------------------------------------------------------------
   # II. Measures based on percentage Error
   PE <- E[u > 0]/u[u > 0] # percentage error
   APE <- abs(PE)
-  # 6.Mean Absolute Percentage Error
+  # 7.Mean Absolute Percentage Error
   MAPE <- mean(APE, na.rm = N)
-  # 7.Median Absolute Percentage Error
+  # 8.Median Absolute Percentage Error
   MdAPE <- median(APE, na.rm = N)
-  # 8.Root Mean Square Percentage Erorr
+  # 9.Root Mean Square Percentage Erorr
   RMSPE <- sqrt(mean(PE^2, na.rm = N))
-  # 9.Root Median Square Percentage Error
+  # 10.Root Median Square Percentage Error
   RMdSPE <- sqrt(median(PE^2, na.rm = N))
   
   # ----------------------------------------------
@@ -129,9 +133,9 @@ computeAccuracy <- function(u, u.hat, b, na.rm = TRUE){
   # This observation led to the use of the so called "symmetric"
   # measures (Makridakis, 1993).
   
-  # 10.Symmetric Mean Absolute Percentage Error
+  # 11.Symmetric Mean Absolute Percentage Error
   sMAPE <- mean(2 * AE/(u + u.hat), na.rm = N)
-  # 11.Symmetric Median Absolute Percentage Error
+  # 12.Symmetric Median Absolute Percentage Error
   sMdAPE <- median(2 * AE/(u + u.hat), na.rm = N)
   
   # ---------------------------------------------------------------
@@ -144,12 +148,12 @@ computeAccuracy <- function(u, u.hat, b, na.rm = TRUE){
   RAE <- abs(RE)
   # Added a very small number in b.errors to avoid divizion by zero.
   
-  # 12.Mean Relative Absolute Error
+  # 13.Mean Relative Absolute Error
   MRAE <- mean(RAE, na.rm = N)
-  # 13.Median Relative Absolute Error
+  # 14.Median Relative Absolute Error
   MdRAE <- median(RAE, na.rm = N)
   
-  # 14.Geometric Mean Relative Absolute Error
+  # 15.Geometric Mean Relative Absolute Error
   # geometric mean function for positive values
   gm_mean = function(z) exp(mean(log(z[z > 0]), na.rm = N))
   GMRAE <- gm_mean(RAE) 
@@ -159,18 +163,20 @@ computeAccuracy <- function(u, u.hat, b, na.rm = TRUE){
   f   <- sum(diff(t(u))) / (nrow(u) * (ncol(u) - 1)) # scaling factor
   SE  <- E / f # scaled errors
   ASE <- abs(SE)
-  # 15.Mean Absolute Scaled Error
+  # 16.Mean Absolute Scaled Error
   MASE <- mean(ASE, na.rm = N)
-  # 16.Median Absolute Scaled Error
+  # 17.Median Absolute Scaled Error
   MdASE <- median(ASE, na.rm = N)
   
   # ---------------------------------------------------------------
   # Absolute errors and square errors tell the same thing. Because we do not 
   # want to receive the same information multiple times we do not export
   # MSE, RMSE, RMSPE and RMdSPE.
-  # Ignore for now GMRAE too.
   out <- data.frame(ME,   MAE,  MAPE,  sMAPE,  MRAE,  MASE, # means
-                    MdE, MdAE, MdAPE, sMdAPE, MdRAE, MdASE) # medians
+                    MdE, MdAE, MdAPE, sMdAPE, MdRAE, MdASE, # medians
+                    MSE, RMSE, RMSPE, RMdSPE,               # squared errors
+                    GMRAE)                                  # geometric mean
+  out <- out[measures]
   out <- as.matrix(out)
   return(out)
 }

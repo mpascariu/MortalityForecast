@@ -5,7 +5,8 @@
 \title{Performe back-testing}
 \usage{
 doBackTesting(Tdata, object, data.type = c("qx", "mx", "dx"), type = c("qx",
-  "mx", "dx", "lx", "Lx", "Tx", "ex"), by = NULL, na.rm = TRUE, ...)
+  "mx", "dx", "lx", "Lx", "Tx", "ex"), measures = c("ME", "MAE", "MAPE",
+  "sMAPE", "MRAE", "MASE"), by = NULL, na.rm = TRUE, ...)
 }
 \arguments{
 \item{Tdata}{Test data}
@@ -16,6 +17,8 @@ doBackTesting(Tdata, object, data.type = c("qx", "mx", "dx"), type = c("qx",
 \code{"qx", "mx", "dx", "lx"}.}
 
 \item{type}{Specify the type of values to be extracted.}
+
+\item{measures}{What accurracy measure to compute?}
 
 \item{by}{The accuracy measures are available in different output formats.
 Option 1: \code{by = NULL} the agregated measure over ages and and years will 

@@ -7,7 +7,8 @@
 Hyndman and Koehler, 2006
 }
 \usage{
-computeAccuracy(u, u.hat, b, na.rm = TRUE)
+computeAccuracy(u, u.hat, b, measures = c("ME", "MAE", "MAPE", "sMAPE",
+  "MRAE", "MASE"), na.rm = TRUE)
 }
 \arguments{
 \item{u}{Observed data}
@@ -16,11 +17,10 @@ computeAccuracy(u, u.hat, b, na.rm = TRUE)
 
 \item{b}{Benchmark forecast data. Usualy a naive or rwd forecast.}
 
+\item{measures}{What accurracy measure to compute?}
+
 \item{na.rm}{A logical value indicating whether NA values should be stripped 
 before the computation proceeds.}
-
-\item{what}{What accurracy measure to compute? If \code{what = NULL} all 
-15 measures will be generated.}
 }
 \description{
 Get Measures of Forecast Accuracy
