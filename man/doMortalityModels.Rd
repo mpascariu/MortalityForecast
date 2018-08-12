@@ -36,13 +36,13 @@ M <- doMortalityModels(data = dxm, x, y, data.type = "dx", exogen = exogen)
 P <- doForecasts(M, h, ci = 95, jumpchoice = "actual")
 
 
-oex <- getObserved(M, type = "ex")
-fex <- getFitted(M, type = "ex")
-rex <- getResiduals(M, type = "ex")
-pex <- getForecasts(P, type = "ex")
+oex <- getObserved(M, what = "ex")
+fex <- getFitted(M, what = "ex")
+rex <- getResiduals(M, what = "ex")
+pex <- getForecasts(P, what = "ex")
 
 
 y2 <- max(y) + 1:h
 Tdata <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
-doBackTesting(Tdata, P, data.type = "dx", type = "ex")
+doBackTesting(Tdata, P, data.type = "dx", what = "ex")
 }

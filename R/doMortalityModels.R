@@ -21,15 +21,15 @@
 #' P <- doForecasts(M, h, ci = 95, jumpchoice = "actual")
 #' 
 #' 
-#' oex <- getObserved(M, type = "ex")
-#' fex <- getFitted(M, type = "ex")
-#' rex <- getResiduals(M, type = "ex")
-#' pex <- getForecasts(P, type = "ex")
+#' oex <- getObserved(M, what = "ex")
+#' fex <- getFitted(M, what = "ex")
+#' rex <- getResiduals(M, what = "ex")
+#' pex <- getForecasts(P, what = "ex")
 #' 
 #' 
 #' y2 <- max(y) + 1:h
 #' Tdata <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
-#' doBackTesting(Tdata, P, data.type = "dx", type = "ex")
+#' doBackTesting(Tdata, P, data.type = "dx", what = "ex")
 #' @export
 #' 
 doMortalityModels <- function(data, x, y, 
@@ -86,13 +86,13 @@ doMortalityModels <- function(data, x, y,
 #' Get Fitted Values
 #' 
 #' @param object An object of the class \code{MortalityModels}.
-#' @param type Specify the type of values to be extracted. 
+#' @param what Specify the type of values to be extracted. 
 #' @inheritParams doMortalityModels
 #' @export
 getFitted <- function(object, 
-                      type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                      what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                       ...) {
-  type <- match.arg(type)
+  what <- match.arg(what)
   Mn   <- object$model.names
   x    <- object$x
   
@@ -108,7 +108,7 @@ getFitted <- function(object,
   }
   
   dx  <- list(dx2, dx3, dx4, dx5, dx6, dx7, dx8, dx9)
-  fn  <- function(Z) convertFx(x, Z, In = "dx", Out = type, lx0 = 1)
+  fn  <- function(Z) convertFx(x, Z, In = "dx", Out = what, lx0 = 1)
   out <- lapply(dx, fn)
   names(out) <- object$model.names
   out <- structure(class = "getFitted", out)
@@ -121,16 +121,16 @@ getFitted <- function(object,
 #' @inheritParams getFitted
 #' @export
 getObserved <- function(object, 
-                        type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                        what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                         ...) {
-  type <- match.arg(type)
+  what <- match.arg(what)
   x    <- object$x
   data <- object$input$data
   In   <- object$input$data.type 
-  if (In == type) {
+  if (In == what) {
     out <- data
   } else {
-    out <- convertFx(x, data, In, Out = type, lx0 = 1)
+    out <- convertFx(x, data, In, Out = what, lx0 = 1)
   }
   return(out)
 }

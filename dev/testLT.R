@@ -7,49 +7,50 @@ library(gnm)
 library(tidyverse)
 # library(StMoMo)
 
-x = 0:100
-y = 1980:1999
-h = 17
-dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
+x = 0:95
+y1 = 1980:1999
+y2 = 2000:2010
+y  = c(y1, y2)
+h = max(y2) - max(y1)
+
+D <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
+D1 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y1)]
+D2 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
 ex <- dxForecast::dxForecast.data$ex$male
-exogen <- ex[paste(y)]
+exogen <- ex[paste(y1)]
 
-M <- doMortalityModels(data = dxm, x, y, data.type = "dx", exogen = exogen)
-P <- doForecasts(M, h, ci = 95, jumpchoice = "actual")
+M <- doMortalityModels(data = D1, x, y1, data.type = "dx", exogen = exogen)
+P <- doForecasts(M, h)
+A <- getAccuracy(P, D2, x = 0:100, y2, data.type = "dx", what = "ex")
+A
 
-
-oex <- getObserved(M, type = "ex")
-fex <- getFitted(M, type = "ex")
-rex <- getResiduals(M, type = "ex")
-pex <- getForecasts(P, type = "ex")
-
-
-y2 <- max(y) + 1:h
-y3 <- c(y, y2)
-Tdata <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
+oex <- getObserved(M, what = "ex")
+fex <- getFitted(M, what = "ex")
+rex <- getResiduals(M, what = "ex")
+pex <- getForecasts(P, what = "ex")
 
 # ----------------------------------------------
 # BackTesting
-what = "ex"
-filter.x = c(0, 10, 40, 60, 70, 80, 90, 100)
 
-bt <- doBackTesting(Tdata, P, data.type = "dx", type = what)
-O1 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y3)]
-O2 <- convertFx(x, O1, In = "dx", Out = what, lx0 = 1)
+
+filter.x = c(0, 60, 70, 80, 90, 100)
+O2 <- convertFx(x, D, In = "dx", Out = "ex", lx0 = 1)
 O3 <- wide2long(data = O2, x, filter.x)
 O3$DATA <- NA
-O3[O3$y %in% y, "DATA"] <- "Training Set"
+O3[O3$y %in% y1, "DATA"] <- "Training Set"
 O3[O3$y %in% y2, "DATA"] <- "Validation Set"
 
-head(O3)
-tail(O3)
 
-H <- wide.list.2.long.df(data = bt$forecasts, x, filter.x)
+H <- wide.list.2.long.df(data = A$forecasts, x, filter.x)
 
 ggplot(H) + 
-  geom_line(aes(x = y, y = value, color = Name, linetype = Name)) +
   facet_wrap(~x, scales = "free") +
-  geom_point(data = O3, aes(x = y, y = value, fill = DATA), color = c(2))
+  geom_line(aes(x = y, y = value, color = Name, linetype = Name)) +
+  geom_point(data = O3, aes(x = y, y = value, fill = DATA), shape = 21) +
+  scale_fill_manual(values = 1:2) +
+  guides(colour = guide_legend("Mortality Forecast\nModel"), 
+         linetype = guide_legend("Mortality Forecast\nModel"), 
+         fill = guide_legend("Demographic Data"))
 
 
 # plot(M2)

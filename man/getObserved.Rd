@@ -4,12 +4,12 @@
 \alias{getObserved}
 \title{Get Observed Values}
 \usage{
-getObserved(object, type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"), ...)
+getObserved(object, what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"), ...)
 }
 \arguments{
 \item{object}{An object of the class \code{MortalityModels}.}
 
-\item{type}{Specify the type of values to be extracted.}
+\item{what}{Specify the type of values to be extracted.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }

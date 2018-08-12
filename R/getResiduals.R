@@ -5,10 +5,10 @@
 #' @inheritParams getFitted
 #' @export
 getResiduals <- function(object,
-                         type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                         what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                          ...) {
-  ov  <- getObserved(object, type, ...)
-  fv  <- getFitted(object, type, ...)
+  ov  <- getObserved(object, what, ...)
+  fv  <- getFitted(object, what, ...)
   fn  <- function(X) ov - X
   out <- lapply(fv, fn)
   out <- structure(class = "getResiduals", out)
@@ -19,7 +19,7 @@ getResiduals <- function(object,
 #' Summary for getResiduals
 #' 
 #' @param object An object of the class \code{\link{getResiduals}}.
-#' @param digits number of digits to display.
+#' @param digits Number of digits to display.
 #' @inheritParams doMortalityModels
 #' @export
 summary.getResiduals <- function(object, ..., 

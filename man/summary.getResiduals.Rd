@@ -12,7 +12,7 @@
 
 \item{...}{Arguments to be passed to or from other methods.}
 
-\item{digits}{number of digits to display.}
+\item{digits}{Number of digits to display.}
 }
 \description{
 Summary for getResiduals

@@ -37,9 +37,9 @@ doForecasts <- function(object, h, ci = 95,
 #' @export
 #' 
 getForecasts <- function(object, 
-                      type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                      what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                       ...) {
-  type <- match.arg(type)
+  what <- match.arg(what)
   x    <- object$x
   
   # mx1 <- object$M1$mean
@@ -54,7 +54,7 @@ getForecasts <- function(object,
   }
   
   dx  <- list(dx2, dx3, dx4, dx5, dx6, dx7, dx8, dx9)
-  fn  <- function(Z) convertFx(x, Z, In = "dx", Out = type, lx0 = 1)
+  fn  <- function(Z) convertFx(x, Z, In = "dx", Out = what, lx0 = 1)
   out <- lapply(dx, fn)
   names(out) <- object$model.names
   out <- structure(class = "getForecasts", out)

@@ -4,12 +4,12 @@
 \alias{getFitted}
 \title{Get Fitted Values}
 \usage{
-getFitted(object, type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"), ...)
+getFitted(object, what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"), ...)
 }
 \arguments{
 \item{object}{An object of the class \code{MortalityModels}.}
 
-\item{type}{Specify the type of values to be extracted.}
+\item{what}{Specify the type of values to be extracted.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }

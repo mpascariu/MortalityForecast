@@ -1,99 +1,100 @@
 
 
-#' Performe back-testing
-#' @param Tdata Test data
-#' @param by The accuracy measures are available in different output formats.
-#' Option 1: \code{by = NULL} the agregated measure over ages and and years will 
-#' be return. This is the default option. 
-#' Option 2: \code{by = "x"} measure for all ages (agregated over time) are returned.
-#' Option 3: \code{by = "y"} measures for all years (aggregated over ages) are returned.
+#' Get Accuracy Measures
+#' @param data Validation set of demographic data.
 #' @inheritParams doMortalityModels
 #' @inheritParams getForecasts
 #' @inheritParams computeAccuracy
+#' @examples 
+#' x = 0:110
+#' y1 = 1980:1990
+#' y2 = 1991:1993
+#' h = max(y2) - max(y1)
+#' 
+#' D1 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y1)]
+#' D2 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
+#' ex <- dxForecast::dxForecast.data$ex$male
+#' exogen <- ex[paste(y1)]
+#' 
+#' M <- doMortalityModels(data = D1, x, y1, data.type = "dx", exogen = exogen)
+#' P <- doForecasts(M, h)
+#' A <- getAccuracy(P, D2, x = 0:90, y2, data.type = "dx", what = "ex")
+#' A
 #' @export
-doBackTesting <- function(Tdata, object, 
-                          data.type = c("qx", "mx", "dx"),
-                          type = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                          measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
-                          by = NULL, na.rm = TRUE, ...) {
-  x <- object$x
-  y <- object$y
-  O <- convertFx(x, Tdata, In = data.type, Out = type, lx0 = 1)
-  H <- getForecasts(object, type)
+getAccuracy <- function(object, data, x = 0:100, y = NULL,
+                        data.type = c("qx", "mx", "dx", "lx"),
+                        what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                        measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
+                        na.rm = TRUE, ...) {
+  
+  O <- convertFx(object$x, data, In = data.type, Out = what, lx0 = 1, ...) # observed data
+  H <- getForecasts(object, what)                              # forecast data
   B <- H$LC # Benchmark: Lee-Carter for now.
   
-  fn <- function(X) core.Accuracy(u = O, u.hat = X, b = B, measures, by, na.rm)
+  fn <- function(X) computeAccuracy(O, X, B, x, y, measures, na.rm)
   A  <- lapply(H, fn)
-  out <- A
+  z  <- NULL
   
-  if (is.null(by)) {
-    z = NULL
-    for (i in 1:length(A)) {
-      z <- rbind(z, A[[i]]) 
-    }
-    rownames(z) <- object$model.names
-    
-    zz <- z
-    zz[, "ME"] <- abs(zz[, "ME"])
-    r <- apply(zz, 2, rank)
-    s1 <- sort(round(apply(r, 1, mean), 1))
-    s2 <- sort(floor(apply(r, 1, median)))
-    out <- list(index = type, x = x, y = y, observed.data = O, forecasts = H, 
-                accuracy = z, rank = r, rankMean = s1, rankMedian = s2)
+  for (i in 1:length(A)) {
+    z <- rbind(z, A[[i]]) 
   }
+  rownames(z) <- object$model.names
+  
+  zz <- z
+  zz[, "ME"] <- abs(zz[, "ME"])
+  r  <- apply(zz, 2, rank)
+  s1 <- floor(rank(apply(r, 1, mean)))
+  s2 <- floor(rank(apply(r, 1, median)))
+  out <- list(index = what, x = x, y = y, observed.data = O, forecasts = H, 
+              accuracy = z, rank = r, rankMean = s1, rankMedian = s2)
+  out <- structure(class = "getAccuracy", out)
   return(out)
 }
 
 
-#' Generate different types of output 
-#' 
-#' @inheritParams doBackTesting
-#' @inheritParams computeAccuracy
+#' Print getAccuracy
+#' @param x An object of the class \code{getAccuracy}
+#' @inheritParams summary.getResiduals
 #' @keywords internal
-core.Accuracy <- function(u, u.hat, b, measures, by = NULL, na.rm = TRUE) {
-  A <- NULL
-  
-  if (is.null(by)) {
-    A <- computeAccuracy(u, u.hat, b)
-  } else {
-    
-    if (by == "y") {
-      for (i in 1:ncol(u.hat)) {
-        a <- computeAccuracy(u[, i], u.hat[, i], b[, i], measures)
-        A <- rbind(A, a)
-      }
-      rownames(A) <- colnames(u.hat)
-    }
-    
-    if (by == "x") {
-      for (j in 1:nrow(u.hat)) {
-        a <- computeAccuracy(u[j, ], u.hat[j, ], b[j, ], measures)
-        A <- rbind(A, a)
-      }
-      rownames(A) <- rownames(u.hat)
-    }
-  }
-  return(A)
+#' @export
+print.getAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L), 
+                              ...) {
+  cat("\nAccuracy Measures:\n")
+  print(round(x$accuracy, digits))
+  cat("\nRanks: Best performing models in each measure:\n")
+  print(x$rank)
+  cat("\nOverall Classification:\n")
+  res <- t(data.frame(MeanRank = x$rankMean, MedianRank = x$rankMedian))
+  print(res)
 }
+
 
 #' Get Measures of Forecast Accuracy
 #' 
-#' @param u Observed data
-#' @param u.hat In-sample Forecast data
-#' @param b Benchmark forecast data. Usualy a naive or rwd forecast.
+#' @param u Validation dataset.
+#' @param u.hat In-sample forecast data.
+#' @param b Benchmark forecast data. Usualy a naive or Random-Walk forecast.
+#' @param x Ages to be considered in accuracy computation. It can be used to 
+#' calculate the measures on a subset of the results. If \code{x = NULL} 
+#' (default) the entire age-range in \coda{u} is considered.
+#' @param y Years to be considered in accuracy computation. Default: \code{NULL}.
 #' @param measures What accurracy measure to compute? 
 #' @param na.rm A logical value indicating whether NA values should be stripped 
 #' before the computation proceeds.
 #' @source Hyndman and Koehler, 2006
 #' @keywords internal
 #' @export
-computeAccuracy <- function(u, u.hat, b, 
+computeAccuracy <- function(u, u.hat, b, x = NULL, y = NULL,
                             measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
                             na.rm = TRUE){
-
-  u.hat <- as.matrix(u.hat)
-  u <- as.matrix(u)
-  b <- as.matrix(b)
+  if (is.null(x)) x <- rownames(u)
+  if (is.null(y)) y <- colnames(u)
+  L1 <- rownames(u) %in% x
+  L2 <- colnames(u) %in% y
+    
+  u.hat <- as.matrix(u.hat[L1, L2])
+  u <- as.matrix(u[L1, L2])
+  b <- as.matrix(b[L1, L2])
   N <- na.rm
   # ---------------------------------------------------------------
   # I. Scale-dependent measures
@@ -176,7 +177,7 @@ computeAccuracy <- function(u, u.hat, b,
                     MdE, MdAE, MdAPE, sMdAPE, MdRAE, MdASE, # medians
                     MSE, RMSE, RMSPE, RMdSPE,               # squared errors
                     GMRAE)                                  # geometric mean
-  out <- out[measures]
+  out <- out[, measures]
   out <- as.matrix(out)
   return(out)
 }
