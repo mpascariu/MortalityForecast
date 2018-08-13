@@ -11,7 +11,10 @@
 #' @export
 doBackTesting <- function(data, x, y.fit, y.for, data.type, what, exogen, 
                 ci = 95, jumpchoice = "actual", 
-                measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"), ...) {
+                measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"), 
+                models = c("LC", "PLAT", "CoDa", "M4", "M4X", 
+                           "M5", "M5X", "M6", "M6X"),
+                ...) {
   # Prepare data
   input <- as.list(environment())
   y <- c(y.fit, y.for)
@@ -21,7 +24,8 @@ doBackTesting <- function(data, x, y.fit, y.for, data.type, what, exogen,
   exogen <- exogen[paste(y.fit)]
   
   # Fit - Forecast - Check Accuracy
-  M <- doMortalityModels(training.set, x, y.fit, data.type, exogen = exogen)
+  M <- doMortalityModels(training.set, x, y.fit, data.type, models, 
+                         exogen = exogen)
   P <- doForecasts(M, h, ci, jumpchoice)
   A <- getAccuracy(P, validation.set, x, y, data.type, what, measures, ...)
   

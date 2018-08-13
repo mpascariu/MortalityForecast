@@ -5,6 +5,7 @@
 \title{Wrapper for function dealing with mortality models}
 \usage{
 doMortalityModels(data, x, y, data.type = c("qx", "mx", "dx", "lx"),
+  models = c("LC", "PLAT", "CoDa", "M4", "M4X", "M5", "M5X", "M6", "M6X"),
   exogen = NULL, ...)
 }
 \arguments{
@@ -16,6 +17,8 @@ doMortalityModels(data, x, y, data.type = c("qx", "mx", "dx", "lx"),
 
 \item{data.type}{Type of data in 'data' argument. Options: 
 \code{"qx", "mx", "dx", "lx"}.}
+
+\item{models}{Mortality models to be evaluated.}
 
 \item{exogen}{Inlusion of exogenous variables.}
 

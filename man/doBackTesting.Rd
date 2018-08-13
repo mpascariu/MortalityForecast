@@ -6,7 +6,8 @@
 \usage{
 doBackTesting(data, x, y.fit, y.for, data.type, what, exogen, ci = 95,
   jumpchoice = "actual", measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE",
-  "MASE"), ...)
+  "MASE"), models = c("LC", "PLAT", "CoDa", "M4", "M4X", "M5", "M5X", "M6",
+  "M6X"), ...)
 }
 \arguments{
 \item{data}{Mortality data for fitting of the models and for validation; 
@@ -32,6 +33,8 @@ Possibilities: \code{"actual"} (use actual rates from final year)
 and \code{"fit"} (use fitted rates).}
 
 \item{measures}{What accurracy measure to compute?}
+
+\item{models}{Mortality models to be evaluated.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }

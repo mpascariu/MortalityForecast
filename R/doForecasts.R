@@ -25,18 +25,23 @@ doForecasts <- function(object, h, ci = 95,
   call  <- match.call()
   x     <- object$x
   y     <- max(object$y) + 1:h
+  Mn    <- object$input$models # Model names
   jumpchoice  <- match.arg(jumpchoice)
-  model.names <- object$model.names
   
-  # M1 <- forecast(object$M1, h = h, level = ci)
-  M2 <- forecast(object$M2, h = h, jumpchoice = jumpchoice, level = ci)
-  for (i in 3:9) {
-    Mi <- with(object, get(paste0("M", i)))
-    assign(paste0("M", i), predict(Mi, h = h, jumpchoice = jumpchoice, ci = ci))
-    cat(i, "\n")
+  
+  for (i in 1:length(Mn)) {
+    cat(Mn[i], "\n")
+    M <- with(object, get(Mn[i]))
+    
+    if (Mn[i] %in% c("LC", "PLAT")) {
+      P <- forecast(M, h = h, jumpchoice = jumpchoice, level = ci)
+    } else {
+      P <- predict(M, h = h, jumpchoice = jumpchoice, ci = ci)
+    }
+    assign(Mn[i], P)
   }
   
-  remove(object, h, ci, jumpchoice, Mi, i)
+  remove(object, h, ci, jumpchoice, M, Mn, P, i)
   out <- as.list(environment())
   out <- structure(class = "doForecasts", out)
   return(out)
@@ -50,26 +55,28 @@ doForecasts <- function(object, h, ci = 95,
 #' @export
 #' 
 getForecasts <- function(object, 
-                      what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                      ...) {
+                         what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                         ...) {
   what <- match.arg(what)
+  Mn   <- object$input$object$input$models # Model names
   x    <- object$x
   
-  # mx1 <- object$M1$mean
-  # dx1 <- convertFx(x, mx1, In = "mx", Out = "dx", lx0 = 1)
-  mx2 <- object$M2$rates
-  dx2 <- convertFx(x, mx2, In = "mx", Out = "dx", lx0 = 1)
-  
-  dx3 = dx4 = dx5 = dx6 = dx7 = dx8 = dx9 <- NULL
-  for (i in 3:9) {
-    Mi <- with(object, get(paste0("M", i)))
-    assign(paste0("dx", i), Mi$predicted.values)
+  DX <- list()
+  for (i in 1:length(Mn)) {
+    M <- with(object, get(Mn[i]))
+    
+    if (Mn[i] %in% c("LC", "PLAT")) {
+      mx <- M$rates
+      dx <- convertFx(x, mx, In = "mx", Out = "dx", lx0 = 1, ...)
+    } else {
+      dx <- M$predicted.values
+    }
+    DX[[i]] <- dx
   }
   
-  dx  <- list(dx2, dx3, dx4, dx5, dx6, dx7, dx8, dx9)
   fn  <- function(Z) convertFx(x, Z, In = "dx", Out = what, lx0 = 1)
-  out <- lapply(dx, fn)
-  names(out) <- object$model.names
+  out <- lapply(DX, fn)
+  names(out) <- Mn
   out <- structure(class = "getForecasts", out)
   return(out)
 }

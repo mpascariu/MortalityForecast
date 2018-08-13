@@ -31,6 +31,7 @@ getAccuracy <- function(object, data, x = 0:100, y = NULL,
   O <- convertFx(x = object$x, data, In = data.type, Out = what, lx0 = 1, ...) # observed data
   H <- getForecasts(object, what)                              # forecast data
   B <- H$LC # Benchmark: Lee-Carter for now.
+  Mn<- object$input$object$input$models # Model names
   
   fn <- function(X) computeAccuracy(O, X, B, x, y, measures, na.rm)
   A  <- lapply(H, fn)
@@ -39,7 +40,7 @@ getAccuracy <- function(object, data, x = 0:100, y = NULL,
   for (i in 1:length(A)) {
     z <- rbind(z, A[[i]]) 
   }
-  rownames(z) <- object$model.names
+  rownames(z) <- Mn
   
   zz <- z
   zz[, "ME"] <- abs(zz[, "ME"])
@@ -64,7 +65,7 @@ print.getAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L),
   print(round(x$results, digits))
   cat("\nRanks - Best performing models in each category:\n")
   print(x$rank)
-  cat("\nOverall Classification:\n")
+  cat("\nGeneral classification:\n")
   res <- t(data.frame(MeanRank = x$rankMean, MedianRank = x$rankMedian))
   print(res)
 }
