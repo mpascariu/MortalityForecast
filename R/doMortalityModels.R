@@ -10,28 +10,18 @@
 #' @param ... Arguments to be passed to or from other methods.
 #' @inheritParams dxForecast::lenart
 #' @examples 
-#' x = 0:110
-#' y = 1980:1999
-#' h = 17
+#' x = 0:100
+#' y = 2005:2016
 #' dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
 #' ex <- dxForecast::dxForecast.data$ex$male
 #' exogen <- ex[paste(y)]
 #' 
 #' M <- doMortalityModels(data = dxm, x, y, data.type = "dx", exogen = exogen)
-#' P <- doForecasts(M, h, ci = 95, jumpchoice = "actual")
-#' 
 #' 
 #' oex <- getObserved(M, what = "ex")
 #' fex <- getFitted(M, what = "ex")
 #' rex <- getResiduals(M, what = "ex")
-#' pex <- getForecasts(P, what = "ex")
-#' 
-#' 
-#' y2 <- max(y) + 1:h
-#' Tdata <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
-#' doBackTesting(Tdata, P, data.type = "dx", what = "ex")
 #' @export
-#' 
 doMortalityModels <- function(data, x, y, 
                               data.type = c("qx", "mx", "dx", "lx"), exogen = NULL, ...) {
   input <- as.list(environment())

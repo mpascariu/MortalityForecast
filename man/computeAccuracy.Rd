@@ -19,7 +19,7 @@ computeAccuracy(u, u.hat, b, x = NULL, y = NULL, measures = c("ME", "MAE",
 
 \item{x}{Ages to be considered in accuracy computation. It can be used to 
 calculate the measures on a subset of the results. If \code{x = NULL} 
-(default) the entire age-range in \coda{u} is considered.}
+(default) the entire age-range in \code{u} is considered.}
 
 \item{y}{Years to be considered in accuracy computation. Default: \code{NULL}.}
 

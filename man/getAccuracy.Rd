@@ -4,10 +4,7 @@
 \alias{getAccuracy}
 \title{Get Accuracy Measures}
 \usage{
-getAccuracy(object, data, x = 0:100, y = NULL, data.type = c("qx", "mx",
-  "dx", "lx"), what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-  measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"), na.rm = TRUE,
-  ...)
+getAccuracy(object, data, x, y, data.type, what, measures, na.rm, ...)
 }
 \arguments{
 \item{object}{An object of the class \code{doForecasts}.}

@@ -23,3 +23,16 @@ and \code{"fit"} (use fitted rates).}
 \description{
 Forecast Human Mortality
 }
+\examples{
+x = 0:100
+y = 1985:1999
+h = 17
+dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
+ex <- dxForecast::dxForecast.data$ex$male
+exogen <- ex[paste(y)]
+
+M <- doMortalityModels(data = dxm, x, y, data.type = "dx", exogen = exogen)
+P <- doForecasts(M, h, ci = 95, jumpchoice = "actual")
+
+pex <- getForecasts(P, what = "ex")
+}

@@ -2,6 +2,7 @@
 
 #' Get Accuracy Measures
 #' @param data Validation set of demographic data.
+#' @usage getAccuracy(object, data, x, y, data.type, what, measures, na.rm, ...)
 #' @inheritParams doMortalityModels
 #' @inheritParams getForecasts
 #' @inheritParams computeAccuracy
@@ -27,7 +28,7 @@ getAccuracy <- function(object, data, x = 0:100, y = NULL,
                         measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
                         na.rm = TRUE, ...) {
   
-  O <- convertFx(object$x, data, In = data.type, Out = what, lx0 = 1, ...) # observed data
+  O <- convertFx(x = object$x, data, In = data.type, Out = what, lx0 = 1, ...) # observed data
   H <- getForecasts(object, what)                              # forecast data
   B <- H$LC # Benchmark: Lee-Carter for now.
   
@@ -45,8 +46,7 @@ getAccuracy <- function(object, data, x = 0:100, y = NULL,
   r  <- apply(zz, 2, rank)
   s1 <- floor(rank(apply(r, 1, mean)))
   s2 <- floor(rank(apply(r, 1, median)))
-  out <- list(index = what, x = x, y = y, observed.data = O, forecasts = H, 
-              accuracy = z, rank = r, rankMean = s1, rankMedian = s2)
+  out <- list(index = what, results = z, rank = r, rankMean = s1, rankMedian = s2)
   out <- structure(class = "getAccuracy", out)
   return(out)
 }
@@ -59,9 +59,10 @@ getAccuracy <- function(object, data, x = 0:100, y = NULL,
 #' @export
 print.getAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L), 
                               ...) {
-  cat("\nAccuracy Measures:\n")
-  print(round(x$accuracy, digits))
-  cat("\nRanks: Best performing models in each measure:\n")
+  cat("\nForecasting Accuracy Measures")
+  cat("\nLife Table Index:", x$index, "\n\n")
+  print(round(x$results, digits))
+  cat("\nRanks - Best performing models in each category:\n")
   print(x$rank)
   cat("\nOverall Classification:\n")
   res <- t(data.frame(MeanRank = x$rankMean, MedianRank = x$rankMedian))
@@ -76,7 +77,7 @@ print.getAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L),
 #' @param b Benchmark forecast data. Usualy a naive or Random-Walk forecast.
 #' @param x Ages to be considered in accuracy computation. It can be used to 
 #' calculate the measures on a subset of the results. If \code{x = NULL} 
-#' (default) the entire age-range in \coda{u} is considered.
+#' (default) the entire age-range in \code{u} is considered.
 #' @param y Years to be considered in accuracy computation. Default: \code{NULL}.
 #' @param measures What accurracy measure to compute? 
 #' @param na.rm A logical value indicating whether NA values should be stripped 

@@ -6,6 +6,18 @@
 #' \code{\link{doMortalityModels}} function.
 #' @param ... Further argumets to be passed to other methods.
 #' @inheritParams CoDa::predict.coda
+#' @examples 
+#' x = 0:100
+#' y = 1985:1999
+#' h = 17
+#' dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
+#' ex <- dxForecast::dxForecast.data$ex$male
+#' exogen <- ex[paste(y)]
+#' 
+#' M <- doMortalityModels(data = dxm, x, y, data.type = "dx", exogen = exogen)
+#' P <- doForecasts(M, h, ci = 95, jumpchoice = "actual")
+#' 
+#' pex <- getForecasts(P, what = "ex")
 #' @export
 doForecasts <- function(object, h, ci = 95, 
                         jumpchoice = c("actual", "fit"), ...) {
@@ -29,6 +41,7 @@ doForecasts <- function(object, h, ci = 95,
   out <- structure(class = "doForecasts", out)
   return(out)
 }
+
 
 #' Get Predicted Values
 #' 

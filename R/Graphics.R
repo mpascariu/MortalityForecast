@@ -1,47 +1,40 @@
 
 
-#' @keywords internal
+#' Plot method for objects of the class doBackTesting
+#' @param x An object of the class \code{doBackTesting}.
+#' @inheritParams wide2long
 #' @export
-#' 
-wide2long <- function(data, x = NULL, filter.x = NULL) {
-  if (is.null(x)) x = 1:nrow(data)
-  if (is.null(filter.x)) filter.x = x
+plot.doBackTesting <- function(x, filter.x = c(0, 60, 70, 80, 90, 100), ...) {
+  y = value = Name = DATA <- NULL # hack CRAN note
   
-  D <- gather(data, key = "y")
-  D$x <- x
-  D$y <- as.numeric(D$y)
-  out <- D[D$x %in% filter.x, ]
-  return(out)
-}
-
-
-#' @keywords internal
-#' @export
-#' 
-wide.list.2.long.df <- function(data, x, filter.x = NULL, ...) {
-  fn  <- function(Z) wide2long(data = Z, x, filter.x)
-  B   <- lapply(data, fn)
-  out <- NULL
+  B  <- x
+  x  <- B$input$x
+  y1 <- B$input$y.fit
+  y2 <- B$input$y.for
   
-  for (i in 1:length(B)) {
-    Bi <- B[[i]]
-    Bi$Name <- names(B)[i]
-    out <- rbind(out, Bi)
-  }
-  return(out)
+  # Observed values
+  O <- convertFx(x, 
+                 data = B$input$data, 
+                 In = B$input$data.type, 
+                 Out = B$input$what, 
+                 lx0 = 1)
+  O <- wide2long(data = O, x, filter.x) %>% mutate(DATA = NA)
+  O[O$y %in% y1, "DATA"] <- "Training Set"
+  O[O$y %in% y2, "DATA"] <- "Validation Set"
+  
+  # Forecast values
+  H <- B$datasets$forecasts
+  H <- wide.list.2.long.df(data = H, x, filter.x)
+  
+  # ggplot method
+  P <- ggplot(H) + 
+    facet_wrap(~x, scales = "free") +
+    geom_line(aes(x = y, y = value, color = Name, linetype = Name)) +
+    geom_point(data = O, aes(x = y, y = value, fill = DATA), shape = 21) +
+    scale_fill_manual(values = 1:2) +
+    guides(colour = guide_legend("Mortality Forecast\nModel"), 
+           linetype = guide_legend("Mortality Forecast\nModel"), 
+           fill = guide_legend("Demographic Data"))
+  P
 }
-
-
-#' @keywords internal
-#' @export
-#'
-whatsYourName <- function(x) {
-  deparse(substitute(x))
-}
-
-
-
-
-
-
 
