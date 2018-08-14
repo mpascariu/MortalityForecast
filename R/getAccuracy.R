@@ -7,20 +7,21 @@
 #' @inheritParams getForecasts
 #' @inheritParams computeAccuracy
 #' @examples 
-#' x = 0:110
-#' y1 = 1980:1990
-#' y2 = 1991:1993
+#' x = 0:100
+#' y1 = 1980:1995
+#' y2 = 1996:2005
 #' h = max(y2) - max(y1)
 #' 
 #' D1 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y1)]
 #' D2 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
-#' ex <- dxForecast::dxForecast.data$ex$male
-#' exogen <- ex[paste(y1)]
 #' 
-#' M <- doMortalityModels(data = D1, x, y1, data.type = "dx", exogen = exogen)
+#' MM = c("LC", "FDM", "CoDa", "M6")
+#' M <- doMortalityModels(data = D1, x, y1, data.type = "dx", models = MM)
 #' P <- doForecasts(M, h)
-#' A <- getAccuracy(P, D2, x = 0:90, y2, data.type = "dx", what = "ex")
+#' A <- getAccuracy(P, D2, x = 0:95, data.type = "dx", what = "qx")
+#' 
 #' A
+#' plot(A)
 #' @export
 getAccuracy <- function(object, data, x = 0:100, y = NULL,
                         data.type = c("qx", "mx", "dx", "lx"),
@@ -28,10 +29,10 @@ getAccuracy <- function(object, data, x = 0:100, y = NULL,
                         measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
                         na.rm = TRUE, ...) {
   
-  O <- convertFx(x = object$x, data, In = data.type, Out = what, lx0 = 1, ...) # observed data
-  H <- getForecasts(object, what)                              # forecast data
-  B <- H$LC # Benchmark: Lee-Carter for now.
-  Mn<- object$input$object$input$models # Model names
+  O  <- convertFx(x = object$x, data, In = data.type, Out = what, lx0 = 1, ...) # observed data
+  H  <- getForecasts(object, what)                              # forecast data
+  B  <- H$LC # Benchmark: Lee-Carter for now.
+  Mn <- object$input$object$input$models # Model names
   
   fn <- function(X) computeAccuracy(O, X, B, x, y, measures, na.rm)
   A  <- lapply(H, fn)
@@ -44,10 +45,10 @@ getAccuracy <- function(object, data, x = 0:100, y = NULL,
   
   zz <- z
   zz[, "ME"] <- abs(zz[, "ME"])
-  r  <- apply(zz, 2, rank)
-  s1 <- floor(rank(apply(r, 1, mean)))
+  r  <- floor(apply(zz, 2, rank))
+  # s1 <- floor(rank(apply(r, 1, mean)))
   s2 <- floor(rank(apply(r, 1, median)))
-  out <- list(index = what, results = z, rank = r, rankMean = s1, rankMedian = s2)
+  out <- list(index = what, results = z, rank = r, GC = s2)
   out <- structure(class = "getAccuracy", out)
   return(out)
 }
@@ -65,9 +66,9 @@ print.getAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L),
   print(round(x$results, digits))
   cat("\nRanks - Best performing models in each category:\n")
   print(x$rank)
-  cat("\nGeneral classification:\n")
-  res <- t(data.frame(MeanRank = x$rankMean, MedianRank = x$rankMedian))
-  print(res)
+  cat("\nGeneral Classification:\n")
+  # res <- t(data.frame(MeanRank = x$rankMean, MedianRank = x$rankMedian))
+  print(x$GC)
 }
 
 

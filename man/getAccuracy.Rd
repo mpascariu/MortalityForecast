@@ -31,18 +31,19 @@ before the computation proceeds.}
 Get Accuracy Measures
 }
 \examples{
-x = 0:110
-y1 = 1980:1990
-y2 = 1991:1993
+x = 0:100
+y1 = 1980:1995
+y2 = 1996:2005
 h = max(y2) - max(y1)
 
 D1 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y1)]
 D2 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
-ex <- dxForecast::dxForecast.data$ex$male
-exogen <- ex[paste(y1)]
 
-M <- doMortalityModels(data = D1, x, y1, data.type = "dx", exogen = exogen)
+MM = c("LC", "FDM", "CoDa", "M6")
+M <- doMortalityModels(data = D1, x, y1, data.type = "dx", models = MM)
 P <- doForecasts(M, h)
-A <- getAccuracy(P, D2, x = 0:90, y2, data.type = "dx", what = "ex")
+A <- getAccuracy(P, D2, x = 0:95, data.type = "dx", what = "qx")
+
 A
+plot(A)
 }

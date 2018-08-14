@@ -31,7 +31,10 @@ dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
 ex <- dxForecast::dxForecast.data$ex$male
 exogen <- ex[paste(y)]
 
-M <- doMortalityModels(data = dxm, x, y, data.type = "dx", exogen = exogen)
+MM = c("LC", "FDM", "CoDa", "M6", "M6X")
+M <- doMortalityModels(data = dxm, x, y, data.type = "dx",
+                       models = MM, exogen = exogen)
+                       
 P <- doForecasts(M, h, ci = 95, jumpchoice = "actual")
 
 pex <- getForecasts(P, what = "ex")

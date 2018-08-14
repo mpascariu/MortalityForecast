@@ -17,7 +17,9 @@
 #' ex <- dxForecast::dxForecast.data$ex$male
 #' exogen <- ex[paste(y)]
 #' 
-#' M <- doMortalityModels(data = dxm, x, y, data.type = "dx", exogen = exogen)
+#' MM = c("LC", "FDM", "CoDa", "M6", "M6X")
+#' M <- doMortalityModels(data = dxm, x, y, data.type = "dx",
+#'                        models = MM, exogen = exogen)
 #' 
 #' oex <- getObserved(M, what = "ex")
 #' fex <- getFitted(M, what = "ex")
@@ -25,7 +27,7 @@
 #' @export
 doMortalityModels <- function(data, x, y, 
                               data.type = c("qx", "mx", "dx", "lx"),
-                              models = c("LC", "PLAT", "CoDa", "M4", "M4X", 
+                              models = c("LC", "FDM", "PLAT", "CoDa", "M4", "M4X", 
                                          "M5", "M5X", "M6", "M6X"),
                               exogen = NULL, ...) {
   input <- as.list(environment())
@@ -45,6 +47,8 @@ doMortalityModels <- function(data, x, y,
   
   # LC (1992)
   if ("LC" %in% models) LC <- LC(data = mx.data, x, y)
+  # FDM (1992)
+  if ("FDM" %in% models) FDM <- FDM(data = mx.data, x, y)
   # Plat Model (2009)
   if ("PLAT" %in% models) PLAT <- PLAT(data = mx.data, x, y)
   # CoDa-LC (2008)
@@ -84,6 +88,11 @@ getFitted <- function(object,
     if (Mn[i] %in% c("LC", "PLAT")) {
       mx <- exp(fitted(M))
       dx <- convertFx(x, mx, In = "mx", Out = "dx", lx0 = 1, ...)
+      
+    } else if (Mn[i] %in% c("FDM")) {
+      mx <- exp(fitted(M)$y)
+      dx <- convertFx(x, mx, In = "mx", Out = "dx", lx0 = 1, ...)
+      
     } else {
       dx <- fitted(M)
     }

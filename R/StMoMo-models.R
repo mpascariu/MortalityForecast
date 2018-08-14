@@ -62,4 +62,24 @@ PLAT <- function(data, x, y, link = "log", lx0 = 1e5, verbose = FALSE) {
   return(PLATfit)
 }
 
+# ----------------------------------------------
+
+#' Functional Demographic Model
+#' @inheritParams LC
+#' @seealso \code{\link[demography]{fdm}}
+#' @keywords internal
+FDM <- function(data, x, y, ...) {
+  D <- demography::demogdata(data = data, ages = x, years = y, 
+                 pop = data * 0, label = "---", name = "mean", 
+                 lambda = 0, type = "mortality")
+  FDMfit <- demography::fdm(D, ...)
+  
+  dimnames(FDMfit$fitted$y) <- list(x, y)
+  
+  return(FDMfit)
+}
+
+
+
+
 

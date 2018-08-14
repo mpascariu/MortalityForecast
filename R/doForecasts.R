@@ -14,7 +14,10 @@
 #' ex <- dxForecast::dxForecast.data$ex$male
 #' exogen <- ex[paste(y)]
 #' 
-#' M <- doMortalityModels(data = dxm, x, y, data.type = "dx", exogen = exogen)
+#' MM = c("LC", "FDM", "CoDa", "M6", "M6X")
+#' M <- doMortalityModels(data = dxm, x, y, data.type = "dx",
+#'                        models = MM, exogen = exogen)
+#'                        
 #' P <- doForecasts(M, h, ci = 95, jumpchoice = "actual")
 #' 
 #' pex <- getForecasts(P, what = "ex")
@@ -33,7 +36,7 @@ doForecasts <- function(object, h, ci = 95,
     cat(Mn[i], "\n")
     M <- with(object, get(Mn[i]))
     
-    if (Mn[i] %in% c("LC", "PLAT")) {
+    if (Mn[i] %in% c("LC", "PLAT", "FDM")) {
       P <- forecast(M, h = h, jumpchoice = jumpchoice, level = ci)
     } else {
       P <- predict(M, h = h, jumpchoice = jumpchoice, ci = ci)
@@ -68,6 +71,11 @@ getForecasts <- function(object,
     if (Mn[i] %in% c("LC", "PLAT")) {
       mx <- M$rates
       dx <- convertFx(x, mx, In = "mx", Out = "dx", lx0 = 1, ...)
+      
+    } else if (Mn[i] %in% c("FDM")) {
+      mx <- M$rate$mean
+      dx <- convertFx(x, mx, In = "mx", Out = "dx", lx0 = 1, ...)
+      
     } else {
       dx <- M$predicted.values
     }
