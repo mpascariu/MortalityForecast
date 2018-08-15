@@ -7,8 +7,7 @@
 Hyndman and Koehler, 2006
 }
 \usage{
-computeAccuracy(u, u.hat, b, x = NULL, y = NULL, measures = c("ME", "MAE",
-  "MAPE", "sMAPE", "MRAE", "MASE"), na.rm = TRUE)
+computeAccuracy(u, u.hat, b, xa = NULL, ya = NULL, measures, na.rm = TRUE)
 }
 \arguments{
 \item{u}{Validation dataset.}
@@ -17,13 +16,16 @@ computeAccuracy(u, u.hat, b, x = NULL, y = NULL, measures = c("ME", "MAE",
 
 \item{b}{Benchmark forecast data. Usualy a naive or Random-Walk forecast.}
 
-\item{x}{Ages to be considered in accuracy computation. It can be used to 
+\item{xa}{Ages to be considered in accuracy computation. It can be used to 
 calculate the measures on a subset of the results. If \code{x = NULL} 
 (default) the entire age-range in \code{u} is considered.}
 
-\item{y}{Years to be considered in accuracy computation. Default: \code{NULL}.}
+\item{ya}{Years to be considered in accuracy computation. Default: \code{NULL}.}
 
-\item{measures}{What accurracy measure to compute?}
+\item{measures}{What accurracy measure to compute? Options: 
+\code{"ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE", 
+"MdE", "MdAE", "MdAPE", "sMdAPE", "MdRAE", "MdASE",
+MSE, RMSE, RMSPE, RMdSPE, GMRAE}}
 
 \item{na.rm}{A logical value indicating whether NA values should be stripped 
 before the computation proceeds.}

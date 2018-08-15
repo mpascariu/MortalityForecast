@@ -4,12 +4,14 @@
 \alias{plot.doBackTesting}
 \title{Plot method for objects of the class doBackTesting}
 \usage{
-\method{plot}{doBackTesting}(x, filter.x = c(0, 60, 70, 80, 90, 100), ...)
+\method{plot}{doBackTesting}(x, facet = c("x", "y"), which = NULL, ...)
 }
 \arguments{
 \item{x}{An object of the class \code{doBackTesting}.}
 
-\item{filter.x}{subset x vector}
+\item{facet}{What facets to include? Options: \code{"x", "y"}.}
+
+\item{which}{Which \code{x} or which \code{y} to be plotted. Numerical vector.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }

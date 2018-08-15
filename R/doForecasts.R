@@ -33,7 +33,7 @@ doForecasts <- function(object, h, ci = 95,
   
   
   for (i in 1:length(Mn)) {
-    cat(Mn[i], "\n")
+    cat(Mn[i], " ")
     M <- with(object, get(Mn[i]))
     
     if (Mn[i] %in% c("LC", "PLAT", "FDM")) {

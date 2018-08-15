@@ -4,14 +4,18 @@
 \alias{wide2long}
 \title{Wide table to long table}
 \usage{
-wide2long(data, x = NULL, filter.x = NULL, ...)
+wide2long(data, x = NULL, y = NULL, which.x = NULL, which.y = NULL, ...)
 }
 \arguments{
 \item{data}{Wide table}
 
 \item{x}{vector of ages}
 
-\item{filter.x}{subset x vector}
+\item{y}{Vector of years.}
+
+\item{which.x}{subset x vector}
+
+\item{which.y}{subset y vector}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }

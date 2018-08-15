@@ -2,7 +2,7 @@
 
 #' Get Accuracy Measures
 #' @param data Validation set of demographic data.
-#' @usage getAccuracy(object, data, x, y, data.type, what, measures, na.rm, ...)
+#' @usage getAccuracy(object, data, xa, ya, data.type, what, measures, na.rm, ...)
 #' @inheritParams doMortalityModels
 #' @inheritParams getForecasts
 #' @inheritParams computeAccuracy
@@ -18,12 +18,12 @@
 #' MM = c("LC", "FDM", "CoDa", "M6")
 #' M <- doMortalityModels(data = D1, x, y1, data.type = "dx", models = MM)
 #' P <- doForecasts(M, h)
-#' A <- getAccuracy(P, D2, x = 0:95, data.type = "dx", what = "qx")
+#' A <- getAccuracy(P, D2, xa = 0:95, data.type = "dx", what = "qx")
 #' 
 #' A
 #' plot(A)
 #' @export
-getAccuracy <- function(object, data, x = 0:100, y = NULL,
+getAccuracy <- function(object, data, xa = 0:98, ya = NULL,
                         data.type = c("qx", "mx", "dx", "lx"),
                         what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                         measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
@@ -31,10 +31,10 @@ getAccuracy <- function(object, data, x = 0:100, y = NULL,
   
   O  <- convertFx(x = object$x, data, In = data.type, Out = what, lx0 = 1, ...) # observed data
   H  <- getForecasts(object, what)                              # forecast data
-  B  <- H$LC # Benchmark: Lee-Carter for now.
+  B  <- H[[1]] # Benchmark: Lee-Carter for now.
   Mn <- object$input$object$input$models # Model names
   
-  fn <- function(X) computeAccuracy(O, X, B, x, y, measures, na.rm)
+  fn <- function(X) computeAccuracy(O, X, B, xa, ya, measures, na.rm)
   A  <- lapply(H, fn)
   z  <- NULL
   
@@ -42,14 +42,24 @@ getAccuracy <- function(object, data, x = 0:100, y = NULL,
     z <- rbind(z, A[[i]]) 
   }
   rownames(z) <- Mn
+  R  <- doRanking(z)
   
+  out <- list(index = what, results = z, rank = R$rank, GC = R$GC)
+  out <- structure(class = "getAccuracy", out)
+  return(out)
+}
+
+
+#' Rank models based on the accuracy results
+#' @param z Accuracy measures
+#' @keywords internal
+#' @export
+doRanking <- function(z) {
   zz <- z
   zz[, "ME"] <- abs(zz[, "ME"])
   r  <- floor(apply(zz, 2, rank))
-  # s1 <- floor(rank(apply(r, 1, mean)))
   s2 <- floor(rank(apply(r, 1, median)))
-  out <- list(index = what, results = z, rank = r, GC = s2)
-  out <- structure(class = "getAccuracy", out)
+  out <- list(rank = r, GC = s2)
   return(out)
 }
 
@@ -77,23 +87,25 @@ print.getAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L),
 #' @param u Validation dataset.
 #' @param u.hat In-sample forecast data.
 #' @param b Benchmark forecast data. Usualy a naive or Random-Walk forecast.
-#' @param x Ages to be considered in accuracy computation. It can be used to 
+#' @param xa Ages to be considered in accuracy computation. It can be used to 
 #' calculate the measures on a subset of the results. If \code{x = NULL} 
 #' (default) the entire age-range in \code{u} is considered.
-#' @param y Years to be considered in accuracy computation. Default: \code{NULL}.
-#' @param measures What accurracy measure to compute? 
+#' @param ya Years to be considered in accuracy computation. Default: \code{NULL}.
+#' @param measures What accurracy measure to compute? Options: 
+#' \code{"ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE", 
+#' "MdE", "MdAE", "MdAPE", "sMdAPE", "MdRAE", "MdASE",
+#' MSE, RMSE, RMSPE, RMdSPE, GMRAE}
 #' @param na.rm A logical value indicating whether NA values should be stripped 
 #' before the computation proceeds.
 #' @source Hyndman and Koehler, 2006
 #' @keywords internal
 #' @export
-computeAccuracy <- function(u, u.hat, b, x = NULL, y = NULL,
-                            measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
-                            na.rm = TRUE){
-  if (is.null(x)) x <- rownames(u)
-  if (is.null(y)) y <- colnames(u)
-  L1 <- rownames(u) %in% x
-  L2 <- colnames(u) %in% y
+computeAccuracy <- function(u, u.hat, b, xa = NULL, ya = NULL,
+                            measures, na.rm = TRUE){
+  if (is.null(xa)) xa <- rownames(u)
+  if (is.null(ya)) ya <- colnames(u)
+  L1 <- rownames(u) %in% xa
+  L2 <- colnames(u) %in% ya
     
   u.hat <- as.matrix(u.hat[L1, L2])
   u <- as.matrix(u[L1, L2])

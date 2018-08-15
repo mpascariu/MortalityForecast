@@ -4,23 +4,28 @@
 \alias{getAccuracy}
 \title{Get Accuracy Measures}
 \usage{
-getAccuracy(object, data, x, y, data.type, what, measures, na.rm, ...)
+getAccuracy(object, data, xa, ya, data.type, what, measures, na.rm, ...)
 }
 \arguments{
 \item{object}{An object of the class \code{doForecasts}.}
 
 \item{data}{Validation set of demographic data.}
 
-\item{x}{Vector of ages.}
+\item{xa}{Ages to be considered in accuracy computation. It can be used to 
+calculate the measures on a subset of the results. If \code{x = NULL} 
+(default) the entire age-range in \code{u} is considered.}
 
-\item{y}{Vector of years.}
+\item{ya}{Years to be considered in accuracy computation. Default: \code{NULL}.}
 
 \item{data.type}{Type of data in 'data' argument. Options: 
 \code{"qx", "mx", "dx", "lx"}.}
 
 \item{what}{Specify the type of values to be extracted.}
 
-\item{measures}{What accurracy measure to compute?}
+\item{measures}{What accurracy measure to compute? Options: 
+\code{"ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE", 
+"MdE", "MdAE", "MdAPE", "sMdAPE", "MdRAE", "MdASE",
+MSE, RMSE, RMSPE, RMdSPE, GMRAE}}
 
 \item{na.rm}{A logical value indicating whether NA values should be stripped 
 before the computation proceeds.}
@@ -42,7 +47,7 @@ D2 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
 MM = c("LC", "FDM", "CoDa", "M6")
 M <- doMortalityModels(data = D1, x, y1, data.type = "dx", models = MM)
 P <- doForecasts(M, h)
-A <- getAccuracy(P, D2, x = 0:95, data.type = "dx", what = "qx")
+A <- getAccuracy(P, D2, xa = 0:95, data.type = "dx", what = "qx")
 
 A
 plot(A)

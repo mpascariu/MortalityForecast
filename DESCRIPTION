@@ -1,7 +1,7 @@
 Package: MortalityAccuracy
 Type: Package
 Title: Standard tools to compare and evaluate mortality forecasting methods
-Version: 0.0.10
+Version: 0.1.0
 Date: 2018-08-08
 Authors@R: c(
   person("Marius D.", "Pascariu", role = c("aut", "cre"), 
@@ -19,13 +19,11 @@ Imports:
   StMoMo (>= 0.4.1),
   demography (>= 1.20),
   forecast (>= 8.4),
-  dplyr (>= 0.7.6),
   tidyr (>= 0.8.1),
   ggplot2 (>= 3.0.0),
   grid (>= 3.5.0),
   gridExtra (>= 2.3),
   gtable (>= 0.2.0),
-  pbapply (>= 1.3-4)
 Suggests:
   knitr,
   rmarkdown,

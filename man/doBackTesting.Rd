@@ -4,9 +4,10 @@
 \alias{doBackTesting}
 \title{Perform in-sample testing of mortality forecasts}
 \usage{
-doBackTesting(data, x, y.fit, y.for, data.type, what, exogen, ci = 95,
-  jumpchoice = "actual", measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE",
-  "MASE"), models = c("LC", "PLAT", "CoDa", "M4", "M4X", "M5", "M5X", "M6",
+doBackTesting(data, x, y.fit, y.for, data.type, what, exogen = NULL,
+  ci = 95, jumpchoice = "actual", xa = NULL, ya = NULL,
+  measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
+  models = c("LC", "FDM", "PLAT", "CoDa", "M4", "M4X", "M5", "M5X", "M6",
   "M6X"), ...)
 }
 \arguments{
@@ -15,9 +16,9 @@ that is the data coresponding to the horizon to be predicted.}
 
 \item{x}{Vector of ages.}
 
-\item{y.fit}{Years to be considered in fitting}
+\item{y.fit}{Years to be considered in fitting.}
 
-\item{y.for}{Years to be forecast}
+\item{y.for}{Years to be forecast.}
 
 \item{data.type}{Type of data in 'data' argument. Options: 
 \code{"qx", "mx", "dx", "lx"}.}
@@ -32,7 +33,16 @@ that is the data coresponding to the horizon to be predicted.}
 Possibilities: \code{"actual"} (use actual rates from final year) 
 and \code{"fit"} (use fitted rates).}
 
-\item{measures}{What accurracy measure to compute?}
+\item{xa}{Ages to be considered in accuracy computation. It can be used to 
+calculate the measures on a subset of the results. If \code{x = NULL} 
+(default) the entire age-range in \code{u} is considered.}
+
+\item{ya}{Years to be considered in accuracy computation. Default: \code{NULL}.}
+
+\item{measures}{What accurracy measure to compute? Options: 
+\code{"ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE", 
+"MdE", "MdAE", "MdAPE", "sMdAPE", "MdRAE", "MdASE",
+MSE, RMSE, RMSPE, RMdSPE, GMRAE}}
 
 \item{models}{Mortality models to be evaluated.}
 
@@ -40,4 +50,29 @@ and \code{"fit"} (use fitted rates).}
 }
 \description{
 Perform in-sample testing of mortality forecasts
+}
+\examples{
+x = 0:98
+y1 = 1980:1999
+y2 = 2000:2016
+y  = c(y1, y2)
+h = max(y2) - max(y1)
+
+D <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
+ex <- dxForecast::dxForecast.data$ex$male
+exogen <- ex[paste(y1)]
+
+MM <- c("LC", "CoDa", "M6")
+B.ex <- doBackTesting(data = D, x = x, 
+                      y.fit = y1, y.for = y2, 
+                      data.type = "dx", 
+                      what = "mx", 
+                      exogen = exogen,
+                      models = MM)
+
+plot(B.ex, facet = "x")
+
+plot(B.ex, facet = "y") #+ 
+  #scale_y_continuous(trans='log10')
+
 }

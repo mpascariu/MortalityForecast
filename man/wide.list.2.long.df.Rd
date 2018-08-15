@@ -4,14 +4,18 @@
 \alias{wide.list.2.long.df}
 \title{List containing wide tables to 1 long table}
 \usage{
-wide.list.2.long.df(data, x, filter.x = NULL, ...)
+wide.list.2.long.df(data, x, y, which.x = NULL, which.y = NULL, ...)
 }
 \arguments{
 \item{data}{Wide table}
 
 \item{x}{vector of ages}
 
-\item{filter.x}{subset x vector}
+\item{y}{Vector of years.}
+
+\item{which.x}{subset x vector}
+
+\item{which.y}{subset y vector}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }
