@@ -7,7 +7,8 @@
 Hyndman and Koehler, 2006
 }
 \usage{
-computeAccuracy(u, u.hat, b, xa = NULL, ya = NULL, measures, na.rm = TRUE)
+computeAccuracy(u, u.hat, b, xa = NULL, ya = NULL, measures,
+  na.rm = TRUE)
 }
 \arguments{
 \item{u}{Validation dataset.}

@@ -1,5 +1,6 @@
-#' MortalityAccuracy Package
-#'
+
+# MortalityForecast Package
+
 #' @import dxForecast CoDa gnm
 #' @importFrom StMoMo StMoMo lc genWeightMat
 #' @importFrom tidyr gather
@@ -16,4 +17,4 @@
 #' @importFrom forecast forecast
 #' @name MortalityAccuracy-package
 #' @docType package
-NULL
+"_PACKAGE"

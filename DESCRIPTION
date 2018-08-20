@@ -1,10 +1,10 @@
-Package: MortalityAccuracy
+Package: MortalityForecast
 Type: Package
 Title: Standard tools to compare and evaluate mortality forecasting methods
-Version: 0.1.0
-Date: 2018-08-08
+Version: 0.1.1
+Date: 2018-08-20
 Authors@R: c(
-  person("Marius D.", "Pascariu", role = c("aut", "cre"), 
+  person("Marius D.", "Pascariu", role = c("aut", "cre", "cph"), 
   email = "rpascariu@outlook.com"))
 Description: Standard tools to compare and evaluate mortality forecasting methods.
 License: GPL-3
@@ -23,13 +23,13 @@ Imports:
   ggplot2 (>= 3.0.0),
   grid (>= 3.5.0),
   gridExtra (>= 2.3),
-  gtable (>= 0.2.0),
+  gtable (>= 0.2.0)
 Suggests:
   knitr,
   rmarkdown,
   covr,
   testthat
-URL: https://github.com/mpascariu/MortalityAccuracy
-BugReports: https://github.com/mpascariu/MortalityAccuracy/issues
-RoxygenNote: 6.0.1
+URL: https://github.com/mpascariu/MortalityForecast
+BugReports: https://github.com/mpascariu/MortalityForecast/issues
+RoxygenNote: 6.1.0
 VignetteBuilder: knitr

@@ -4,7 +4,8 @@
 \alias{getObserved}
 \title{Get Observed Values}
 \usage{
-getObserved(object, what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"), ...)
+getObserved(object, what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+  ...)
 }
 \arguments{
 \item{object}{An object of the class \code{MortalityModels}.}

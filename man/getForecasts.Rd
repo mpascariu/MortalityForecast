@@ -4,7 +4,8 @@
 \alias{getForecasts}
 \title{Get Predicted Values}
 \usage{
-getForecasts(object, what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"), ...)
+getForecasts(object, what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+  ...)
 }
 \arguments{
 \item{object}{An object of the class \code{doForecasts}.}

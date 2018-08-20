@@ -4,7 +4,8 @@
 \alias{wide2long}
 \title{Wide table to long table}
 \usage{
-wide2long(data, x = NULL, y = NULL, which.x = NULL, which.y = NULL, ...)
+wide2long(data, x = NULL, y = NULL, which.x = NULL, which.y = NULL,
+  ...)
 }
 \arguments{
 \item{data}{Wide table}

@@ -4,7 +4,8 @@
 \alias{getResiduals}
 \title{Get Deviance Residuals}
 \usage{
-getResiduals(object, what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"), ...)
+getResiduals(object, what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+  ...)
 }
 \arguments{
 \item{object}{An object of the class \code{MortalityModels}.}

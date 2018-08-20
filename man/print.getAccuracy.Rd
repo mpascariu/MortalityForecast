@@ -4,8 +4,8 @@
 \alias{print.getAccuracy}
 \title{Print getAccuracy}
 \usage{
-\method{print}{getAccuracy}(x, digits = max(3L, getOption("digits") - 3L),
-  ...)
+\method{print}{getAccuracy}(x, digits = max(3L, getOption("digits") -
+  3L), ...)
 }
 \arguments{
 \item{x}{An object of the class \code{getAccuracy}}
