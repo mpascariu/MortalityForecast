@@ -1,7 +1,7 @@
 Package: MortalityForecast
 Type: Package
 Title: Standard tools to compare and evaluate mortality forecasting methods
-Version: 0.1.1
+Version: 0.1.2
 Date: 2018-08-20
 Authors@R: c(
   person("Marius D.", "Pascariu", role = c("aut", "cre", "cph"), 
@@ -11,14 +11,13 @@ License: GPL-3
 LazyData: TRUE
 Depends: 
   R (>= 3.4.0), 
-  gnm
 Imports:
   dxForecast (>= 0.4.8),
-  MortalityLaws (>= 1.5.6),
+  MortalityLaws (>= 1.5.10),
   CoDa (>= 0.9.8),
   StMoMo (>= 0.4.1),
-  demography (>= 1.20),
   forecast (>= 8.4),
+  demography (>= 1.20),
   tidyr (>= 0.8.1),
   ggplot2 (>= 3.0.0),
   grid (>= 3.5.0),

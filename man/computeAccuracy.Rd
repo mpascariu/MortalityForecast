@@ -23,10 +23,12 @@ calculate the measures on a subset of the results. If \code{x = NULL}
 
 \item{ya}{Years to be considered in accuracy computation. Default: \code{NULL}.}
 
-\item{measures}{What accurracy measure to compute? Options: 
-\code{"ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE", 
-"MdE", "MdAE", "MdAPE", "sMdAPE", "MdRAE", "MdASE",
-MSE, RMSE, RMSPE, RMdSPE, GMRAE}}
+\item{measures}{What accurracy measure to compute? Various alternatives are 
+available, \itemize{
+\item{Mean error measures: } \code{"ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"};
+\item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "MdRAE", "MdASE"};
+\item{Squared error measures: } \code{"MSE", "RMSE", "RMSPE", "RMdSPE"};
+\item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}}
 
 \item{na.rm}{A logical value indicating whether NA values should be stripped 
 before the computation proceeds.}

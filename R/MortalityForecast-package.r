@@ -1,8 +1,9 @@
 
 # MortalityForecast Package
 
-#' @import dxForecast CoDa gnm
+#' @import dxForecast CoDa
 #' @importFrom StMoMo StMoMo lc genWeightMat
+#' @importFrom forecast forecast
 #' @importFrom tidyr gather
 #' @importFrom MortalityLaws convertFx
 #' @importFrom demography demogdata fdm
@@ -14,7 +15,6 @@
 #' @importFrom gtable gtable_add_grob
 #' @importFrom stats predict fitted median coef lm na.omit quantile
 #' @importFrom utils tail
-#' @importFrom forecast forecast
 #' @name MortalityAccuracy-package
 #' @docType package
 "_PACKAGE"
