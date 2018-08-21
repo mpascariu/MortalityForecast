@@ -1,7 +1,7 @@
 Package: MortalityForecast
 Type: Package
 Title: Standard tools to compare and evaluate mortality forecasting methods
-Version: 0.1.2
+Version: 0.2.0
 Date: 2018-08-20
 Authors@R: c(
   person("Marius D.", "Pascariu", role = c("aut", "cre", "cph"), 
@@ -9,25 +9,29 @@ Authors@R: c(
 Description: Standard tools to compare and evaluate mortality forecasting methods.
 License: GPL-3
 LazyData: TRUE
-Depends: 
-  R (>= 3.4.0), 
+Depends: R (>= 3.4.0)
 Imports:
   dxForecast (>= 0.4.8),
   MortalityLaws (>= 1.5.10),
-  CoDa (>= 0.9.8),
   StMoMo (>= 0.4.1),
   forecast (>= 8.4),
   demography (>= 1.20),
+  compositions (>= 1.40-2),
   tidyr (>= 0.8.1),
   ggplot2 (>= 3.0.0),
   grid (>= 3.5.0),
   gridExtra (>= 2.3),
-  gtable (>= 0.2.0)
+  gtable (>= 0.2.0),
+  fields (>= 8.2), 
+  RColorBrewer (>= 1.1-2),
+  Rdpack (>= 0.9-0)
 Suggests:
   knitr,
   rmarkdown,
   covr,
   testthat
+RdMacros: 
+  Rdpack
 URL: https://github.com/mpascariu/MortalityForecast
 BugReports: https://github.com/mpascariu/MortalityForecast/issues
 RoxygenNote: 6.1.0

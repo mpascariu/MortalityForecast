@@ -3,9 +3,6 @@
 \name{computeAccuracy}
 \alias{computeAccuracy}
 \title{Get Measures of Forecast Accuracy}
-\source{
-Hyndman and Koehler, 2006
-}
 \usage{
 computeAccuracy(u, u.hat, b, xa = NULL, ya = NULL, measures,
   na.rm = TRUE)
@@ -35,5 +32,12 @@ before the computation proceeds.}
 }
 \description{
 Get Measures of Forecast Accuracy
+}
+\details{
+See \insertCite{hyndman2006;textual}{MortalityForecast} for a 
+comprehensive discussion of the accuracy measures.
+}
+\references{
+\insertAllCited{}
 }
 \keyword{internal}

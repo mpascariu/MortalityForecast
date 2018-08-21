@@ -13,12 +13,12 @@
 #' @examples 
 #' x = 0:100
 #' y = 2005:2016
-#' dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
-#' ex <- dxForecast::dxForecast.data$ex$male
+#' D  <- MortalityForecast.data$dx[paste(x), paste(y)]
+#' ex <- MortalityForecast.data$ex
 #' exogen <- ex[paste(y)]
 #' 
 #' MM = c("LC", "FDM", "CoDa", "M6", "M6X")
-#' M <- doMortalityModels(data = dxm, x, y, data.type = "dx",
+#' M <- doMortalityModels(data = D, x, y, data.type = "dx",
 #'                        models = MM, exogen = exogen)
 #' 
 #' oex <- getObserved(M, what = "ex")
@@ -27,8 +27,8 @@
 #' @export
 doMortalityModels <- function(data, x, y, 
                               data.type = c("qx", "mx", "dx", "lx"),
-                              models = c("LC", "FDM", "PLAT", "CoDa", "M4", "M4X", 
-                                         "M5", "M5X", "M6", "M6X"),
+                              models = c("MRW", "MRWD","LC", "FDM", "PLAT", "CoDa", 
+                                         "M4", "M4X", "M5", "M5X", "M6", "M6X"),
                               exogen = NULL, ...) {
   input <- as.list(environment())
   data.type <- match.arg(data.type)
@@ -39,12 +39,10 @@ doMortalityModels <- function(data, x, y,
   # qx.data <- convertFx(x, data, In = data.type, Out = "qx", lx0 = 1) # not needed now
   # lx.data <- convertFx(x, data, In = data.type, Out = "lx", lx0 = 1)
 
-  # # The Naive model
-  # M0 <- list(fitted.values = dx.data * 0 + dx.data[, length(y)])
-
+  # The Naive model - Multivariate Random-Walk
+  if ("MRW" %in% models) MRW <- MRW(data = log(mx.data), x, y, include.drift = FALSE)
   # Random Walk with drift
-  # M1 <- StMoMo::mrwd(mx.data)
-  
+  if ("MRWD" %in% models) MRWD <- MRW(data = log(mx.data), x, y, include.drift = TRUE)
   # LC (1992)
   if ("LC" %in% models) LC <- LC(data = mx.data, x, y)
   # FDM (1992)
@@ -52,7 +50,7 @@ doMortalityModels <- function(data, x, y,
   # Plat Model (2009)
   if ("PLAT" %in% models) PLAT <- PLAT(data = mx.data, x, y)
   # CoDa-LC (2008)
-  if ("CoDa" %in% models) CoDa <- CoDa::coda(data = dx.data, x, y)
+  if ("CoDa" %in% models) CoDa <- coda(data = dx.data, x, y)
   # Mortality Moments Model - PLC (2018)
   if ("M4" %in% models)  M4 <- lenart(data = dx.data, x, y, n = 4)
   if ("M4X" %in% models) M4X <- lenart(data = dx.data, x, y, n = 4, exogen = exogen)
@@ -87,7 +85,7 @@ getFitted <- function(object,
   for (i in 1:length(Mn)) {
     M <- with(object, get(Mn[i]))
     
-    if (Mn[i] %in% c("LC", "PLAT")) {
+    if (Mn[i] %in% c("MRW", "MRWD", "LC", "PLAT")) {
       mx <- exp(fitted(M))
       dx <- convertFx(x, mx, In = "mx", Out = "dx", lx0 = 1, ...)
       

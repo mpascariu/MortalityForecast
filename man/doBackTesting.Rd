@@ -5,7 +5,7 @@
 \title{Perform in-sample testing of mortality forecasts}
 \usage{
 doBackTesting(data, x, y.fit, y.for, data.type, what, exogen = NULL,
-  ci = 95, jumpchoice = "actual", xa = NULL, ya = NULL,
+  level = 95, jumpchoice = "actual", xa = NULL, ya = NULL,
   measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
   models = c("LC", "FDM", "PLAT", "CoDa", "M4", "M4X", "M5", "M5X", "M6",
   "M6X"), ...)
@@ -27,7 +27,7 @@ that is the data coresponding to the horizon to be predicted.}
 
 \item{exogen}{Inlusion of exogenous variables.}
 
-\item{ci}{Confidence level for prediction intervals.}
+\item{level}{Confidence level for prediction intervals.}
 
 \item{jumpchoice}{Method used for computation of jumpchoice. 
 Possibilities: \code{"actual"} (use actual rates from final year) 
@@ -54,27 +54,22 @@ available, \itemize{
 Perform in-sample testing of mortality forecasts
 }
 \examples{
-x = 0:98
-y1 = 1980:1999
-y2 = 2000:2016
+x = 0:98              # Ages
+y1 = 1980:2000        # Training period
+y2 = 2001:2016        # Validation period
 y  = c(y1, y2)
-h = max(y2) - max(y1)
+h = max(y2) - max(y1) # Forecasting horizon
 
-D <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
-ex <- dxForecast::dxForecast.data$ex$male
-exogen <- ex[paste(y1)]
+D <- MortalityForecast.data$dx[paste(x), paste(y)] # DATA
 
-MM <- c("LC", "CoDa", "M6")
+MM <- c("MRW", "MRWD", "LC", "CoDa", "M6")
 B.ex <- doBackTesting(data = D, x = x, 
                       y.fit = y1, y.for = y2, 
                       data.type = "dx", 
-                      what = "mx", 
-                      exogen = exogen,
+                      what = "ex", 
                       models = MM)
+B.ex$accuracy
 
 plot(B.ex, facet = "x")
-
-plot(B.ex, facet = "y") #+ 
-  #scale_y_continuous(trans='log10')
-
+plot(B.ex, facet = "y")  
 }

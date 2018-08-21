@@ -37,20 +37,27 @@ before the computation proceeds.}
 \description{
 Get Accuracy Measures
 }
+\details{
+See \insertCite{hyndman2006;textual}{MortalityForecast} for a 
+comprehensive discussion of the accuracy measures.
+}
 \examples{
-x = 0:100
-y1 = 1980:1995
-y2 = 1996:2005
-h = max(y2) - max(y1)
+x = 0:100             # Ages
+y1 = 1980:1995        # Training period
+y2 = 1996:2005        # Validation period
+h = max(y2) - max(y1) # Forecasting horizon
 
-D1 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y1)]
-D2 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
+D1 <- MortalityForecast.data$dx[paste(x), paste(y1)]
+D2 <- MortalityForecast.data$dx[paste(x), paste(y2)]
 
-MM = c("LC", "FDM", "CoDa", "M6")
+MM = c("MRWD", "LC", "FDM", "CoDa", "M6")
 M <- doMortalityModels(data = D1, x, y1, data.type = "dx", models = MM)
 P <- doForecasts(M, h)
 A <- getAccuracy(P, D2, xa = 0:95, data.type = "dx", what = "qx")
 
 A
 plot(A)
+}
+\references{
+\insertAllCited{}
 }

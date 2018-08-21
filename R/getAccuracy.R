@@ -6,16 +6,17 @@
 #' @inheritParams doMortalityModels
 #' @inheritParams getForecasts
 #' @inheritParams computeAccuracy
+#' @inherit computeAccuracy details references
 #' @examples 
-#' x = 0:100
-#' y1 = 1980:1995
-#' y2 = 1996:2005
-#' h = max(y2) - max(y1)
+#' x = 0:100             # Ages
+#' y1 = 1980:1995        # Training period
+#' y2 = 1996:2005        # Validation period
+#' h = max(y2) - max(y1) # Forecasting horizon
 #' 
-#' D1 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y1)]
-#' D2 <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y2)]
+#' D1 <- MortalityForecast.data$dx[paste(x), paste(y1)]
+#' D2 <- MortalityForecast.data$dx[paste(x), paste(y2)]
 #' 
-#' MM = c("LC", "FDM", "CoDa", "M6")
+#' MM = c("MRWD", "LC", "FDM", "CoDa", "M6")
 #' M <- doMortalityModels(data = D1, x, y1, data.type = "dx", models = MM)
 #' P <- doForecasts(M, h)
 #' A <- getAccuracy(P, D2, xa = 0:95, data.type = "dx", what = "qx")
@@ -99,7 +100,9 @@ print.getAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L),
 #' \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}
 #' @param na.rm A logical value indicating whether NA values should be stripped 
 #' before the computation proceeds.
-#' @source Hyndman and Koehler, 2006
+#' @details See \insertCite{hyndman2006;textual}{MortalityForecast} for a 
+#' comprehensive discussion of the accuracy measures.
+#' @references \insertAllCited{}
 #' @keywords internal
 #' @export
 computeAccuracy <- function(u, u.hat, b, xa = NULL, ya = NULL,
@@ -161,10 +164,8 @@ computeAccuracy <- function(u, u.hat, b, xa = NULL, ya = NULL,
   # An alternative way of scaling is to divide each error by
   # the error obtaned using another standard method of forecasting (benchmark method).
   
-  bE  <- u - b
-  RE  <- E[bE > 0]/bE[bE > 0] # relative errors.
-  RAE <- abs(RE)
-  # Added a very small number in b.errors to avoid divizion by zero.
+  bE  <- u - b        # benchmark errors
+  RAE <- AE/abs(bE)  # relative absolute errors.
   
   # 13.Mean Relative Absolute Error
   MRAE <- mean(RAE, na.rm = N)

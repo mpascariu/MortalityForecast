@@ -9,33 +9,28 @@
 #' @inheritParams doForecasts
 #' @inheritParams getAccuracy
 #' @examples 
-#' x = 0:98
-#' y1 = 1980:1999
-#' y2 = 2000:2016
+#' x = 0:98              # Ages
+#' y1 = 1980:2000        # Training period
+#' y2 = 2001:2016        # Validation period
 #' y  = c(y1, y2)
-#' h = max(y2) - max(y1)
+#' h = max(y2) - max(y1) # Forecasting horizon
 #' 
-#' D <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
-#' ex <- dxForecast::dxForecast.data$ex$male
-#' exogen <- ex[paste(y1)]
+#' D <- MortalityForecast.data$dx[paste(x), paste(y)] # DATA
 #' 
-#' MM <- c("LC", "CoDa", "M6")
+#' MM <- c("MRW", "MRWD", "LC", "CoDa", "M6")
 #' B.ex <- doBackTesting(data = D, x = x, 
 #'                       y.fit = y1, y.for = y2, 
 #'                       data.type = "dx", 
-#'                       what = "mx", 
-#'                       exogen = exogen,
+#'                       what = "ex", 
 #'                       models = MM)
+#' B.ex$accuracy
 #' 
 #' plot(B.ex, facet = "x")
-#' 
-#' plot(B.ex, facet = "y") #+ 
-#'   #scale_y_continuous(trans='log10')
-#' 
+#' plot(B.ex, facet = "y")  
 #' @export
 doBackTesting <- function(data, x, 
                           y.fit, y.for, data.type, what, 
-                          exogen = NULL, ci = 95, jumpchoice = "actual", 
+                          exogen = NULL, level = 95, jumpchoice = "actual", 
                           xa = NULL, ya = NULL,
                           measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"), 
                           models = c("LC", "FDM", "PLAT", "CoDa", "M4", "M4X", 
@@ -50,7 +45,7 @@ doBackTesting <- function(data, x,
   
   # Fit - Forecast - Check Accuracy
   M <- doMortalityModels(training.set, x, y.fit, data.type, models, exogen = exogen)
-  P <- doForecasts(M, h, ci, jumpchoice)
+  P <- doForecasts(M, h, level, jumpchoice)
   A <- getAccuracy(P, validation.set, xa, ya, data.type, what, measures, ...)
   
   # Datasets used

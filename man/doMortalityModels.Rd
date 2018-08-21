@@ -5,8 +5,8 @@
 \title{Wrapper for function dealing with mortality models}
 \usage{
 doMortalityModels(data, x, y, data.type = c("qx", "mx", "dx", "lx"),
-  models = c("LC", "FDM", "PLAT", "CoDa", "M4", "M4X", "M5", "M5X", "M6",
-  "M6X"), exogen = NULL, ...)
+  models = c("MRW", "MRWD", "LC", "FDM", "PLAT", "CoDa", "M4", "M4X",
+  "M5", "M5X", "M6", "M6X"), exogen = NULL, ...)
 }
 \arguments{
 \item{data}{Mortality data}
@@ -30,12 +30,12 @@ Wrapper for function dealing with mortality models
 \examples{
 x = 0:100
 y = 2005:2016
-dxm <- dxForecast::dxForecast.data$dx$male[paste(x), paste(y)]
-ex <- dxForecast::dxForecast.data$ex$male
+D  <- MortalityForecast.data$dx[paste(x), paste(y)]
+ex <- MortalityForecast.data$ex
 exogen <- ex[paste(y)]
 
 MM = c("LC", "FDM", "CoDa", "M6", "M6X")
-M <- doMortalityModels(data = dxm, x, y, data.type = "dx",
+M <- doMortalityModels(data = D, x, y, data.type = "dx",
                        models = MM, exogen = exogen)
 
 oex <- getObserved(M, what = "ex")
