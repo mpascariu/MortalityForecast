@@ -27,7 +27,7 @@ Default: \code{TRUE}.}
 An object of class the \code{"MRW"} with components:
 \item{input}{ A list with the input data.}
 \item{drift}{ A vector with the estimated drift.}
-\item{vcov}{ A matrix with the estimated variance covariance matrix.}
+\item{sigma}{ A matrix with the estimated variance covariance matrix.}
 \item{fitted}{ Fitted values.}
 \item{residuals}{ Residuals from the fitted model. That is 
 observed minus fitted values.}

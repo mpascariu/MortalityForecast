@@ -20,7 +20,7 @@
 #' @return An object of class the \code{"MRW"} with components:
 #' \item{input}{ A list with the input data.}
 #' \item{drift}{ A vector with the estimated drift.}
-#' \item{vcov}{ A matrix with the estimated variance covariance matrix.}
+#' \item{sigma}{ A matrix with the estimated variance covariance matrix.}
 #' \item{fitted}{ Fitted values.}
 #' \item{residuals}{ Residuals from the fitted model. That is 
 #' observed minus fitted values.}
@@ -58,11 +58,11 @@ MRW <- function(data, x = NULL, y = NULL, include.drift = TRUE, ...) {
   # Fit the model
   fit  <- cbind(array(NA, c(nx, 1)), data[, -ny] + array(d, c(nx, ny - 1)))
   res  <- data - fit
-  vcov <- cov(t(res), use = "complete.obs")
+  sigma <- cov(t(res), use = "complete.obs")
   dimnames(fit) <- dimnames(res) <- dimnames(data)
   
   # Exit
-  out <- list(input = input, drift = d, vcov = vcov, fitted = fit, 
+  out <- list(input = input, drift = d, sigma = sigma, fitted = fit, 
               residuals = res, x = x, y = y)
   out <- structure(class = "MRW", out)  
   return(out)
@@ -97,18 +97,21 @@ predict.MRW <- function(object, h = 10, level = c(80, 95), ...) {
   mean <- data[, ny] + t(array(nn, c(h, nx))) * array(object$drift, c(nx, h))
   dimnames(mean) <- list(x = xf, y = yf)
   
-  vcov  <- object$vcov
-  se    <- sqrt(t(array(nn, c(h, nx))) * array(diag(vcov), c(nx, h)))
+  sigma <- object$sigma
+  se    <- sqrt(t(array(nn, c(h, nx))) * array(diag(sigma), c(nx, h)))
   nconf <- length(level)
   z     <- qnorm((1 - level/100)/2)
-  dn    <- list(rownames(data), yf, paste0(level, "%"))
-  lower <- upper <- array(NA, c(nx, h, nconf), dimnames = dn)
+  lower <- upper <- list()
   
   for (i in 1:nconf) {
-    lower[, , i] <- mean - z[i] * se
-    upper[, , i] <- mean + z[i] * se
+    lower[[i]] <- mean - z[i] * se
+    upper[[i]] <- mean + z[i] * se
   }
-  out <- list(predicted.values = mean, lower = lower, upper = upper,
+  
+  dn <- apply(expand.grid(c("L", "U"), level), 1, paste, collapse = "")
+  CI <- c(lower, upper)
+  names(CI) <- dn
+  out <- list(predicted.values = mean, conf.intervals = CI,
               x = xf, y = yf)
   out <- structure(class = "predict.MRW", out)  
   return(out)
