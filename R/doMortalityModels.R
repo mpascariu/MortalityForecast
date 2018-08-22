@@ -1,39 +1,46 @@
 
 
-#' Wrapper for function dealing with mortality models
+#' Wrapper for Function Fitting Stochastic Mortality Models
 #' 
-#' @param data Mortality data
-#' @param x Vector of ages.
-#' @param y Vector of years.
-#' @param data.type Type of data in 'data' argument. Options: 
-#' \code{"qx", "mx", "dx", "lx"}.
+#' @param data A data.frame or a matrix containing mortality data 
+#' with ages \code{x} as row and time \code{y} as column.
+#' @param x Numerical vector indicating the ages in input \code{data}. Optional.
+#' Default: \code{NULL}.
+#' @param y Numerical vector indicating the years in input \code{data}. Optional.
+#' Default: \code{NULL}.
+#' @param data.in Specify the type of input \code{data}. Various life table 
+#' indices are accepted: \code{"qx", "mx", "dx", "lx"}.
 #' @param models Mortality models to be evaluated.
+#' @param verbose A logical value. Set \code{verbose = FALSE} to silent 
+#' the process that take place inside the function and avoid progress messages.
 #' @param ... Arguments to be passed to or from other methods.
-#' @inheritParams MEM
 #' @examples 
 #' x  <- 0:100
 #' y  <- 2005:2016
 #' D  <- MortalityForecast.data$dx[paste(x), paste(y)]
 #' MM <- c("LC", "FDM", "CoDa", "M6")
 #' 
-#' M <- doMortalityModels(data = D, x, y, data.type = "dx", models = MM)
+#' M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 #' 
-#' oex <- getObserved(M, what = "ex")
-#' fex <- getFitted(M, what = "ex")
-#' rex <- getResiduals(M, what = "ex")
+#' oex <- getObserved(M, data.out = "ex")
+#' fex <- getFitted(M, data.out = "ex")
+#' rex <- getResiduals(M, data.out = "ex")
 #' @export
-doMortalityModels <- function(data, x, y, 
-                              data.type = c("qx", "mx", "dx", "lx"),
-                              models = c("MRW", "MRWD","LC", "FDM", "PLAT", "CoDa", 
-                                         "M4", "M5", "M6"), ...) {
-  input <- as.list(environment())
-  data.type <- match.arg(data.type)
-  call <-  match.call()
+doMortalityModels <- function(data, x = NULL, y = NULL, 
+                              data.in = c("qx", "mx", "dx", "lx"),
+                              models = c("MRWD","LC"),
+                              verbose = TRUE, ...) {
   
-  mx.data <- convertFx(x, data, In = data.type, Out = "mx", lx0 = 1, ...)
-  dx.data <- convertFx(x, data, In = data.type, Out = "dx", lx0 = 1, ...)
-  # qx.data <- convertFx(x, data, In = data.type, Out = "qx", lx0 = 1) # not needed now
-  # lx.data <- convertFx(x, data, In = data.type, Out = "lx", lx0 = 1)
+  data.in <- match.arg(data.in)
+  input   <- as.list(environment())
+  call    <- match.call()
+  x <- x %||% 1:nrow(data)
+  y <- y %||% 1:ncol(data)
+  
+  mx.data <- convertFx(x, data, from = data.in, to = "mx", lx0 = 1, ...)
+  dx.data <- convertFx(x, data, from = data.in, to = "dx", lx0 = 1, ...)
+  # qx.data <- convertFx(x, data, from = data.in, to = "qx", lx0 = 1) # not needed now
+  # lx.data <- convertFx(x, data, from = data.in, to = "lx", lx0 = 1)
 
   # The Naive model - Multivariate Random-Walk
   if ("MRW" %in% models) MRW <- MRW(data = log(mx.data), x, y, include.drift = FALSE)
@@ -53,7 +60,7 @@ doMortalityModels <- function(data, x, y,
   if ("M6" %in% models)  M6 <- MEM(data = dx.data, x, y, n = 6)
   if ("M7" %in% models)  M7 <- MEM(data = dx.data, x, y, n = 7)
 
-  remove(data, data.type, models, dx.data, mx.data)
+  remove(data, data.in, models, dx.data, mx.data)
   out <- as.list(environment())
   out <- structure(class = "MortalityModels", out)
   return(out)
@@ -61,15 +68,13 @@ doMortalityModels <- function(data, x, y,
 
 
 #' Get Fitted Values
-#' 
-#' @param object An object of the class \code{MortalityModels}.
-#' @param what Specify the type of values to be extracted. 
-#' @inheritParams doMortalityModels
+#' @param object An object of class \code{MortalityModels}.
+#' @inheritParams getAccuracy
 #' @export
 getFitted <- function(object, 
-                      what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                      data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                       ...) {
-  what <- match.arg(what)
+  data.out <- match.arg(data.out)
   Mn   <- object$input$models # Model names
   x    <- object$x
   
@@ -79,11 +84,11 @@ getFitted <- function(object,
     
     if (Mn[i] %in% c("MRW", "MRWD", "LC", "PLAT")) {
       mx <- exp(fitted(M))
-      dx <- convertFx(x, mx, In = "mx", Out = "dx", lx0 = 1, ...)
+      dx <- convertFx(x, mx, from = "mx", to = "dx", lx0 = 1, ...)
       
     } else if (Mn[i] %in% c("FDM")) {
       mx <- exp(fitted(M)$y)
-      dx <- convertFx(x, mx, In = "mx", Out = "dx", lx0 = 1, ...)
+      dx <- convertFx(x, mx, from = "mx", to = "dx", lx0 = 1, ...)
       
     } else {
       dx <- fitted(M)
@@ -91,7 +96,7 @@ getFitted <- function(object,
     DX[[i]] <- dx
   }
   
-  fn  <- function(Z) convertFx(x, Z, In = "dx", Out = what, lx0 = 1, ...)
+  fn  <- function(Z) convertFx(x, Z, from = "dx", to = data.out, lx0 = 1, ...)
   out <- lapply(DX, fn)
   names(out) <- Mn
   out <- structure(class = "getFitted", out)
@@ -100,20 +105,20 @@ getFitted <- function(object,
 
 
 #' Get Observed Values
-#' 
 #' @inheritParams getFitted
 #' @export
 getObserved <- function(object, 
-                        what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                        data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                         ...) {
-  what <- match.arg(what)
-  x    <- object$x
-  data <- object$input$data
-  In   <- object$input$data.type 
-  if (In == what) {
+  x        <- object$x
+  data     <- object$input$data
+  data.in  <- object$input$data.in 
+  data.out <- match.arg(data.out)
+  
+  if (data.in == data.out) {
     out <- data
   } else {
-    out <- convertFx(x, data, In, Out = what, lx0 = 1, ...)
+    out <- convertFx(x, data, from = data.in, to = data.out, lx0 = 1, ...)
   }
   return(out)
 }

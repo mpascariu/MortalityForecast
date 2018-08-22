@@ -53,8 +53,8 @@ findMoments <- function(data, x, y = NULL, n, na.rm = TRUE) {
     rM[i, ] <- moments::all.moments(x = vect, order.max = n, na.rm = na.rm)
   }
   
-  cM <- convertMoments(rM, In = "raw", Out = "central")
-  nM <- convertMoments(rM, In = "raw", Out = "normalized")
+  cM <- convertMoments(rM, from = "raw", to = "central")
+  nM <- convertMoments(rM, from = "raw", to = "normalized")
   dimnames(cM) <- dimnames(rM)
   
   out <- list(raw.moments = rM, central.moments = cM, normalized.moments = nM)
@@ -66,10 +66,10 @@ findMoments <- function(data, x, y = NULL, n, na.rm = TRUE) {
 #' 
 #' Transform the raw, central or normalized statistical moments between them.
 #' @param data data.frame containing statistical moments.
-#' @param In What type of statistical moments do we have in input \code{data}?
+#' @param from What type of statistical moments do we have in input \code{data}?
 #' Three types of moments are accepted: \code{"raw", "central", "normalized"}.
-#' @param Out What type of statistical moments do we want to get? 
-#' Three types moments can be obtained: \code{"raw", "central", "normalized"}.
+#' @param to What type of statistical moments do you want to obtain? 
+#' Three types of moments can be obtained: \code{"raw", "central", "normalized"}.
 #' @param eta A numeric vector of the expected values. This is required ONLY 
 #' is we convert central moments into raw or normalized. Default: \code{NULL}.
 #' 
@@ -87,30 +87,30 @@ findMoments <- function(data, x, y = NULL, n, na.rm = TRUE) {
 #'         2176435499, 170477697491)
 #' 
 #' 
-#' CM1 <- convertMoments(RM, In = "raw", Out = "central")    # raw to central
-#' NM1 <- convertMoments(RM, In = "raw", Out = "normalized") # raw to normalized
+#' CM1 <- convertMoments(RM, from = "raw", to = "central")    # raw to central
+#' NM1 <- convertMoments(RM, from = "raw", to = "normalized") # raw to normalized
 #' 
-#' CM2 <- convertMoments(NM1, In = "normalized", Out = "central")
-#' RM2 <- convertMoments(NM1, In = "normalized", Out = "raw")
+#' CM2 <- convertMoments(NM1, from = "normalized", to = "central")
+#' RM2 <- convertMoments(NM1, from = "normalized", to = "raw")
 #' 
-#' RM3 <- convertMoments(CM2, In = "central", Out = "raw", eta = 68.75099)
-#' NM3 <- convertMoments(CM2, In = "central", Out = "normalized", eta = 68.75099)
+#' RM3 <- convertMoments(CM2, from = "central", to = "raw", eta = 68.75099)
+#' NM3 <- convertMoments(CM2, from = "central", to = "normalized", eta = 68.75099)
 #' 
 #' # The resulted error following multiple conversions is negligible
 #' sum(RM - RM3)
 #' @export
 convertMoments <- function(data, 
-                           In = c("raw", "central", "normalized"), 
-                           Out = c("raw", "central", "normalized"), 
+                           from = c("raw", "central", "normalized"), 
+                           to = c("raw", "central", "normalized"), 
                            eta = NULL) {
   if (is.vector(data)) data = matrix(data, nrow = 1)
-  In <- match.arg(In)
-  Out <- match.arg(Out)
+  from <- match.arg(from)
+  to <- match.arg(to)
   out <- data
   
-  if (In == "raw") out <- convertRM(data, Out)
-  if (In == "central") out <- convertCM(data, Out, eta)
-  if (In == "normalized") out <- convertNM(data, Out)
+  if (from == "raw") out <- convertRM(data, to)
+  if (from == "central") out <- convertCM(data, to, eta)
+  if (from == "normalized") out <- convertNM(data, to)
   
   return(out)
 }
@@ -120,7 +120,7 @@ convertMoments <- function(data,
 #' @param data Data.frame with central moments.
 #' @inheritParams convertMoments
 #' @keywords internal
-convertCM <- function(data, Out = c("raw", "normalized"), eta) {
+convertCM <- function(data, to = c("raw", "normalized"), eta) {
   cM  <- data 
   n   <- ncol(cM)
   Mnames <- paste0("M", 1:n - 1)
@@ -128,8 +128,8 @@ convertCM <- function(data, Out = c("raw", "normalized"), eta) {
   colnames(rM) = colnames(cM) <- Mnames
   out <- rM
   
-  if (Out == "normalized") {
-    nM <- convertRM(rM, Out)
+  if (to == "normalized") {
+    nM <- convertRM(rM, to)
     out <- nM
   }
   rownames(out) <- rownames(cM)
@@ -141,7 +141,7 @@ convertCM <- function(data, Out = c("raw", "normalized"), eta) {
 #' @param data Data.frame with normalized moments.
 #' @inheritParams convertMoments
 #' @keywords internal
-convertNM <- function(data, Out = c("central", "raw")) {
+convertNM <- function(data, to = c("central", "raw")) {
   nM <- data                                 # Normalized moments
   n  <- ncol(nM)
   if (n < 3L) {
@@ -165,7 +165,7 @@ convertNM <- function(data, Out = c("central", "raw")) {
   cM[, "M1"] <- 0
   out <- cM
   
-  if (Out == "raw") {
+  if (to == "raw") {
     rM <- t(moments::central2raw(t(cM), eta = mM[, "M1"]))
     dimnames(rM) <- dimnames(mM)
     out <- rM
@@ -179,7 +179,7 @@ convertNM <- function(data, Out = c("central", "raw")) {
 #' @param data Data.frame with raw moments.
 #' @inheritParams convertMoments
 #' @keywords internal
-convertRM <- function(data, Out = c("central", "normalized")) {
+convertRM <- function(data, to = c("central", "normalized")) {
   rM <- data                                 # Raw moments
   n  <- ncol(rM)
   if (n < 3L) {
@@ -191,7 +191,7 @@ convertRM <- function(data, Out = c("central", "normalized")) {
   colnames(rM) = colnames(cM) = colnames(mM) <- paste0("M", 1:n - 1)
   out <- cM
   
-  if (Out == "normalized") {
+  if (to == "normalized") {
     # Compute Normalised Moments
     nM <- mM
     if (n > 3) {

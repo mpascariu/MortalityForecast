@@ -18,7 +18,8 @@ on the right-hand side. In the case of age-at-death distribution, \code{omega}
 should be an old age; otherwise the MaxEnt might fail to converge. 
 Numeric scalar.}
 
-\item{verbose}{Show progress bar? Logical. Default: \code{FALSE}.}
+\item{verbose}{A logical value. Set \code{verbose = FALSE} to silent 
+the process that take place inside the function and avoid progress messages.}
 }
 \value{
 An object with the estimated densities.

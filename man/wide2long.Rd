@@ -12,7 +12,8 @@ wide2long(data, x = NULL, y = NULL, which.x = NULL, which.y = NULL,
 
 \item{x}{vector of ages}
 
-\item{y}{Vector of years.}
+\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
+Default: \code{NULL}.}
 
 \item{which.x}{subset x vector}
 

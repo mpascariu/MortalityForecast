@@ -15,7 +15,8 @@ compute_dx(dx, kt, ax, bx, fit, y, jumpchoice)
 
 \item{fit}{Fitted values}
 
-\item{y}{Vector of input years (optional). Used to label the output objects and plots.}
+\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
+Default: \code{NULL}.}
 
 \item{jumpchoice}{Method used for computation of jumpchoice. 
 Possibilities: \code{"actual"} (use actual rates from final year) 

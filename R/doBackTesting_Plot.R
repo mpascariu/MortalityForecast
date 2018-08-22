@@ -12,7 +12,7 @@ plot.doBackTesting <- function(x, facet = c("x", "y"),
   x  <- B$input$x
   y1 <- B$input$y.fit
   y2 <- B$input$y.for
-  index <- B$input$what
+  index <- B$input$data.out
   facet <- match.arg(facet)
   
   y_lab <- switch(index,
@@ -26,8 +26,8 @@ plot.doBackTesting <- function(x, facet = c("x", "y"),
   
   # Observed values
   O <- convertFx(x, data = B$input$data, 
-                 In = B$input$data.type, 
-                 Out = B$input$what, lx0 = 1)
+                 from = B$input$data.in, 
+                 to = B$input$data.out, lx0 = 1)
   # Forecast values
   H <- B$datasets$forecasts
   

@@ -10,7 +10,7 @@
 \arguments{
 \item{object}{An object of class \code{\link{MEM}}.}
 
-\item{h}{h Number of units of time (years) to be forecast in the future.}
+\item{h}{Number of years to be forecast in the future.}
 
 \item{x.h}{Numerical vector indicating the ages to be considered in 
 reconstruction of the density over the forecast horizon. 
@@ -25,9 +25,10 @@ dataset containing values for 0-100 only.}
 Possibilities: \code{"actual"} (use actual rates from final year) 
 and \code{"fit"} (use fitted rates).}
 
-\item{verbose}{Show progress bar? Logical, default \code{TRUE}.}
+\item{verbose}{A logical value. Set \code{verbose = FALSE} to silent 
+the process that take place inside the function and avoid progress messages.}
 
-\item{...}{Ignored.}
+\item{...}{Arguments to be passed to or from other methods.}
 }
 \description{
 Predict Maximum-Entropy Mortality Model

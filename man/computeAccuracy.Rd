@@ -14,7 +14,7 @@ computeAccuracy(u, u.hat, b, xa = NULL, ya = NULL, measures,
 
 \item{b}{Benchmark forecast data. Usualy a naive or Random-Walk forecast.}
 
-\item{xa}{Ages to be considered in accuracy computation. It can be used to 
+\item{xa}{Ages to be considered in model accuracy evaluation. It can be used to 
 calculate the measures on a subset of the results. If \code{x = NULL} 
 (default) the entire age-range in \code{u} is considered.}
 

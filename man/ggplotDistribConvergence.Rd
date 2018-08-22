@@ -9,11 +9,8 @@ ggplotDistribConvergence(mat, x, ny, quant)
 \arguments{
 \item{mat}{Matrix containing the observed or fitted value.}
 
-\item{x}{Numerical vector indicating the ages to be considered in the 
-fitting procedure. If \code{NULL} the number fitted data points is equal 
-with the observed number of data points.
-This argument can be used for example to estimate a density between 0 and 130 
-given the fact that the input dataset contains values for 0-100 only.}
+\item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
+Default: \code{NULL}.}
 
 \item{ny}{Number of years to be selected from input data and to be added in the plot.}
 }

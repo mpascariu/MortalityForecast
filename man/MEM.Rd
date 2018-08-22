@@ -4,58 +4,40 @@
 \alias{MEM}
 \title{Fit Maximum-Entropy Mortality Model}
 \usage{
-MEM(data, x = NULL, y = NULL, n = 5, exogen = NULL, lag = 1,
-  verbose = FALSE, ...)
+MEM(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...)
 }
 \arguments{
-\item{data}{A data.frame or a matrix containing mortality data (dx) 
+\item{data}{A data.frame or a matrix containing mortality data 
 with ages \code{x} as row and time \code{y} as column.}
 
-\item{x}{Numerical vector indicating the ages to be considered in the 
-fitting procedure. If \code{NULL} the number fitted data points is equal 
-with the observed number of data points.
-This argument can be used for example to estimate a density between 0 and 130 
-given the fact that the input dataset contains values for 0-100 only.}
+\item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
+Default: \code{NULL}.}
 
-\item{y}{Numerical vector indicating the years in \code{data}. 
+\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
 Default: \code{NULL}.}
 
 \item{n}{The maximum order of the moments to be used.}
 
-\item{exogen}{Inlusion of exogenous variables.}
+\item{verbose}{A logical value. Set \code{verbose = FALSE} to silent 
+the process that take place inside the function and avoid progress messages.}
 
-\item{lag}{Integer for the lag order in VAR model. Default: 1.}
-
-\item{verbose}{Show progress bar? Logical. Default: \code{FALSE}.}
-
-\item{...}{Further arguments passed to \code{\link[vars]{VAR}} method.}
+\item{...}{Arguments to be passed to or from other methods.}
 }
 \value{
-The output is an object of the class \code{"MEM"} with the components:
-
-\item{input}{List with arguments provided in input. Saved for convenience.}
-
-\item{call}{An unevaluated function call, that is, an unevaluated 
-expression which consists of the named function applied to the given arguments;}
-
-\item{coefficients}{Estimated coefficients;}
-
-\item{fitted.values}{Fitted values of the estimated model;}
-
-\item{observed.values}{Observed values used in fitting;}
-
-\item{fitted.raw.moments}{Fitted raw moments;}
-
-\item{observed.raw.moments}{Observed raw moments of the input data;}
-
-\item{residuals}{Deviance residuals;}
-
-\item{VAR}{Object containing the components of the fitted time 
-series model to extrapolate moments;}
-
-\item{x}{Vector of ages used in the fitting;}
-
-\item{y}{Vector of years used in the fitting.}
+The output is an object of class \code{"MEM"} with the components:
+ \item{input}{List with arguments provided in input. Saved for convenience.}
+ \item{call}{An unevaluated function call, that is, an unevaluated 
+ expression which consists of the named function applied to the given arguments;}
+ \item{coefficients}{Estimated coefficients;}
+ \item{fitted.values}{Fitted values of the estimated model;}
+ \item{observed.values}{Observed values used in fitting;}
+ \item{fitted.raw.moments}{Fitted raw moments;}
+ \item{observed.raw.moments}{Observed raw moments of the input data;}
+ \item{residuals}{Deviance residuals;} 
+ \item{VAR}{Object containing the components of the fitted time 
+ series model to the extrapolate moments;}
+ \item{x}{Vector of ages used in the fitting;} 
+ \item{y}{Vector of years used in the fitting.}
 }
 \description{
 Fit Maximum-Entropy Mortality Model
@@ -76,6 +58,6 @@ P1 <- predict(M1, h = 16)
 P1 
 }
 \seealso{
-\code{\link{predict.MEM}}, \code{\link{findMoments}}; 
-\code{\link[vars]{VAR}}
+\code{\link{predict.MEM}} 
+\code{\link{findMoments}}
 }

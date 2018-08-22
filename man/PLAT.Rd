@@ -7,11 +7,14 @@
 PLAT(data, x, y, link = "log", lx0 = 1e+05, verbose = FALSE)
 }
 \arguments{
-\item{data}{Mortality data}
+\item{data}{A data.frame or a matrix containing mortality data 
+with ages \code{x} as row and time \code{y} as column.}
 
-\item{x}{Vector of ages.}
+\item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
+Default: \code{NULL}.}
 
-\item{y}{Vector of years.}
+\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
+Default: \code{NULL}.}
 
 \item{link}{defines the link function and random component associated with 
 the mortality model. \code{"log"} would assume that deaths follow a 
@@ -19,6 +22,9 @@ Poisson distribution and use a log link while \code{"logit"} would assume
 that deaths follow a Binomial distribution and a logit link.}
 
 \item{lx0}{lx0}
+
+\item{verbose}{A logical value. Set \code{verbose = FALSE} to silent 
+the process that take place inside the function and avoid progress messages.}
 }
 \description{
 Lee-Carter Mortality Model as implemented in StMoMo package

@@ -1,36 +1,25 @@
 
 #' Fit Maximum-Entropy Mortality Model 
 #' 
-#' @param data A data.frame or a matrix containing mortality data (dx) 
-#' with ages \code{x} as row and time \code{y} as column.
-#' @param x Numerical vector indicating the ages to be considered in the 
-#' fitting procedure. If \code{NULL} the number fitted data points is equal 
-#' with the observed number of data points.
-#' This argument can be used for example to estimate a density between 0 and 130 
-#' given the fact that the input dataset contains values for 0-100 only.
-#' @param y Numerical vector indicating the years in \code{data}. 
-#' Default: \code{NULL}.
 #' @param n The maximum order of the moments to be used.
-#' @param lag Integer for the lag order in VAR model. Default: 1.
-#' @param verbose Show progress bar? Logical. Default: \code{FALSE}.
-#' @param ... Further arguments passed to \code{\link[vars]{VAR}} method.
-#' @return The output is an object of the class \code{"MEM"} with the components:
-#' @return \item{input}{List with arguments provided in input. Saved for convenience.}
-#' @return \item{call}{An unevaluated function call, that is, an unevaluated 
-#' expression which consists of the named function applied to the given arguments;}
-#' @return \item{coefficients}{Estimated coefficients;}
-#' @return \item{fitted.values}{Fitted values of the estimated model;}
-#' @return \item{observed.values}{Observed values used in fitting;}
-#' @return \item{fitted.raw.moments}{Fitted raw moments;}
-#' @return \item{observed.raw.moments}{Observed raw moments of the input data;}
-#' @return \item{residuals}{Deviance residuals;} 
-#' @return \item{VAR}{Object containing the components of the fitted time 
-#' series model to extrapolate moments;}
-#' @return \item{x}{Vector of ages used in the fitting;} 
-#' @return \item{y}{Vector of years used in the fitting.} 
-#' @inheritParams vars::VAR
-#' @seealso \code{\link{predict.MEM}}, \code{\link{findMoments}}; 
-#' \code{\link[vars]{VAR}}
+#' @inheritParams doMortalityModels
+#' @return The output is an object of class \code{"MEM"} with the components:
+#'  \item{input}{List with arguments provided in input. Saved for convenience.}
+#'  \item{call}{An unevaluated function call, that is, an unevaluated 
+#'  expression which consists of the named function applied to the given arguments;}
+#'  \item{coefficients}{Estimated coefficients;}
+#'  \item{fitted.values}{Fitted values of the estimated model;}
+#'  \item{observed.values}{Observed values used in fitting;}
+#'  \item{fitted.raw.moments}{Fitted raw moments;}
+#'  \item{observed.raw.moments}{Observed raw moments of the input data;}
+#'  \item{residuals}{Deviance residuals;} 
+#'  \item{VAR}{Object containing the components of the fitted time 
+#'  series model to the extrapolate moments;}
+#'  \item{x}{Vector of ages used in the fitting;} 
+#'  \item{y}{Vector of years used in the fitting.} 
+#' @seealso 
+#' \code{\link{predict.MEM}} 
+#' \code{\link{findMoments}}
 #' @examples 
 #' # Data ----------------------------------------
 #' x  <- 0:110
@@ -46,13 +35,9 @@
 #' P1 <- predict(M1, h = 16)
 #' P1 
 #' @export
-MEM <- function(data, x = NULL, y = NULL, n = 5, 
-                   exogen = NULL, lag = 1, verbose = FALSE, ...) {
+MEM <- function(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...) {
   input <- c(as.list(environment()))
-  if (verbose) { # Set progress bar
-    pb <- startpb(0, 10)
-    on.exit(closepb(pb)); setpb(pb, 1)
-  }
+
   AY  <- find_ages_and_years(data, x, y)
   x   <- AY$x
   y   <- AY$y
@@ -61,15 +46,13 @@ MEM <- function(data, x = NULL, y = NULL, n = 5,
   nM  <- M$normalized.moments
   nMT <- log(abs(nM))
   sg  <- sign(nM)
-  if (verbose) setpb(pb, 3)
   
   V   <- MRW(t(nMT), x = NULL, y, include.drift = TRUE)
-  fnM <- fnM <- t(exp(fitted(V)) * as.numeric(sg[1,]))     # fitted normalized moments
-  frM <- convertMoments(fnM, In = "normalized", Out = "raw") # fitted raw moments
-  if (verbose) setpb(pb, 5)
+  fnM <- fnM <- t(exp(fitted(V)) * as.numeric(sg[1,]))       # fitted normalized moments
+  frM <- convertMoments(fnM, from = "normalized", to = "raw") # fitted raw moments
   
   fD  <- findDensity(frM[-1, ], x)$density                # fitted dx
-  fD  <- cbind(NA, fD) #make sure fD has the same dimension as oD data. Not sure it's OK.
+  fD  <- cbind(NA, fD) 
   oD  <- apply(data, 2, FUN = function(x) x/sum(x)) # observed dx - same scale as fitted dx
   res <- oD - fD                                    # residuals
   dimnames(oD) = dimnames(fD) = dimnames(res) = list(x = x, y = y)
@@ -79,17 +62,14 @@ MEM <- function(data, x = NULL, y = NULL, n = 5,
               residuals = res, fitted.raw.moments = frM, observed.raw.moments = orM, 
               VAR = V, x = x, y = y)
   out <- structure(class = 'MEM', out)
-  if (verbose) setpb(pb, 10)
   return(out)
 }
 
 
 #' Find age and year vectors
-#' 
 #' @inheritParams MEM
 #' @keywords internal
 #' @export
-#' 
 find_ages_and_years <- function(data, x, y) {
   if (!is.null(x) & nrow(data) != length(x)) {
     stop("'data' and 'x' must have the same dimension!\n", 
@@ -143,8 +123,8 @@ residuals.MEM <- function(object, ...) {
   return(out)
 }
 
+
 #' Print function for MEM method
-#' @param x An object of class \code{\link{MEM}}.
 #' @inheritParams residuals.MEM
 #' @keywords internal
 #' @export

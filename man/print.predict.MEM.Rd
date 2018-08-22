@@ -7,8 +7,6 @@
 \method{print}{predict.MEM}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{\link{MEM}}.}
-
 \item{...}{Further arguments passed to or from other methods.}
 }
 \description{

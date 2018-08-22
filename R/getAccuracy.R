@@ -1,10 +1,12 @@
 
 
 #' Get Accuracy Measures
+#' @param object An object of class \code{doForecasts}.
 #' @param data Validation set of demographic data.
-#' @usage getAccuracy(object, data, xa, ya, data.type, what, measures, na.rm, ...)
+#' @param data.out Specify the type of data to be returned in output. 
+#' Various life table indices are accepted: 
+#' \code{"qx", "mx", "dx", "lx", "Lx", "Tx", "ex"}.
 #' @inheritParams doMortalityModels
-#' @inheritParams getForecasts
 #' @inheritParams computeAccuracy
 #' @inherit computeAccuracy details references
 #' @examples 
@@ -17,22 +19,26 @@
 #' D2 <- MortalityForecast.data$dx[paste(x), paste(y2)]
 #' 
 #' MM = c("MRWD", "LC", "FDM", "CoDa", "M6")
-#' M <- doMortalityModels(data = D1, x, y1, data.type = "dx", models = MM)
+#' M <- doMortalityModels(data = D1, x, y1, data.in = "dx", models = MM)
 #' P <- doForecasts(M, h)
-#' A <- getAccuracy(P, D2, xa = 0:95, data.type = "dx", what = "qx")
+#' A <- getAccuracy(P, D2, xa = 0:95, data.in = "dx", data.out = "qx")
 #' 
 #' A
 #' plot(A)
 #' @export
-getAccuracy <- function(object, data, xa = 0:98, ya = NULL,
-                        data.type = c("qx", "mx", "dx", "lx"),
-                        what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+getAccuracy <- function(object, data, 
+                        data.in = c("qx", "mx", "dx", "lx"),
+                        data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                         measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
+                        xa = NULL, ya = NULL,
                         na.rm = TRUE, ...) {
   
-  O  <- convertFx(x = object$x, data, In = data.type, Out = what, lx0 = 1, ...) # observed data
-  H  <- getForecasts(object, what)                              # forecast data
-  B  <- H[[1]] # Benchmark: Lee-Carter for now.
+  data.in  <- match.arg(data.in)
+  data.out <- match.arg(data.out)
+  
+  O  <- convertFx(x = object$x, data, from = data.in, to = data.out, lx0 = 1, ...) # observed data
+  H  <- getForecasts(object, data.out)                              # forecast data
+  B  <- H[[1]] # Benchmark model
   Mn <- object$input$object$input$models # Model names
   
   fn <- function(X) computeAccuracy(O, X, B, xa, ya, measures, na.rm)
@@ -45,15 +51,14 @@ getAccuracy <- function(object, data, xa = 0:98, ya = NULL,
   rownames(z) <- Mn
   R  <- doRanking(z)
   
-  out <- list(index = what, results = z, rank = R$rank, GC = R$GC)
+  out <- list(index = data.out, results = z, rank = R$rank, GC = R$GC)
   out <- structure(class = "getAccuracy", out)
   return(out)
 }
 
 
 #' Rank models based on the accuracy results
-#' @param z Accuracy measures
-#' @keywords internal
+#' @param z Table containing accuracy measures.
 #' @export
 doRanking <- function(z) {
   zz <- z
@@ -88,7 +93,7 @@ print.getAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L),
 #' @param u Validation dataset.
 #' @param u.hat In-sample forecast data.
 #' @param b Benchmark forecast data. Usualy a naive or Random-Walk forecast.
-#' @param xa Ages to be considered in accuracy computation. It can be used to 
+#' @param xa Ages to be considered in model accuracy evaluation. It can be used to 
 #' calculate the measures on a subset of the results. If \code{x = NULL} 
 #' (default) the entire age-range in \code{u} is considered.
 #' @param ya Years to be considered in accuracy computation. Default: \code{NULL}.

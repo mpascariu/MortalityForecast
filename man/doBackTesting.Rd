@@ -2,39 +2,34 @@
 % Please edit documentation in R/doBackTesting.R
 \name{doBackTesting}
 \alias{doBackTesting}
-\title{Perform in-sample testing of mortality forecasts}
+\title{Perform in-sample Testing of Mortality Forecasts}
 \usage{
-doBackTesting(data, x, y.fit, y.for, data.type, what, level = 95,
-  jumpchoice = "actual", xa = NULL, ya = NULL, measures = c("ME",
-  "MAE", "MAPE", "sMAPE", "MRAE", "MASE"), models = c("LC", "FDM",
-  "PLAT", "CoDa", "M4", "M4X", "M5", "M5X", "M6", "M6X"), ...)
+doBackTesting(data, x, y.fit, y.for, data.in = c("qx", "mx", "dx", "lx"),
+  data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+  models = c("MRWD", "LC"), measures = c("ME", "MAE", "MAPE", "sMAPE",
+  "MRAE", "MASE"), xa = NULL, ya = NULL, level = 95,
+  jumpchoice = c("actual", "fit"), verbose = FALSE, ...)
 }
 \arguments{
-\item{data}{Mortality data for fitting of the models and for validation; 
-that is the data coresponding to the horizon to be predicted.}
+\item{data}{A data.frame or a matrix containing mortality data 
+with ages \code{x} as row and time \code{y} as column. This object should
+contain the data to be used in fitting (traning) and validation process as well.}
 
-\item{x}{Vector of ages.}
+\item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
+Default: \code{NULL}.}
 
 \item{y.fit}{Years to be considered in fitting.}
 
 \item{y.for}{Years to be forecast.}
 
-\item{data.type}{Type of data in 'data' argument. Options: 
-\code{"qx", "mx", "dx", "lx"}.}
+\item{data.in}{Specify the type of input \code{data}. Various life table 
+indices are accepted: \code{"qx", "mx", "dx", "lx"}.}
 
-\item{what}{Specify the type of values to be extracted.}
+\item{data.out}{Specify the type of data to be returned in output. 
+Various life table indices are accepted: 
+\code{"qx", "mx", "dx", "lx", "Lx", "Tx", "ex"}.}
 
-\item{level}{Confidence level for prediction intervals.}
-
-\item{jumpchoice}{Method used for computation of jumpchoice. 
-Possibilities: \code{"actual"} (use actual rates from final year) 
-and \code{"fit"} (use fitted rates).}
-
-\item{xa}{Ages to be considered in accuracy computation. It can be used to 
-calculate the measures on a subset of the results. If \code{x = NULL} 
-(default) the entire age-range in \code{u} is considered.}
-
-\item{ya}{Years to be considered in accuracy computation. Default: \code{NULL}.}
+\item{models}{Mortality models to be evaluated.}
 
 \item{measures}{What accurracy measure to compute? Various alternatives are 
 available, \itemize{
@@ -43,12 +38,25 @@ available, \itemize{
 \item{Squared error measures: } \code{"MSE", "RMSE", "RMSPE", "RMdSPE"};
 \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}}
 
-\item{models}{Mortality models to be evaluated.}
+\item{xa}{Ages to be considered in model accuracy evaluation. It can be used to 
+calculate the measures on a subset of the results. If \code{x = NULL} 
+(default) the entire age-range in \code{u} is considered.}
+
+\item{ya}{Years to be considered in accuracy computation. Default: \code{NULL}.}
+
+\item{level}{Significance level of the confidence interval. Default: 95.}
+
+\item{jumpchoice}{Method used for computation of jumpchoice. 
+Possibilities: \code{"actual"} (use actual rates from final year) 
+and \code{"fit"} (use fitted rates).}
+
+\item{verbose}{A logical value. Set \code{verbose = FALSE} to silent 
+the process that take place inside the function and avoid progress messages.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }
 \description{
-Perform in-sample testing of mortality forecasts
+Perform in-sample Testing of Mortality Forecasts
 }
 \examples{
 x = 0:98              # Ages
@@ -62,8 +70,8 @@ D <- MortalityForecast.data$dx[paste(x), paste(y)] # DATA
 MM <- c("MRW", "MRWD", "LC", "CoDa", "M6")
 B.ex <- doBackTesting(data = D, x = x, 
                       y.fit = y1, y.for = y2, 
-                      data.type = "dx", 
-                      what = "ex", 
+                      data.in = "dx", 
+                      data.out = "ex", 
                       models = MM)
 B.ex$accuracy
 

@@ -11,7 +11,7 @@ findMoments(data, x, y = NULL, n, na.rm = TRUE)
 
 \item{x}{Vector of ages.}
 
-\item{y}{Numerical vector indicating the years in \code{data}. 
+\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
 Default: \code{NULL}.}
 
 \item{n}{The maximum order of the moments to be computed. 

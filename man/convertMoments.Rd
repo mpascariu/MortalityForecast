@@ -4,17 +4,17 @@
 \alias{convertMoments}
 \title{Convert Statistical Moments}
 \usage{
-convertMoments(data, In = c("raw", "central", "normalized"),
-  Out = c("raw", "central", "normalized"), eta = NULL)
+convertMoments(data, from = c("raw", "central", "normalized"),
+  to = c("raw", "central", "normalized"), eta = NULL)
 }
 \arguments{
 \item{data}{data.frame containing statistical moments.}
 
-\item{In}{What type of statistical moments do we have in input \code{data}?
+\item{from}{What type of statistical moments do we have in input \code{data}?
 Three types of moments are accepted: \code{"raw", "central", "normalized"}.}
 
-\item{Out}{What type of statistical moments do we want to get? 
-Three types moments can be obtained: \code{"raw", "central", "normalized"}.}
+\item{to}{What type of statistical moments do you want to obtain? 
+Three types of moments can be obtained: \code{"raw", "central", "normalized"}.}
 
 \item{eta}{A numeric vector of the expected values. This is required ONLY 
 is we convert central moments into raw or normalized. Default: \code{NULL}.}
@@ -38,14 +38,14 @@ RM <- c(1, 68.75099, 4991.724, 371531.9, 28199680,
         2176435499, 170477697491)
 
 
-CM1 <- convertMoments(RM, In = "raw", Out = "central")    # raw to central
-NM1 <- convertMoments(RM, In = "raw", Out = "normalized") # raw to normalized
+CM1 <- convertMoments(RM, from = "raw", to = "central")    # raw to central
+NM1 <- convertMoments(RM, from = "raw", to = "normalized") # raw to normalized
 
-CM2 <- convertMoments(NM1, In = "normalized", Out = "central")
-RM2 <- convertMoments(NM1, In = "normalized", Out = "raw")
+CM2 <- convertMoments(NM1, from = "normalized", to = "central")
+RM2 <- convertMoments(NM1, from = "normalized", to = "raw")
 
-RM3 <- convertMoments(CM2, In = "central", Out = "raw", eta = 68.75099)
-NM3 <- convertMoments(CM2, In = "central", Out = "normalized", eta = 68.75099)
+RM3 <- convertMoments(CM2, from = "central", to = "raw", eta = 68.75099)
+NM3 <- convertMoments(CM2, from = "central", to = "normalized", eta = 68.75099)
 
 # The resulted error following multiple conversions is negligible
 sum(RM - RM3)

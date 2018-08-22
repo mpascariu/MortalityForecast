@@ -4,23 +4,22 @@
 \alias{getAccuracy}
 \title{Get Accuracy Measures}
 \usage{
-getAccuracy(object, data, xa, ya, data.type, what, measures, na.rm, ...)
+getAccuracy(object, data, data.in = c("qx", "mx", "dx", "lx"),
+  data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+  measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
+  xa = NULL, ya = NULL, na.rm = TRUE, ...)
 }
 \arguments{
-\item{object}{An object of the class \code{doForecasts}.}
+\item{object}{An object of class \code{doForecasts}.}
 
 \item{data}{Validation set of demographic data.}
 
-\item{xa}{Ages to be considered in accuracy computation. It can be used to 
-calculate the measures on a subset of the results. If \code{x = NULL} 
-(default) the entire age-range in \code{u} is considered.}
+\item{data.in}{Specify the type of input \code{data}. Various life table 
+indices are accepted: \code{"qx", "mx", "dx", "lx"}.}
 
-\item{ya}{Years to be considered in accuracy computation. Default: \code{NULL}.}
-
-\item{data.type}{Type of data in 'data' argument. Options: 
-\code{"qx", "mx", "dx", "lx"}.}
-
-\item{what}{Specify the type of values to be extracted.}
+\item{data.out}{Specify the type of data to be returned in output. 
+Various life table indices are accepted: 
+\code{"qx", "mx", "dx", "lx", "Lx", "Tx", "ex"}.}
 
 \item{measures}{What accurracy measure to compute? Various alternatives are 
 available, \itemize{
@@ -28,6 +27,12 @@ available, \itemize{
 \item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "MdRAE", "MdASE"};
 \item{Squared error measures: } \code{"MSE", "RMSE", "RMSPE", "RMdSPE"};
 \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}}
+
+\item{xa}{Ages to be considered in model accuracy evaluation. It can be used to 
+calculate the measures on a subset of the results. If \code{x = NULL} 
+(default) the entire age-range in \code{u} is considered.}
+
+\item{ya}{Years to be considered in accuracy computation. Default: \code{NULL}.}
 
 \item{na.rm}{A logical value indicating whether NA values should be stripped 
 before the computation proceeds.}
@@ -51,9 +56,9 @@ D1 <- MortalityForecast.data$dx[paste(x), paste(y1)]
 D2 <- MortalityForecast.data$dx[paste(x), paste(y2)]
 
 MM = c("MRWD", "LC", "FDM", "CoDa", "M6")
-M <- doMortalityModels(data = D1, x, y1, data.type = "dx", models = MM)
+M <- doMortalityModels(data = D1, x, y1, data.in = "dx", models = MM)
 P <- doForecasts(M, h)
-A <- getAccuracy(P, D2, xa = 0:95, data.type = "dx", what = "qx")
+A <- getAccuracy(P, D2, xa = 0:95, data.in = "dx", data.out = "qx")
 
 A
 plot(A)

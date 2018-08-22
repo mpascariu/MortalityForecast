@@ -7,16 +7,13 @@
 find_ages_and_years(data, x, y)
 }
 \arguments{
-\item{data}{A data.frame or a matrix containing mortality data (dx) 
+\item{data}{A data.frame or a matrix containing mortality data 
 with ages \code{x} as row and time \code{y} as column.}
 
-\item{x}{Numerical vector indicating the ages to be considered in the 
-fitting procedure. If \code{NULL} the number fitted data points is equal 
-with the observed number of data points.
-This argument can be used for example to estimate a density between 0 and 130 
-given the fact that the input dataset contains values for 0-100 only.}
+\item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
+Default: \code{NULL}.}
 
-\item{y}{Numerical vector indicating the years in \code{data}. 
+\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
 Default: \code{NULL}.}
 }
 \description{

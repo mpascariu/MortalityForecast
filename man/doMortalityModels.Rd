@@ -2,28 +2,33 @@
 % Please edit documentation in R/doMortalityModels.R
 \name{doMortalityModels}
 \alias{doMortalityModels}
-\title{Wrapper for function dealing with mortality models}
+\title{Wrapper for Function Fitting Stochastic Mortality Models}
 \usage{
-doMortalityModels(data, x, y, data.type = c("qx", "mx", "dx", "lx"),
-  models = c("MRW", "MRWD", "LC", "FDM", "PLAT", "CoDa", "M4", "M5",
-  "M6"), ...)
+doMortalityModels(data, x = NULL, y = NULL, data.in = c("qx", "mx",
+  "dx", "lx"), models = c("MRWD", "LC"), verbose = TRUE, ...)
 }
 \arguments{
-\item{data}{Mortality data}
+\item{data}{A data.frame or a matrix containing mortality data 
+with ages \code{x} as row and time \code{y} as column.}
 
-\item{x}{Vector of ages.}
+\item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
+Default: \code{NULL}.}
 
-\item{y}{Vector of years.}
+\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
+Default: \code{NULL}.}
 
-\item{data.type}{Type of data in 'data' argument. Options: 
-\code{"qx", "mx", "dx", "lx"}.}
+\item{data.in}{Specify the type of input \code{data}. Various life table 
+indices are accepted: \code{"qx", "mx", "dx", "lx"}.}
 
 \item{models}{Mortality models to be evaluated.}
+
+\item{verbose}{A logical value. Set \code{verbose = FALSE} to silent 
+the process that take place inside the function and avoid progress messages.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }
 \description{
-Wrapper for function dealing with mortality models
+Wrapper for Function Fitting Stochastic Mortality Models
 }
 \examples{
 x  <- 0:100
@@ -31,9 +36,9 @@ y  <- 2005:2016
 D  <- MortalityForecast.data$dx[paste(x), paste(y)]
 MM <- c("LC", "FDM", "CoDa", "M6")
 
-M <- doMortalityModels(data = D, x, y, data.type = "dx", models = MM)
+M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 
-oex <- getObserved(M, what = "ex")
-fex <- getFitted(M, what = "ex")
-rex <- getResiduals(M, what = "ex")
+oex <- getObserved(M, data.out = "ex")
+fex <- getFitted(M, data.out = "ex")
+rex <- getResiduals(M, data.out = "ex")
 }

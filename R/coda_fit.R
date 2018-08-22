@@ -10,18 +10,16 @@
 #' \insertCite{@See @oeppen2008 and @bergeron2017;textual}{MortalityForecast} 
 #' for a detail description and mathematical formulation.
 #' 
-#' @param data Matrix containing mortality data (dx) with ages as row and time as column.
-#' @param x Vector of input ages (optional). Used to label the output objects and plots. 
-#' @param y Vector of input years (optional). Used to label the output objects and plots. 
+#' @inheritParams doMortalityModels 
 #' @return The output is an object of class \code{"coda"} with the components:
-#' @return \item{input}{List with arguments provided in input. Saved for convenience.}
-#' @return \item{call}{An unevaluated function call, that is, an unevaluated 
-#' expression which consists of the named function applied to the given arguments.}
-#' @return \item{coefficients}{Estimated coefficients.}
-#' @return \item{fitted.values}{Fitted values of the estimated CoDa model.}
-#' @return \item{residuals}{Deviance residuals.} 
-#' @return \item{x}{Vector of ages used in the fitting.} 
-#' @return \item{y}{Vector of years used in the fitting.} 
+#'  \item{input}{List with arguments provided in input. Saved for convenience.}
+#'  \item{call}{An unevaluated function call, that is, an unevaluated 
+#'  expression which consists of the named function applied to the given arguments.}
+#'  \item{coefficients}{Estimated coefficients.}
+#'  \item{fitted.values}{Fitted values of the estimated CoDa model.}
+#'  \item{residuals}{Deviance residuals.} 
+#'  \item{x}{Vector of ages used in the fitting.} 
+#'  \item{y}{Vector of years used in the fitting.} 
 #' @seealso \code{\link{predict.coda}}
 #' @references \insertAllCited{}
 #' @examples
@@ -33,8 +31,7 @@
 #' # Forecast life expectancy
 #' P <- predict(M, h = 20)
 #' @export
-#' 
-coda <- function(data, x = NULL, y = NULL){
+coda <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   input <- c(as.list(environment()))
   coda.input.check(input)
   x <- x %||% 1:nrow(data)
@@ -42,7 +39,7 @@ coda <- function(data, x = NULL, y = NULL){
   
   vsn <- sum(data)/ncol(data) * 1e-10 # very small number
   data[data == 0] <- vsn              # replace zero's with a vsn
-  data <- convertFx(x, data, In = "dx", Out = "dx", lx0 = 1)
+  data <- convertFx(x, data, from = "dx", to = "dx", lx0 = 1)
   
   close.dx  <- unclass(acomp(t(data)))      # data close
   ax        <- geometricmeanCol(close.dx) # geometric mean
@@ -76,7 +73,6 @@ coda <- function(data, x = NULL, y = NULL){
 
 
 #' Validate input values
-#' 
 #' @param X A list with input arguments provided in \code{\link{coda}} function
 #' @keywords internal
 coda.input.check <- function(X) {

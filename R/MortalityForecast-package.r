@@ -12,6 +12,7 @@
 #' @importFrom forecast forecast Arima arimaorder auto.arima
 #' @importFrom stats predict fitted median coef lm na.omit quantile cov qnorm
 #' @importFrom tidyr gather
+#' @importFrom tibble as.tibble tibble
 #' @importFrom utils head tail
 #' @importFrom ggplot2 ggplot geom_line  geom_point geom_ribbon facet_wrap    
 #' theme theme_minimal element_text labs ylab xlab unit

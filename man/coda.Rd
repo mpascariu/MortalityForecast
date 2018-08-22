@@ -4,32 +4,33 @@
 \alias{coda}
 \title{Fit CoDa Mortality Model}
 \usage{
-coda(data, x = NULL, y = NULL)
+coda(data, x = NULL, y = NULL, verbose = TRUE, ...)
 }
 \arguments{
-\item{data}{Matrix containing mortality data (dx) with ages as row and time as column.}
+\item{data}{A data.frame or a matrix containing mortality data 
+with ages \code{x} as row and time \code{y} as column.}
 
-\item{x}{Vector of input ages (optional). Used to label the output objects and plots.}
+\item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
+Default: \code{NULL}.}
 
-\item{y}{Vector of input years (optional). Used to label the output objects and plots.}
+\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
+Default: \code{NULL}.}
+
+\item{verbose}{A logical value. Set \code{verbose = FALSE} to silent 
+the process that take place inside the function and avoid progress messages.}
+
+\item{...}{Arguments to be passed to or from other methods.}
 }
 \value{
 The output is an object of class \code{"coda"} with the components:
-
-\item{input}{List with arguments provided in input. Saved for convenience.}
-
-\item{call}{An unevaluated function call, that is, an unevaluated 
-expression which consists of the named function applied to the given arguments.}
-
-\item{coefficients}{Estimated coefficients.}
-
-\item{fitted.values}{Fitted values of the estimated CoDa model.}
-
-\item{residuals}{Deviance residuals.}
-
-\item{x}{Vector of ages used in the fitting.}
-
-\item{y}{Vector of years used in the fitting.}
+ \item{input}{List with arguments provided in input. Saved for convenience.}
+ \item{call}{An unevaluated function call, that is, an unevaluated 
+ expression which consists of the named function applied to the given arguments.}
+ \item{coefficients}{Estimated coefficients.}
+ \item{fitted.values}{Fitted values of the estimated CoDa model.}
+ \item{residuals}{Deviance residuals.} 
+ \item{x}{Vector of ages used in the fitting.} 
+ \item{y}{Vector of years used in the fitting.}
 }
 \description{
 Fit Compositional Data (CoDa) model for forecasting the life table 

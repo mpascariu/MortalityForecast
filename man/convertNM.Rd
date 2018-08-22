@@ -4,13 +4,13 @@
 \alias{convertNM}
 \title{Convert Normalized Moments to Central or Raw moments}
 \usage{
-convertNM(data, Out = c("central", "raw"))
+convertNM(data, to = c("central", "raw"))
 }
 \arguments{
 \item{data}{Data.frame with normalized moments.}
 
-\item{Out}{What type of statistical moments do we want to get? 
-Three types moments can be obtained: \code{"raw", "central", "normalized"}.}
+\item{to}{What type of statistical moments do you want to obtain? 
+Three types of moments can be obtained: \code{"raw", "central", "normalized"}.}
 }
 \description{
 Convert Normalized Moments to Central or Raw moments

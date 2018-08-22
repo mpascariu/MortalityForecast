@@ -4,13 +4,15 @@
 \alias{getForecasts}
 \title{Get Predicted Values}
 \usage{
-getForecasts(object, what = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-  ...)
+getForecasts(object, data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx",
+  "ex"), ...)
 }
 \arguments{
-\item{object}{An object of the class \code{doForecasts}.}
+\item{object}{An object of class \code{doForecasts}.}
 
-\item{what}{Specify the type of values to be extracted.}
+\item{data.out}{Specify the type of data to be returned in output. 
+Various life table indices are accepted: 
+\code{"qx", "mx", "dx", "lx", "Lx", "Tx", "ex"}.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }

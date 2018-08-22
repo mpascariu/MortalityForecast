@@ -7,11 +7,14 @@
 FDM(data, x, y, ...)
 }
 \arguments{
-\item{data}{Mortality data}
+\item{data}{A data.frame or a matrix containing mortality data 
+with ages \code{x} as row and time \code{y} as column.}
 
-\item{x}{Vector of ages.}
+\item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
+Default: \code{NULL}.}
 
-\item{y}{Vector of years.}
+\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
+Default: \code{NULL}.}
 }
 \description{
 Functional Demographic Model

@@ -5,13 +5,13 @@
 \title{Predict distribution of deaths using CoDa model.}
 \usage{
 \method{predict}{coda}(object, h, order = NULL, include.drift = NULL,
-  method = "ML", level = c(80, 95), jumpchoice = c("actual", "fit"),
-  ...)
+  level = c(80, 95), jumpchoice = c("actual", "fit"), method = "ML",
+  verbose = TRUE, ...)
 }
 \arguments{
-\item{object}{coda object}
+\item{object}{An object of class \code{coda}.}
 
-\item{h}{Number of years to be forecast in the future}
+\item{h}{Number of years to be forecast in the future.}
 
 \item{order}{A specification of the non-seasonal part of the ARIMA model: 
 the three components (p, d, q) are the AR order, the degree of differencing, 
@@ -21,39 +21,34 @@ automatically using the KPPS algorithm.}
 \item{include.drift}{Logical. Should the ARIMA model include a linear drift term?
 If \code{include.drift = NULL}, the model will be estimated automatically.}
 
-\item{method}{Fitting method: maximum likelihood or minimize conditional 
-sum-of-squares. Options to use:
-conditional-sum-of-squares (\code{"CSS-ML"}), maximum likelihood (\code{"ML"}) 
-and \code{"CSS"}.}
-
-\item{level}{Confidence level for prediction intervals.}
+\item{level}{Significance level of the confidence interval. Default: 95.}
 
 \item{jumpchoice}{Method used for computation of jumpchoice. 
 Possibilities: \code{"actual"} (use actual rates from final year) 
 and \code{"fit"} (use fitted rates).}
 
+\item{method}{ARIMA fitting method: maximum likelihood or minimize conditional 
+sum-of-squares. Options to use: conditional-sum-of-squares (\code{"CSS-ML"}), 
+maximum likelihood (\code{"ML"}) and \code{"CSS"}.}
+
+\item{verbose}{A logical value. Set \code{verbose = FALSE} to silent 
+the process that take place inside the function and avoid progress messages.}
+
 \item{...}{Additional arguments to be passed to \code{\link[forecast]{Arima}}}
 }
 \value{
 The output is an object of class \code{"predict.coda"} with the components:
-
-\item{call}{An unevaluated function call, that is, an unevaluated 
-expression which consists of the named function applied to the given arguments.}
-
-\item{predicted.values}{A list containing the predicted values together
-with the associated prediction intervals given by the estimated \code{link{coda}} 
-model over the forecast horizon \code{h}.}
-
-\item{kt}{The extrapolated kt parameters.}
-
-\item{conf.intervals}{The extrapolated kt parameters.}
-
-\item{deep}{An object of class \code{ARIMA} that contains all the
-components of the fitted time series model used in \code{kt} prediction.}
-
-\item{x}{Vector of ages used in prediction.}
-
-\item{y}{Vector of years used in prediction.}
+ \item{call}{An unevaluated function call, that is, an unevaluated 
+ expression which consists of the named function applied to the given arguments.}
+ \item{predicted.values}{A list containing the predicted values together
+ with the associated prediction intervals given by the estimated \code{link{coda}} 
+ model over the forecast horizon \code{h}.}
+ \item{kt}{The extrapolated kt parameters.}
+ \item{conf.intervals}{The extrapolated kt parameters.}
+ \item{deep}{An object of class \code{ARIMA} that contains all the
+ components of the fitted time series model used in \code{kt} prediction.} 
+ \item{x}{Vector of ages used in prediction.} 
+ \item{y}{Vector of years used in prediction.}
 }
 \description{
 Predict distribution of deaths using CoDa model.

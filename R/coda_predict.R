@@ -1,35 +1,30 @@
 
 #' Predict distribution of deaths using CoDa model.
 #' 
-#' @param object coda object
-#' @param h Number of years to be forecast in the future
+#' @param object An object of class \code{coda}.
 #' @param order A specification of the non-seasonal part of the ARIMA model: 
 #'  the three components (p, d, q) are the AR order, the degree of differencing, 
 #'  and the MA order. If \code{order = NULL}, the ARIMA order will be estimated 
 #'  automatically using the KPPS algorithm.
 #' @param include.drift Logical. Should the ARIMA model include a linear drift term?
 #'  If \code{include.drift = NULL}, the model will be estimated automatically.
-#' @param method Fitting method: maximum likelihood or minimize conditional 
-#'  sum-of-squares. Options to use:
-#'  conditional-sum-of-squares (\code{"CSS-ML"}), maximum likelihood (\code{"ML"}) 
-#'  and \code{"CSS"}.
-#' @param level Confidence level for prediction intervals.
+#' @param method ARIMA fitting method: maximum likelihood or minimize conditional 
+#'  sum-of-squares. Options to use: conditional-sum-of-squares (\code{"CSS-ML"}), 
+#'  maximum likelihood (\code{"ML"}) and \code{"CSS"}.
 #' @param ... Additional arguments to be passed to \code{\link[forecast]{Arima}}
-#' @param jumpchoice Method used for computation of jumpchoice. 
-#'  Possibilities: \code{"actual"} (use actual rates from final year) 
-#'  and \code{"fit"} (use fitted rates).
+#' @inheritParams doForecasts
 #' @return The output is an object of class \code{"predict.coda"} with the components:
-#' @return \item{call}{An unevaluated function call, that is, an unevaluated 
-#' expression which consists of the named function applied to the given arguments.}
-#' @return \item{predicted.values}{A list containing the predicted values together
-#' with the associated prediction intervals given by the estimated \code{link{coda}} 
-#' model over the forecast horizon \code{h}.}
-#' @return \item{kt}{The extrapolated kt parameters.}
-#' @return \item{conf.intervals}{The extrapolated kt parameters.}
-#' @return \item{deep}{An object of class \code{ARIMA} that contains all the
-#' components of the fitted time series model used in \code{kt} prediction.} 
-#' @return \item{x}{Vector of ages used in prediction.} 
-#' @return \item{y}{Vector of years used in prediction.} 
+#'  \item{call}{An unevaluated function call, that is, an unevaluated 
+#'  expression which consists of the named function applied to the given arguments.}
+#'  \item{predicted.values}{A list containing the predicted values together
+#'  with the associated prediction intervals given by the estimated \code{link{coda}} 
+#'  model over the forecast horizon \code{h}.}
+#'  \item{kt}{The extrapolated kt parameters.}
+#'  \item{conf.intervals}{The extrapolated kt parameters.}
+#'  \item{deep}{An object of class \code{ARIMA} that contains all the
+#'  components of the fitted time series model used in \code{kt} prediction.} 
+#'  \item{x}{Vector of ages used in prediction.} 
+#'  \item{y}{Vector of years used in prediction.} 
 #' @examples 
 #' # Example 1 ----------------------
 #' # Fit CoDa Mortality Model
@@ -52,10 +47,11 @@
 #' lt <- LifeTable(x = P$x, dx = dx)
 #' }
 #' @export
-#' 
 predict.coda <- function(object, h, order = NULL, include.drift = NULL,
-                         method = "ML", level = c(80, 95), 
-                         jumpchoice = c("actual", "fit"), ...){
+                         level = c(80, 95), 
+                         jumpchoice = c("actual", "fit"), 
+                         method = "ML", 
+                         verbose = TRUE, ...){
   dx  <- t(object$input$data)
   bop <- max(object$y) + 1
   eop <- bop + h - 1
@@ -91,7 +87,6 @@ predict.coda <- function(object, h, order = NULL, include.drift = NULL,
 
 
 #' Internal function
-#' 
 #' @inheritParams coda
 #' @inheritParams predict.coda
 #' @param kt Estimated kt vector of parameters
@@ -99,7 +94,6 @@ predict.coda <- function(object, h, order = NULL, include.drift = NULL,
 #' @param bx Estimated bx vector of parameters
 #' @param fit Fitted values
 #' @keywords internal
-#' 
 compute_dx <- function(dx, kt, ax, bx, fit, y, jumpchoice) {
   
   if (is.data.frame(kt)) {
@@ -133,7 +127,6 @@ compute_dx <- function(dx, kt, ax, bx, fit, y, jumpchoice) {
 #' @inheritParams print.coda
 #' @keywords internal
 #' @export
-#' 
 print.predict.coda <- function(x, ...) {
   cat('\nForecast: Compositional-Data Lee-Carter Mortality Model')
   cat('\nModel   : clr d[x,t] = a[x] + b[x]k[t]')
@@ -149,7 +142,6 @@ print.predict.coda <- function(x, ...) {
 #' @param object An object generate by Arima function
 #' @param padding Logical.
 #' @keywords internal
-#' 
 arima.string1 <- function(object, padding = FALSE) {
   order  <- object$arma[c(1, 6, 2, 3, 7, 4, 5)]
   nc     <- names(coef(object))

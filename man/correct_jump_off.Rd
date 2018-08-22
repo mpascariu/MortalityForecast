@@ -15,7 +15,7 @@ correct_jump_off(X, object, jumpchoice, h)
 Possibilities: \code{"actual"} (use actual rates from final year) 
 and \code{"fit"} (use fitted rates).}
 
-\item{h}{h Number of units of time (years) to be forecast in the future.}
+\item{h}{Number of years to be forecast in the future.}
 }
 \description{
 Jump-off correction

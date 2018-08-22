@@ -4,13 +4,13 @@
 \alias{convertCM}
 \title{Convert Central Moments to Raw or Normalized moments}
 \usage{
-convertCM(data, Out = c("raw", "normalized"), eta)
+convertCM(data, to = c("raw", "normalized"), eta)
 }
 \arguments{
 \item{data}{Data.frame with central moments.}
 
-\item{Out}{What type of statistical moments do we want to get? 
-Three types moments can be obtained: \code{"raw", "central", "normalized"}.}
+\item{to}{What type of statistical moments do you want to obtain? 
+Three types of moments can be obtained: \code{"raw", "central", "normalized"}.}
 
 \item{eta}{A numeric vector of the expected values. This is required ONLY 
 is we convert central moments into raw or normalized. Default: \code{NULL}.}

@@ -7,9 +7,8 @@
 doRanking(z)
 }
 \arguments{
-\item{z}{Accuracy measures}
+\item{z}{Table containing accuracy measures.}
 }
 \description{
 Rank models based on the accuracy results
 }
-\keyword{internal}

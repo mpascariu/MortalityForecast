@@ -8,7 +8,7 @@
   getOption("digits") - 3L))
 }
 \arguments{
-\item{object}{An object of the class \code{\link{getResiduals}}.}
+\item{object}{An object of class \code{\link{getResiduals}}.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 

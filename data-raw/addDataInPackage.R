@@ -6,8 +6,8 @@ library(dplyr)
 library(tidyr)
 
 # Download HMD data
-HMDusr = 'zpascariu@outlook.com'
-psd = '1513208587'
+HMDusr = '...@outlook.com'
+psd = '...'
 cntr = 'GBRTENW'
 
 

@@ -7,7 +7,7 @@
 \method{print}{summary.getResiduals}(x, ...)
 }
 \arguments{
-\item{x}{An object of the class \code{summary.getResiduals}}
+\item{x}{An object of class \code{summary.getResiduals}}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }
