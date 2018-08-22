@@ -3,7 +3,7 @@
 \docType{package}
 \name{MortalityForecast}
 \alias{MortalityForecast-package}
-\title{MortalityForecast: Standard tools to compare and evaluate mortality forecasting methods}
+\title{MortalityForecast: Standard Tools to Compare and Evaluate Mortality Forecasting Methods}
 \description{
 Standard tools to compare and evaluate mortality forecasting methods.
 }
@@ -23,5 +23,12 @@ Useful links:
 }
 \author{
 \strong{Maintainer}: Marius D. Pascariu \email{rpascariu@outlook.com} [copyright holder]
+
+Other contributors:
+\itemize{
+  \item Adam Lenart [contributor]
+  \item Marie-Pier Bergeron-Boucher [contributor]
+  \item Jim Oeppen [contributor]
+}
 
 }

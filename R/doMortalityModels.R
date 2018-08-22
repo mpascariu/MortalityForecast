@@ -9,17 +9,14 @@
 #' \code{"qx", "mx", "dx", "lx"}.
 #' @param models Mortality models to be evaluated.
 #' @param ... Arguments to be passed to or from other methods.
-#' @inheritParams dxForecast::lenart
+#' @inheritParams MEM
 #' @examples 
-#' x = 0:100
-#' y = 2005:2016
+#' x  <- 0:100
+#' y  <- 2005:2016
 #' D  <- MortalityForecast.data$dx[paste(x), paste(y)]
-#' ex <- MortalityForecast.data$ex
-#' exogen <- ex[paste(y)]
+#' MM <- c("LC", "FDM", "CoDa", "M6")
 #' 
-#' MM = c("LC", "FDM", "CoDa", "M6", "M6X")
-#' M <- doMortalityModels(data = D, x, y, data.type = "dx",
-#'                        models = MM, exogen = exogen)
+#' M <- doMortalityModels(data = D, x, y, data.type = "dx", models = MM)
 #' 
 #' oex <- getObserved(M, what = "ex")
 #' fex <- getFitted(M, what = "ex")
@@ -28,8 +25,7 @@
 doMortalityModels <- function(data, x, y, 
                               data.type = c("qx", "mx", "dx", "lx"),
                               models = c("MRW", "MRWD","LC", "FDM", "PLAT", "CoDa", 
-                                         "M4", "M4X", "M5", "M5X", "M6", "M6X"),
-                              exogen = NULL, ...) {
+                                         "M4", "M5", "M6"), ...) {
   input <- as.list(environment())
   data.type <- match.arg(data.type)
   call <-  match.call()
@@ -51,17 +47,13 @@ doMortalityModels <- function(data, x, y,
   if ("PLAT" %in% models) PLAT <- PLAT(data = mx.data, x, y)
   # CoDa-LC (2008)
   if ("CoDa" %in% models) CoDa <- coda(data = dx.data, x, y)
-  # Mortality Moments Model - PLC (2018)
-  if ("M4" %in% models)  M4 <- lenart(data = dx.data, x, y, n = 4)
-  if ("M4X" %in% models) M4X <- lenart(data = dx.data, x, y, n = 4, exogen = exogen)
-  if ("M5" %in% models)  M5 <- lenart(data = dx.data, x, y, n = 5)
-  if ("M5X" %in% models) M5X <- lenart(data = dx.data, x, y, n = 5, exogen = exogen)
-  if ("M6" %in% models)  M6 <- lenart(data = dx.data, x, y, n = 6)
-  if ("M6X" %in% models) M6X <- lenart(data = dx.data, x, y, n = 6, exogen = exogen)
-  if ("M7" %in% models)  M7 <- lenart(data = dx.data, x, y, n = 7)
-  if ("M7X" %in% models) M7X <- lenart(data = dx.data, x, y, n = 7, exogen = exogen)
+  # Maximum Entropy Mortality Models - PLC (2018)
+  if ("M4" %in% models)  M4 <- MEM(data = dx.data, x, y, n = 4)
+  if ("M5" %in% models)  M5 <- MEM(data = dx.data, x, y, n = 5)
+  if ("M6" %in% models)  M6 <- MEM(data = dx.data, x, y, n = 6)
+  if ("M7" %in% models)  M7 <- MEM(data = dx.data, x, y, n = 7)
 
-  remove(data, exogen, data.type, models, dx.data, mx.data)
+  remove(data, data.type, models, dx.data, mx.data)
   out <- as.list(environment())
   out <- structure(class = "MortalityModels", out)
   return(out)

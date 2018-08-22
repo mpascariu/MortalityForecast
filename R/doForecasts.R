@@ -7,17 +7,13 @@
 #' @param ... Further argumets to be passed to other methods.
 #' @inheritParams predict.coda
 #' @examples 
-#' x = 0:100
-#' y = 1985:1999
-#' h = 17
+#' x  <- 0:100
+#' y  <- 1985:1999
+#' h  <- 17
 #' D  <- MortalityForecast.data$dx[paste(x), paste(y)]
-#' ex <- MortalityForecast.data$ex
-#' exogen <- ex[paste(y)]
+#' MM <- c("LC", "FDM", "CoDa", "M6")
 #' 
-#' MM = c("LC", "FDM", "CoDa", "M6", "M6X")
-#' M <- doMortalityModels(data = D, x, y, data.type = "dx",
-#'                        models = MM, exogen = exogen)
-#'                        
+#' M <- doMortalityModels(data = D, x, y, data.type = "dx", models = MM)
 #' P <- doForecasts(M, h, level = 95, jumpchoice = "actual")
 #' 
 #' pex <- getForecasts(P, what = "ex")
@@ -30,7 +26,6 @@ doForecasts <- function(object, h, level = 95,
   y     <- max(object$y) + 1:h
   Mn    <- object$input$models # Model names
   jumpchoice <- match.arg(jumpchoice)
-  
   
   for (i in 1:length(Mn)) {
     cat(Mn[i], " ")

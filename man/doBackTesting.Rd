@@ -4,11 +4,10 @@
 \alias{doBackTesting}
 \title{Perform in-sample testing of mortality forecasts}
 \usage{
-doBackTesting(data, x, y.fit, y.for, data.type, what, exogen = NULL,
-  level = 95, jumpchoice = "actual", xa = NULL, ya = NULL,
-  measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
-  models = c("LC", "FDM", "PLAT", "CoDa", "M4", "M4X", "M5", "M5X", "M6",
-  "M6X"), ...)
+doBackTesting(data, x, y.fit, y.for, data.type, what, level = 95,
+  jumpchoice = "actual", xa = NULL, ya = NULL, measures = c("ME",
+  "MAE", "MAPE", "sMAPE", "MRAE", "MASE"), models = c("LC", "FDM",
+  "PLAT", "CoDa", "M4", "M4X", "M5", "M5X", "M6", "M6X"), ...)
 }
 \arguments{
 \item{data}{Mortality data for fitting of the models and for validation; 
@@ -24,8 +23,6 @@ that is the data coresponding to the horizon to be predicted.}
 \code{"qx", "mx", "dx", "lx"}.}
 
 \item{what}{Specify the type of values to be extracted.}
-
-\item{exogen}{Inlusion of exogenous variables.}
 
 \item{level}{Confidence level for prediction intervals.}
 
