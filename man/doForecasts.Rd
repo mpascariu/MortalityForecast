@@ -32,7 +32,7 @@ x  <- 0:100
 y  <- 1985:1999
 h  <- 17
 D  <- MortalityForecast.data$dx[paste(x), paste(y)]
-MM <- c("LC", "FDM", "CoDa", "M6")
+MM <- c("MRWD", "LC", "FDM", "CoDa", "MEM6")
 
 M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 P <- doForecasts(M, h, level = 95, jumpchoice = "actual")

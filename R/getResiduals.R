@@ -1,7 +1,6 @@
 
 
 #' Get Deviance Residuals
-#' 
 #' @inheritParams getFitted
 #' @export
 getResiduals <- function(object,
@@ -20,31 +19,29 @@ getResiduals <- function(object,
 
 
 #' Summary for getResiduals
-#' 
 #' @param object An object of class \code{\link{getResiduals}}.
 #' @param digits Number of digits to display.
 #' @inheritParams doMortalityModels
+#' @keywords internal
 #' @export
 summary.getResiduals <- function(object, ..., 
-                                 digits = max(3L, getOption("digits") - 3L)) {
-  a <- lapply(object, FUN = function(k) summary(unlist(k)))
-  A <- matrix(unlist(a), nrow = 4, byrow = T)
-  # models <- c("RWD", "Lee-Carter", "CoDa-LC", "PLC")
-  models <- c("Lee-Carter", "CoDa-LC", "PLC")
-  st <- c("Min.", "1st Qu.", "Median", "Mean", "3rd Qu.", "Max.")
-  dimnames(A) <- list(Models = models, st)
-  out <- list(resid = A, digits = digits)
-  class(out) <- "summary.getResiduals"
+                                 digits = max(4L, getOption("digits") - 2L)) {
+  rn <- names(object)
+  cn <- c("Min.", "1st Qu.", "Median", "Mean", "3rd Qu.", "Max.")
+  N <- length(rn)
+  
+  fn <- function(Z) {
+    z <- unlist(Z)
+    z <- z[!is.na(z)]
+    summary(z)
+  } 
+  
+  O <- lapply(object, fn)
+  A <- matrix(unlist(O), nrow = N, byrow = T)
+  colnames(A) <- cn
+  out <- data.frame(model = rn, round(A, digits))
+  
+  out <- as.tibble(out)
   return(out)
 }
 
-
-#' Print summary.getResiduals
-#' @param x An object of class \code{summary.getResiduals}
-#' @inheritParams doMortalityModels
-#' @keywords internal
-#' @export
-print.summary.getResiduals <- function(x, ...) {
-  cat('\nDeviance Residuals:\n')
-  print(round(x$resid, x$digits))
-}

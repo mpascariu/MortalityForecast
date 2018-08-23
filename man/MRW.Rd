@@ -21,16 +21,16 @@ Default: \code{NULL}.}
 \item{include.drift}{Should the Random Walk model include a linear drift term? 
 Default: \code{TRUE}.}
 
-\item{...}{Ignored.}
+\item{...}{Arguments to be passed to or from other methods.}
 }
 \value{
-An object of class the \code{"MRW"} with components:
-\item{input}{ A list with the input data.}
-\item{drift}{ A vector with the estimated drift.}
-\item{sigma}{ A matrix with the estimated variance covariance matrix.}
-\item{fitted}{ Fitted values.}
-\item{residuals}{ Residuals from the fitted model. That is 
-observed minus fitted values.}
+An object of class \code{"MRW"} with components:
+ \item{input}{ A list with the input data.}
+ \item{drift}{ A vector with the estimated drift.}
+ \item{sigma}{ A matrix with the estimated variance covariance matrix.}
+ \item{fitted}{ Fitted values.}
+ \item{residuals}{ Residuals from the fitted model. That is 
+ observed minus fitted values.}
 }
 \description{
 Fit a Multivariate Random Walk Model to the input \code{data}, a
@@ -41,13 +41,12 @@ For further information on the Multivariate Random Walk with
 drift see Appendix B in \insertCite{haberman2011;textual}{MortalityForecast}.
 }
 \examples{
-# Forecast mortality using a Random Walk with Drift model
-x <- 0:100
-y <- 1980:2000
-D <- MortalityForecast.data$mx[paste(x), paste(y)]
-logD <- log(D)
+# Forecast mortality using a Multivariate Random Walk with Drift model
+x  <- 0:100
+y  <- 1980:2000
+mx <- MortalityForecast.data$mx[paste(x), paste(y)]
 
-M <- MRW(data = log(D), x = x, y = y, include.drift = TRUE)
+M <- MRW(data = log(mx), x = x, y = y, include.drift = TRUE)
 P <- predict(M, h = 16)
 
 pv <- exp(P$predicted.values)

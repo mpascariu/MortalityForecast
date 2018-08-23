@@ -34,7 +34,7 @@ Wrapper for Function Fitting Stochastic Mortality Models
 x  <- 0:100
 y  <- 2005:2016
 D  <- MortalityForecast.data$dx[paste(x), paste(y)]
-MM <- c("LC", "FDM", "CoDa", "M6")
+MM <- c("MRWD", "LC", "FDM", "CoDa")
 
 M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 

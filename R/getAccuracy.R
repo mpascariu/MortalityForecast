@@ -18,7 +18,7 @@
 #' D1 <- MortalityForecast.data$dx[paste(x), paste(y1)]
 #' D2 <- MortalityForecast.data$dx[paste(x), paste(y2)]
 #' 
-#' MM = c("MRWD", "LC", "FDM", "CoDa", "M6")
+#' MM = c("MRWD", "LC", "CoDa")
 #' M <- doMortalityModels(data = D1, x, y1, data.in = "dx", models = MM)
 #' P <- doForecasts(M, h)
 #' A <- getAccuracy(P, D2, xa = 0:95, data.in = "dx", data.out = "qx")

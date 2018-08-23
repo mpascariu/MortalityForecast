@@ -18,7 +18,7 @@
 #' 
 #' D <- MortalityForecast.data$dx[paste(x), paste(y)] # DATA
 #' 
-#' MM <- c("MRW", "MRWD", "LC", "CoDa", "M6")
+#' MM <- c("MRWD", "LC", "CoDa", "MEM6")
 #' B.ex <- doBackTesting(data = D, x = x, 
 #'                       y.fit = y1, y.for = y2, 
 #'                       data.in = "dx", 

@@ -4,8 +4,8 @@
 \alias{summary.getResiduals}
 \title{Summary for getResiduals}
 \usage{
-\method{summary}{getResiduals}(object, ..., digits = max(3L,
-  getOption("digits") - 3L))
+\method{summary}{getResiduals}(object, ..., digits = max(4L,
+  getOption("digits") - 2L))
 }
 \arguments{
 \item{object}{An object of class \code{\link{getResiduals}}.}
@@ -17,3 +17,4 @@
 \description{
 Summary for getResiduals
 }
+\keyword{internal}
