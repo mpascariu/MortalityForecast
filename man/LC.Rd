@@ -4,7 +4,7 @@
 \alias{LC}
 \title{Lee-Carter Mortality Model as implemented in StMoMo package}
 \usage{
-LC(data, x, y, link = "log", lx0 = 1e+05, verbose = FALSE)
+LC(data, x, y, link = "logit", lx0 = 1e+05, verbose = FALSE)
 }
 \arguments{
 \item{data}{A data.frame or a matrix containing mortality data 

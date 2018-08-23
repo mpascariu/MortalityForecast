@@ -4,13 +4,12 @@
 #' @inheritParams StMoMo::lc
 #' @param lx0 lx0
 #' @export
-LC <- function(data, x, y, link = "log", lx0 = 1e5, verbose = FALSE) {
-  Dxt <- data * lx0
-  Ext <- Dxt * 0 + lx0
-  wxt <- genWeightMat(ages = x, years = y, clip = 3) # weighting matrix
-  lca <- lc(link = link)
-  LCfit <- StMoMo::fit(object = lca, Dxt = Dxt, Ext = Ext, ages = x, years = y, 
-                       ages.fit = x, wxt = wxt, verbose = verbose)
+LC <- function(data, x, y, link = "logit", lx0 = 1e5, verbose = FALSE) {
+  LCfit <- StMoMo::fit(object = lc(link = link), 
+                       Dxt = data * lx0, 
+                       Ext = data * 0 + lx0, 
+                       ages = x, years = y, 
+                       ages.fit = x, wxt = NULL, verbose = verbose)
   return(LCfit)
 }
 
@@ -68,11 +67,26 @@ PLAT <- function(data, x, y, link = "log", lx0 = 1e5, verbose = FALSE) {
 #' @inheritParams LC
 #' @seealso \code{\link[demography]{fdm}}
 #' @keywords internal
-FDM <- function(data, x, y, ...) {
-  D <- demography::demogdata(data = data, ages = x, years = y, 
+HyndmanUllah <- function(data, x, y, ...) {
+  demo_data <- demography::demogdata(data = data, ages = x, years = y, 
                  pop = data * 0, label = "---", name = "mean", 
                  lambda = 0, type = "mortality")
-  FDMfit <- demography::fdm(D, ...)
+  FDMfit <- demography::fdm(demo_data, ...)
+  
+  dimnames(FDMfit$fitted$y) <- list(x, y)
+  
+  return(FDMfit)
+}
+
+#' Lee-Carter Demographic Model
+#' @inheritParams LC
+#' @seealso \code{\link[demography]{lca}}
+#' @keywords internal
+LeeCarter <- function(data, x, y, ...) {
+  demo_data <- demography::demogdata(data = data, ages = x, years = y, 
+                                     pop = data * 0, label = "---", name = "mean", 
+                                     lambda = 0, type = "mortality")
+  FDMfit <- demography::lca(demo_data, ...)
   
   dimnames(FDMfit$fitted$y) <- list(x, y)
   

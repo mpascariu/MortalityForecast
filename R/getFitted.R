@@ -19,7 +19,7 @@ getFitted <- function(object,
       mx <- exp(fitted(M))
       dx <- convertFx(x, mx, from = "mx", to = "dx", lx0 = 1, ...)
       
-    } else if (Mn[i] %in% c("FDM")) {
+    } else if (Mn[i] %in% c("HyndmanUllah", "LeeCarter")) {
       mx <- exp(fitted(M)$y)
       dx <- convertFx(x, mx, from = "mx", to = "dx", lx0 = 1, ...)
       

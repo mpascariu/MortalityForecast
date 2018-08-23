@@ -51,17 +51,21 @@ doBBackTesting <- function(data, x, y,
                         x = x, 
                         y.fit = yf, 
                         y.for = yh, 
-                        data.in = "dx", data.out = "mx",
+                        data.in = data.in, data.out = data.out,
                         models = models, xa = xa, ya = ya, ...)
     Ak <- Bk$accuracy$results
     
     B[[k]] <- Bk
-    A <- A + Ak
+    A <- A + Ak/nc
     remove(k, yf, yh, y_, Bk, Ak)
   }
+  names(B) <- paste0("S", 1:nc)
+  R <- doRanking(A)
   
-  out <- list(call = call, accuracy = A/nc, scenarios = S, results = B)
-  out <- structure(class = "doBackTESTING", out)
+  accuracy <- structure(class = "getAccuracy", list(index = data.out, results = A, 
+                                                    rank = R$rank, GC = R$GC))
+  out <- list(call = call, accuracy = accuracy, scenarios = S, results = B)
+  out <- structure(class = "doBBackTesting", out)
   return(out)
 }
 

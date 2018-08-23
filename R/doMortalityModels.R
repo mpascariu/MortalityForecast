@@ -18,7 +18,7 @@
 #' x  <- 0:100
 #' y  <- 2005:2016
 #' D  <- MortalityForecast.data$dx[paste(x), paste(y)]
-#' MM <- c("MRWD", "LC", "FDM", "CoDa")
+#' MM <- c("MRWD", "LeeCarter", "HyndmanUllah", "CoDa")
 #' 
 #' M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 #' 
@@ -48,8 +48,9 @@ doMortalityModels <- function(data, x = NULL, y = NULL,
   if ("MRWD" %in% models) MRWD <- MRW(data = log(mx.data), x, y, include.drift = TRUE)
   # LC (1992)
   if ("LC" %in% models) LC <- LC(data = mx.data, x, y, link = "log")
+  if ("LeeCarter" %in% models) LeeCarter <- LeeCarter(data = mx.data, x, y)
   # FDM (1992)
-  if ("FDM" %in% models) FDM <- FDM(data = mx.data, x, y)
+  if ("HyndmanUllah" %in% models) HyndmanUllah <- HyndmanUllah(data = mx.data, x, y)
   # Plat Model (2009)
   if ("PLAT" %in% models) PLAT <- PLAT(data = mx.data, x, y)
   # CoDa-LC (2008)

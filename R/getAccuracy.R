@@ -1,5 +1,4 @@
 
-
 #' Get Accuracy Measures
 #' @param object An object of class \code{doForecasts}.
 #' @param data Validation set of demographic data.
@@ -169,8 +168,10 @@ computeAccuracy <- function(u, u.hat, b, xa = NULL, ya = NULL,
   # An alternative way of scaling is to divide each error by
   # the error obtaned using another standard method of forecasting (benchmark method).
   
-  bE  <- u - b        # benchmark errors
-  RAE <- AE/abs(bE)  # relative absolute errors.
+  bE  <- u - b       # benchmark errors
+  bAE <- abs(bE)
+  # RAE <- AE/bAE      # relative absolute errors.
+  RAE <- 2 * AE/(AE + bAE)  # relative absolute errors.
   
   # 13.Mean Relative Absolute Error
   MRAE <- mean(RAE, na.rm = N)

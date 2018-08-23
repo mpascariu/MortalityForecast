@@ -15,7 +15,7 @@
 #' y  <- 1985:1999
 #' h  <- 17
 #' D  <- MortalityForecast.data$dx[paste(x), paste(y)]
-#' MM <- c("MRWD", "LC", "FDM", "CoDa", "MEM6")
+#' MM <- c("MRWD", "LeeCarter", "HyndmanUllah", "CoDa", "MEM6")
 #' 
 #' M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 #' P <- doForecasts(M, h, level = 95, jumpchoice = "actual")
@@ -36,7 +36,7 @@ doForecasts <- function(object, h, level = 95,
     cat(Mn[i], " ")
     M <- with(object, get(Mn[i]))
     
-    if (Mn[i] %in% c("LC", "PLAT", "FDM")) {
+    if (Mn[i] %in% c("LC", "PLAT", "HyndmanUllah", "LeeCarter")) {
       P <- forecast(M, h = h, jumpchoice = jumpchoice, level = level)
     } else {
       P <- predict(M, h = h, jumpchoice = jumpchoice, level = level)
@@ -50,43 +50,3 @@ doForecasts <- function(object, h, level = 95,
   return(out)
 }
 
-
-#' Get Predicted Values
-#' @param object An object of class \code{doForecasts}.
-#' @inheritParams getAccuracy
-#' @export
-getForecasts <- function(object, 
-                         data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                         ...) {
-  data.out <- match.arg(data.out)
-  Mn   <- object$input$object$input$models # Model names
-  x    <- object$x
-  
-  DX <- list()
-  for (i in 1:length(Mn)) {
-    M <- with(object, get(Mn[i]))
-    
-    if (Mn[i] %in% c("LC", "PLAT")) {
-      mx <- M$rates
-      dx <- convertFx(x, mx, from = "mx", to = "dx", lx0 = 1, ...)
-      
-    } else if (Mn[i] %in% c("FDM")) {
-      mx <- M$rate$mean
-      dx <- convertFx(x, mx, from = "mx", to = "dx", lx0 = 1, ...)
-      
-    } else if (Mn[i] %in% c("MRW", "MRWD")) {
-      mx <- exp(M$predicted.values)
-      dx <- convertFx(x, mx, from = "mx", to = "dx", lx0 = 1, ...)
-      
-    } else {
-      dx <- M$predicted.values
-    }
-    DX[[i]] <- dx
-  }
-  
-  fn  <- function(Z) convertFx(x, Z, from = "dx", to = data.out, lx0 = 1)
-  out <- lapply(DX, fn)
-  names(out) <- Mn
-  out <- structure(class = "getForecasts", out)
-  return(out)
-}
