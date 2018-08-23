@@ -1,5 +1,5 @@
 
-#' Fit Maximum-Entropy Mortality Model 
+#' Fit a Maximum-Entropy Mortality Model 
 #' 
 #' @param n The maximum order of the moments to be used.
 #' @inheritParams doMortalityModels

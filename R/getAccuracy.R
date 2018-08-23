@@ -93,16 +93,16 @@ print.getAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L),
 #' @param u Validation dataset.
 #' @param u.hat In-sample forecast data.
 #' @param b Benchmark forecast data. Usualy a naive or Random-Walk forecast.
-#' @param xa Ages to be considered in model accuracy evaluation. It can be used to 
-#' calculate the measures on a subset of the results. If \code{x = NULL} 
-#' (default) the entire age-range in \code{u} is considered.
-#' @param ya Years to be considered in accuracy computation. Default: \code{NULL}.
+#' @param xa Ages to be considered in model accuracy evaluation. It can be used 
+#' to calculate the measures on a subset of the results. If \code{xa = NULL} 
+#' (default) the entire age-range in input is considered.
+#' @param ya Years to be considered in accuracy computation. Default: \code{ya = NULL}.
 #' @param measures What accurracy measure to compute? Various alternatives are 
 #' available, \itemize{
-#' \item{Mean error measures: } \code{"ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"};
-#' \item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "MdRAE", "MdASE"};
-#' \item{Squared error measures: } \code{"MSE", "RMSE", "RMSPE", "RMdSPE"};
-#' \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}
+#'  \item{Mean error measures: } \code{"ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"};
+#'  \item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "MdRAE", "MdASE"};
+#'  \item{Squared error measures: } \code{"MSE", "RMSE", "RMSPE", "RMdSPE"};
+#'  \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}
 #' @param na.rm A logical value indicating whether NA values should be stripped 
 #' before the computation proceeds.
 #' @details See \insertCite{hyndman2006;textual}{MortalityForecast} for a 

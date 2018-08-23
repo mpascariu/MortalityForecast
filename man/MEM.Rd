@@ -2,7 +2,7 @@
 % Please edit documentation in R/MEM_fit.R
 \name{MEM}
 \alias{MEM}
-\title{Fit Maximum-Entropy Mortality Model}
+\title{Fit a Maximum-Entropy Mortality Model}
 \usage{
 MEM(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...)
 }
@@ -40,7 +40,7 @@ The output is an object of class \code{"MEM"} with the components:
  \item{y}{Vector of years used in the fitting.}
 }
 \description{
-Fit Maximum-Entropy Mortality Model
+Fit a Maximum-Entropy Mortality Model
 }
 \examples{
 # Data ----------------------------------------

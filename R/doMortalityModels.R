@@ -1,6 +1,6 @@
 
 
-#' Wrapper for Function Fitting Stochastic Mortality Models
+#' Fit Multiple Stochastic Mortality Models
 #' 
 #' @param data A data.frame or a matrix containing mortality data 
 #' with ages \code{x} as row and time \code{y} as column.
@@ -47,7 +47,7 @@ doMortalityModels <- function(data, x = NULL, y = NULL,
   # Random Walk with drift
   if ("MRWD" %in% models) MRWD <- MRW(data = log(mx.data), x, y, include.drift = TRUE)
   # LC (1992)
-  if ("LC" %in% models) LC <- LC(data = mx.data, x, y)
+  if ("LC" %in% models) LC <- LC(data = mx.data, x, y, link = "log")
   # FDM (1992)
   if ("FDM" %in% models) FDM <- FDM(data = mx.data, x, y)
   # Plat Model (2009)

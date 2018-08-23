@@ -2,7 +2,7 @@
 % Please edit documentation in R/doMortalityModels.R
 \name{doMortalityModels}
 \alias{doMortalityModels}
-\title{Wrapper for Function Fitting Stochastic Mortality Models}
+\title{Fit Multiple Stochastic Mortality Models}
 \usage{
 doMortalityModels(data, x = NULL, y = NULL, data.in = c("qx", "mx",
   "dx", "lx"), models = c("MRWD", "LC"), verbose = TRUE, ...)
@@ -28,7 +28,7 @@ the process that take place inside the function and avoid progress messages.}
 \item{...}{Arguments to be passed to or from other methods.}
 }
 \description{
-Wrapper for Function Fitting Stochastic Mortality Models
+Fit Multiple Stochastic Mortality Models
 }
 \examples{
 x  <- 0:100

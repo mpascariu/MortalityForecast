@@ -2,7 +2,7 @@
 % Please edit documentation in R/doForecasts.R
 \name{doForecasts}
 \alias{doForecasts}
-\title{Forecast Human Mortality}
+\title{Perform Multiple Forecast of Mortality Using Various Models}
 \usage{
 doForecasts(object, h, level = 95, jumpchoice = c("actual", "fit"),
   verbose = TRUE, ...)
@@ -25,7 +25,7 @@ the process that take place inside the function and avoid progress messages.}
 \item{...}{Arguments to be passed to or from other methods.}
 }
 \description{
-Forecast Human Mortality
+Perform Multiple Forecast of Mortality Using Various Models
 }
 \examples{
 x  <- 0:100

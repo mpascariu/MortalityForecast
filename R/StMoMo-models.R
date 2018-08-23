@@ -3,13 +3,13 @@
 #' @inheritParams doMortalityModels
 #' @inheritParams StMoMo::lc
 #' @param lx0 lx0
-#' @keywords internal
+#' @export
 LC <- function(data, x, y, link = "log", lx0 = 1e5, verbose = FALSE) {
-  Dx  <- data * lx0
-  Ex  <- Dx * 0 + lx0
+  Dxt <- data * lx0
+  Ext <- Dxt * 0 + lx0
   wxt <- genWeightMat(ages = x, years = y, clip = 3) # weighting matrix
-  M   <- lc(link)
-  LCfit <- StMoMo::fit(M, Dxt = Dx, Ext = Ex, ages = x, years = y, 
+  lca <- lc(link = link)
+  LCfit <- StMoMo::fit(object = lca, Dxt = Dxt, Ext = Ext, ages = x, years = y, 
                        ages.fit = x, wxt = wxt, verbose = verbose)
   return(LCfit)
 }
