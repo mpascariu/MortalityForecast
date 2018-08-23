@@ -29,3 +29,4 @@ the process that take place inside the function and avoid progress messages.}
 \description{
 Lee-Carter Mortality Model as implemented in StMoMo package
 }
+\keyword{internal}

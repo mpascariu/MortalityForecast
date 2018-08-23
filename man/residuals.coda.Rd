@@ -7,11 +7,10 @@
 \method{residuals}{coda}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{"coda"}}
+\item{object}{An object of class \code{"coda"}.}
 
 \item{...}{Further arguments passed to or from other methods.}
 }
 \description{
 Residuals of the CoDa Mortality Model
 }
-\keyword{internal}

@@ -7,7 +7,7 @@
 \method{summary}{coda}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{"coda"}}
+\item{object}{An object of class \code{"coda"}.}
 
 \item{...}{Further arguments passed to or from other methods.}
 }

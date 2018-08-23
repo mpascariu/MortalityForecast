@@ -1,12 +1,12 @@
 
-#' Plot the residuals of a Maximum-Entropy Mortality Model
+#' Plot the deviance residuals
 #' 
-#' Plots the deviance residuals of a Maximum-Entropy Mortality Model model. 
+#' Plots the deviance residuals of a Mortality Model model. 
 #' Three types of plots are available: scatter plot of residuals by age, 
 #' period and cohort, colour map (heatmap) of the residuals, and a black and 
 #' white signplot of the residuals.
 #' 
-#' @param x An object of class \code{MEM}
+#' @param x An object of class \code{residMF}.
 #' @param plotType The type of the plot. The alternatives are 
 #' \code{"scatter"}(default), \code{"colourmap"}, and \code{"signplot"}.
 #' @param reslim Optional numeric vector of length 2, giving the range of the 
@@ -48,17 +48,9 @@
 #' All the credit goes to it's authors: 
 #' \href{https://github.com/amvillegas}{Andres Villegas}, Pietro Millossovich 
 #' and Vladimir Kaishev.
-#' @examples
-#' x  <- 10:100
-#' y  <- 1965:2014
-#' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
-#' M  <- MEM(dx, x, y, n = 6)
-#' 
-#' plot(resid(M), plotType = 'scatter')
-#' plot(resid(M), plotType = 'colourmap')
-#' plot(resid(M), plotType = 'signplot')
+#' @keywords internal
 #' @export 
-plot.residuals.MEM <- function(x, plotType = c("scatter", "colourmap", "signplot"), 
+plot.residMF <- function(x, plotType = c("scatter", "colourmap", "signplot"), 
                                   reslim = NULL, plotAge = TRUE, plotYear = TRUE, 
                                   plotCohort  = TRUE, pch = 20, col = NULL, ...) {
   plotType <- match.arg(plotType)

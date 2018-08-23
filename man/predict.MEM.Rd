@@ -19,7 +19,7 @@ of fitted data points. This argument can be used for example to estimate a
 density between 0 and 130 given the fact that the model was fitted on a 
 dataset containing values for 0-100 only.}
 
-\item{level}{Significance level of the confidence interval. Default: 95.}
+\item{level}{Significance level of the confidence interval.}
 
 \item{jumpchoice}{Method used for computation of jumpchoice. 
 Possibilities: \code{"actual"} (use actual rates from final year) 

@@ -3,7 +3,7 @@
 #' @inheritParams doMortalityModels
 #' @inheritParams StMoMo::lc
 #' @param lx0 lx0
-#' @export
+#' @keywords internal
 LC <- function(data, x, y, link = "logit", lx0 = 1e5, verbose = FALSE) {
   LCfit <- StMoMo::fit(object = lc(link = link), 
                        Dxt = data * lx0, 
@@ -61,37 +61,7 @@ PLAT <- function(data, x, y, link = "log", lx0 = 1e5, verbose = FALSE) {
   return(PLATfit)
 }
 
-# ----------------------------------------------
 
-#' Functional Demographic Model
-#' @inheritParams LC
-#' @seealso \code{\link[demography]{fdm}}
-#' @keywords internal
-HyndmanUllah <- function(data, x, y, ...) {
-  demo_data <- demography::demogdata(data = data, ages = x, years = y, 
-                 pop = data * 0, label = "---", name = "mean", 
-                 lambda = 0, type = "mortality")
-  FDMfit <- demography::fdm(demo_data, ...)
-  
-  dimnames(FDMfit$fitted$y) <- list(x, y)
-  
-  return(FDMfit)
-}
-
-#' Lee-Carter Demographic Model
-#' @inheritParams LC
-#' @seealso \code{\link[demography]{lca}}
-#' @keywords internal
-LeeCarter <- function(data, x, y, ...) {
-  demo_data <- demography::demogdata(data = data, ages = x, years = y, 
-                                     pop = data * 0, label = "---", name = "mean", 
-                                     lambda = 0, type = "mortality")
-  FDMfit <- demography::lca(demo_data, ...)
-  
-  dimnames(FDMfit$fitted$y) <- list(x, y)
-  
-  return(FDMfit)
-}
 
 
 

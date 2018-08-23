@@ -52,7 +52,7 @@ the life table (input-specific), the errors can be "false positives" in the last
 \item{ya}{Years to be considered in accuracy computation. If \code{ya = NULL} 
 (default) the entire period in \code{y} is considered.}
 
-\item{level}{Significance level of the confidence interval. Default: 95.}
+\item{level}{Significance level of the confidence interval.}
 
 \item{jumpchoice}{Method used for computation of jumpchoice. 
 Possibilities: \code{"actual"} (use actual rates from final year) 

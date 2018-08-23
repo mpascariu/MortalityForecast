@@ -8,7 +8,7 @@
 #' @importFrom compositions acomp geometricmeanCol clr clrInv
 #' @importFrom magrittr %>%
 #' @importFrom moments all.moments raw2central
-#' @importFrom demography demogdata fdm
+#' @importFrom demography demogdata fdm lca
 #' @importFrom forecast forecast Arima arimaorder auto.arima
 #' @importFrom stats predict fitted median coef lm na.omit quantile cov qnorm
 #' @importFrom tidyr gather

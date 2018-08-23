@@ -110,12 +110,9 @@ coda.input.check <- function(X) {
 # S3 ----------------------------------------------
 #' Residuals of the CoDa Mortality Model
 #' @inheritParams summary.coda
-#' @keywords internal
 #' @export
 residuals.coda <- function(object, ...){
-  res <- as.matrix(object$residuals)
-  out <- structure(class = 'residuals.coda', res)
-  return(out)
+  structure(class = "residMF", as.matrix(object$residuals))
 }
 
 
@@ -135,7 +132,7 @@ print.coda <- function(x, ...) {
 
 
 #' Summary coda
-#' @param object An object of class \code{"coda"}
+#' @param object An object of class \code{"coda"}.
 #' @inheritParams print.coda
 #' @keywords internal
 #' @export
@@ -152,7 +149,7 @@ summary.coda <- function(object, ...) {
 
 
 #' Print summary.coda
-#' @param x An object of class \code{"summary.coda"}
+#' @param x An object of class \code{"summary.coda"}.
 #' @inheritParams print.coda
 #' @keywords internal
 #' @export

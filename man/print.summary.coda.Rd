@@ -7,7 +7,7 @@
 \method{print}{summary.coda}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{"summary.coda"}}
+\item{x}{An object of class \code{"summary.coda"}.}
 
 \item{...}{Further arguments passed to or from other methods.}
 }

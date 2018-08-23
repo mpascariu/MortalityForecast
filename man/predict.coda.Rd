@@ -21,7 +21,7 @@ automatically using the KPPS algorithm.}
 \item{include.drift}{Logical. Should the ARIMA model include a linear drift term?
 If \code{include.drift = NULL}, the model will be estimated automatically.}
 
-\item{level}{Significance level of the confidence interval. Default: 95.}
+\item{level}{Significance level of the confidence interval.}
 
 \item{jumpchoice}{Method used for computation of jumpchoice. 
 Possibilities: \code{"actual"} (use actual rates from final year) 

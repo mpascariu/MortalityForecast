@@ -8,7 +8,7 @@
   quant = c(0.1, 0.9), ...)
 }
 \arguments{
-\item{x}{An object of class \code{MEM}}
+\item{x}{An object of class \code{residMF}.}
 
 \item{plotType}{The type of the plot. The alternatives are 
 \code{"fitted"}, \code{"observed"}. Default: \code{"fitted"}.}

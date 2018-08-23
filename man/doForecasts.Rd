@@ -13,7 +13,7 @@ doForecasts(object, h, level = 95, jumpchoice = c("actual", "fit"),
 
 \item{h}{Number of years to be forecast in the future.}
 
-\item{level}{Significance level of the confidence interval. Default: 95.}
+\item{level}{Significance level of the confidence interval.}
 
 \item{jumpchoice}{Method used for computation of jumpchoice. 
 Possibilities: \code{"actual"} (use actual rates from final year) 

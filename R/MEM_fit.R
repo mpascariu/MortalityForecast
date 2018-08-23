@@ -47,7 +47,7 @@ MEM <- function(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...) {
   nMT <- log(abs(nM))
   sg  <- sign(nM)
   
-  V   <- MRW(t(nMT), x = NULL, y, include.drift = TRUE)
+  V   <- fitMRandomWalk(t(nMT), x = NULL, y, include.drift = TRUE)
   fnM <- fnM <- t(exp(fitted(V)) * as.numeric(sg[1,]))       # fitted normalized moments
   frM <- convertMoments(fnM, from = "normalized", to = "raw") # fitted raw moments
   
@@ -117,19 +117,17 @@ find_ages_and_years <- function(data, x, y) {
 #' residuals(M)
 #' @export
 residuals.MEM <- function(object, ...) {
-  X   <- object
-  R   <- X$observed.values - X$fitted.values
-  out <- structure(class = "residuals.MEM", R)
-  return(out)
+  structure(class = "residMF", as.matrix(object$residuals))
 }
 
 
 #' Print function for MEM method
+#' @param x An object of class \code{\link{MEM}}.
 #' @inheritParams residuals.MEM
 #' @keywords internal
 #' @export
 print.MEM <- function(x, ...) {
-  cat('\nFit : Lenart-Pascariu Mortality Model')
+  cat('\nFit : Maximum-Entropy Mortality Model')
   cat('\nCall: '); print(x$call)
   cat('\nAges in fit   : ', paste0(range(x$x), collapse = ' - '))
   cat('\nYears in fit  : ', paste0(range(x$y), collapse = ' - '))

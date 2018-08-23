@@ -28,7 +28,7 @@
 #' @export
 doMortalityModels <- function(data, x = NULL, y = NULL, 
                               data.in = c("qx", "mx", "dx", "lx"),
-                              models = c("MRWD","LC"),
+                              models = c("MRWD","LeeCarter"),
                               verbose = TRUE, ...) {
   
   data.in <- match.arg(data.in)
@@ -43,14 +43,14 @@ doMortalityModels <- function(data, x = NULL, y = NULL,
   # lx.data <- convertFx(x, data, from = data.in, to = "lx", lx0 = 1)
 
   # The Naive model - Multivariate Random-Walk
-  if ("MRW" %in% models) MRW <- MRW(data = log(mx.data), x, y, include.drift = FALSE)
+  if ("MRW" %in% models) MRW <- fitMRandomWalk(data = log(mx.data), x, y, include.drift = FALSE)
   # Random Walk with drift
-  if ("MRWD" %in% models) MRWD <- MRW(data = log(mx.data), x, y, include.drift = TRUE)
+  if ("MRWD" %in% models) MRWD <- fitMRandomWalk(data = log(mx.data), x, y, include.drift = TRUE)
   # LC (1992)
   if ("LC" %in% models) LC <- LC(data = mx.data, x, y, link = "log")
-  if ("LeeCarter" %in% models) LeeCarter <- LeeCarter(data = mx.data, x, y)
+  if ("LeeCarter" %in% models) LeeCarter <- fitLeeCarter(data = mx.data, x, y)
   # FDM (1992)
-  if ("HyndmanUllah" %in% models) HyndmanUllah <- HyndmanUllah(data = mx.data, x, y)
+  if ("HyndmanUllah" %in% models) HyndmanUllah <- fitHyndmanUllah(data = mx.data, x, y)
   # Plat Model (2009)
   if ("PLAT" %in% models) PLAT <- PLAT(data = mx.data, x, y)
   # CoDa-LC (2008)

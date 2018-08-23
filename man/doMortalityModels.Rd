@@ -5,7 +5,7 @@
 \title{Fit Multiple Stochastic Mortality Models}
 \usage{
 doMortalityModels(data, x = NULL, y = NULL, data.in = c("qx", "mx",
-  "dx", "lx"), models = c("MRWD", "LC"), verbose = TRUE, ...)
+  "dx", "lx"), models = c("MRWD", "LeeCarter"), verbose = TRUE, ...)
 }
 \arguments{
 \item{data}{A data.frame or a matrix containing mortality data 

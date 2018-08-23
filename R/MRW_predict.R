@@ -4,17 +4,15 @@
 #' Returns forecasts and other information for a Multivariate 
 #' Random Walk Model.
 #' 
-#' @param object An object of the class \code{"MWR"}.
-#' @param h Number of periods for forecasting.
-#' @param level Confidence level for prediction intervals.
-#' @param ... Ignored.
-#' @return An object of the class \code{"predict.MRW"} with components:
+#' @param object An object of class \code{"fitMRandomWalk"}.
+#' @inheritParams doForecasts
+#' @return An object of the class \code{"predict.fitMRandomWalk"} with components:
 #' \item{predicted.values}{ Data.frame with the central forecast.}
 #' \item{conf.intervals}{ List with lower and upper limits for prediction intervals.}
 #' \item{x}{ Numerical vector indicating the age classes in output.}
 #' \item{y}{ Numerical vector indicating the years in output.}
 #' @export
-predict.MRW <- function(object, h = 10, level = c(80, 95), ...) {
+predict.fitMRandomWalk <- function(object, h = 10, level = c(80, 95), ...) {
   
   data <- object$input$data
   x  <- object$x
@@ -44,7 +42,7 @@ predict.MRW <- function(object, h = 10, level = c(80, 95), ...) {
   names(CI) <- dn
   out <- list(predicted.values = mean, conf.intervals = CI,
               x = xf, y = yf)
-  out <- structure(class = "predict.MRW", out)  
+  out <- structure(class = "predict.fitMRandomWalk", out)  
   return(out)
 }
 

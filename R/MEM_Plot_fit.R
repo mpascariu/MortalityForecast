@@ -3,7 +3,7 @@
 #' 
 #' @param plotType The type of the plot. The alternatives are 
 #' \code{"fitted"}, \code{"observed"}. Default: \code{"fitted"}.
-#' @inheritParams plot.residuals.MEM
+#' @inheritParams plot.residMF
 #' @inheritParams fitted2dens
 #' @param quant Sets the number of quantiles the data should be broken into. 
 #' Default: c(0.1, 0.9).
