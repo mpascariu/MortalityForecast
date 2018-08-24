@@ -4,7 +4,7 @@
 #' @param x An object of the class \code{doBackTesting}.
 #' @param facet What facets to include? Options: \code{"x", "y"}.
 #' @param which Which \code{x} or which \code{y} to be plotted. Numerical vector.
-#' @inheritParams getAccuracy.doBackTesting
+#' @inheritParams evalAccuracy.doBackTesting
 #' @inheritParams wide2long
 #' @export
 plot.doBackTesting <- function(x, data.out, facet = c("x", "y"),

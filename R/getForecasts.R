@@ -3,7 +3,7 @@
 
 #' Get Predicted Values
 #' @param object An object of class \code{doForecasts}.
-#' @inheritParams getAccuracy.doBackTesting
+#' @inheritParams evalAccuracy.doBackTesting
 #' @seealso \code{\link{doForecasts}}
 #' @author Marius D. Pascariu
 #' @export

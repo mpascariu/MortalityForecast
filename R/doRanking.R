@@ -1,7 +1,7 @@
 
 
-#' Rank models based on the accuracy results
-#' @param A Table containing accuracy measures.
+#' Rank models based on the accuracy or robustness results
+#' @param A Table containing accuracy or robustness measures.
 #' @seealso 
 #' \code{\link{doBackTesting}} 
 #' \code{\link{doBBackTesting}}
@@ -17,6 +17,8 @@ doRanking <- function(A) {
   if (ns == 1) {
     N  <- -c(1:3)
     if (any(colnames(A) == "ME")) A[, "ME"] <- abs(A[, "ME"])
+    if (any(colnames(A) == "MD")) A[, "MD"] <- abs(A[, "MD"])
+    
     A[, N] <- as.integer(floor(apply(A[, N], 2, rank)))
     G <- rank(apply(A[, N], 1, median))
     G <- as.integer(floor(G))

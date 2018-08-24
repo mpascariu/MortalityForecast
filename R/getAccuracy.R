@@ -9,8 +9,8 @@
 #' @examples 
 #' # For examples go to ?doBackTesting and ?doBBackTesting
 #' @export
-getAccuracy = function(object, ...)
-  UseMethod("getAccuracy")
+evalAccuracy = function(object, ...)
+  UseMethod("evalAccuracy")
 
 
 #' Get Accuracy Measures from \code{doBackTesting}
@@ -26,7 +26,7 @@ getAccuracy = function(object, ...)
 #' @examples 
 #' # For examples go to ?doBackTesting
 #' @export
-getAccuracy.doBackTesting <- function(object, 
+evalAccuracy.doBackTesting <- function(object, 
                         data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                         measures = c("ME", "MAE", "MAPE", "sMAPE", "sMRAE", "MASE"),
                         ...) {
@@ -56,14 +56,15 @@ getAccuracy.doBackTesting <- function(object,
 
 
 #' Get Accuracy Measures from \code{doBBackTesting}
-#' @inheritParams getAccuracy.doBackTesting
-#' @inherit getAccuracy.doBackTesting details references
+#' @param object An object of class \code{doBBackTesting}.
+#' @inheritParams evalAccuracy.doBackTesting
+#' @inherit evalAccuracy.doBackTesting details references
 #' @seealso \code{\link{doBBackTesting}}
 #' @author Marius D. Pascariu
 #' @examples 
 #' # For examples go to ?doBBackTesting
 #' @export
-getAccuracy.doBBackTesting <- function(object,
+evalAccuracy.doBBackTesting <- function(object,
                                        data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                                        measures = c("ME", "MAE", "MAPE", "sMAPE", "sMRAE", "MASE"),
                                        ...) {
@@ -74,7 +75,7 @@ getAccuracy.doBBackTesting <- function(object,
   AA <- 0
   
   for (s in 1:ns) {
-    As <- getAccuracy(object = object$results[[s]], data.out, measures, ...)
+    As <- evalAccuracy(object = object$results[[s]], data.out, measures, ...)
     As$Scenario <- s
     A <- rbind(A, As)
     AA <- AA + As[, N]/ns  # compute mean values over all scenarios
@@ -87,12 +88,12 @@ getAccuracy.doBBackTesting <- function(object,
 }
 
 
-# #' Print getAccuracy
-# #' @param x An object of the class \code{getAccuracy}
+# #' Print evalAccuracy
+# #' @param x An object of the class \code{evalAccuracy}
 # #' @inheritParams summary.getResiduals
 # #' @keywords internal
 # #' @export
-# print.getAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L), 
+# print.evalAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L), 
 #                               ...) {
 #   cat("\nForecasting Accuracy Measures")
 #   cat("\nLife Table Index:", x$index, "\n\n")

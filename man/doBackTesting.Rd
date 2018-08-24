@@ -61,12 +61,12 @@ B <- doBackTesting(data = D, x = x,
 # The measures can be computed for different indicators. Even if it is not 
 # impossible to get a diffrent classification and ranking the 
 # outcome should be in general the same.
-getAccuracy(B, data.out = "mx")
-getAccuracy(B, data.out = "qx")
-getAccuracy(B, data.out = "dx")
+evalAccuracy(B, data.out = "mx")
+evalAccuracy(B, data.out = "qx")
+evalAccuracy(B, data.out = "dx")
 
 # Rank the model's performance.
-A <- getAccuracy(B, data.out = "ex")
+A <- evalAccuracy(B, data.out = "ex")
 A
 R <- doRanking(A)
 R
@@ -77,7 +77,5 @@ plot(B, data.out = "mx", facet = "y")
 }
 \seealso{
 \code{\link{doBBackTesting}}
-\code{\link{doMortalityModels}}
-\code{\link{doForecasts}}
-\code{\link{getAccuracy}}
+\code{\link{evalAccuracy.doBackTesting}}
 }

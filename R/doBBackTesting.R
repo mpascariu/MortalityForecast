@@ -7,9 +7,8 @@
 #' @inheritParams buildScenarios
 #' @seealso 
 #' \code{\link{doBackTesting}}
-#' \code{\link{doMortalityModels}}
-#' \code{\link{doForecasts}}
-#' \code{\link{getAccuracy}}
+#' \code{\link{evalAccuracy.doBBackTesting}}
+#' \code{\link{evalRobustness.doBBackTesting}}
 #' @author Marius D. Pascariu
 #' @examples 
 #' x  <- 0:95
@@ -21,7 +20,7 @@
 #'                      models = c("MRWD", "LeeCarter", "HyndmanUllah"),
 #'                      strategy = c(20, 20, 3))
 #' 
-#' A <- getAccuracy(BB, data.out = "ex")
+#' A <- evalAccuracy(BB, data.out = "ex")
 #' A
 #' 
 #' R <- doRanking(A)
@@ -99,7 +98,7 @@ doBBackTesting <- function(data, x, y,
 buildScenarios <- function(y, strategy = c(f = 20, h = 20, s = 2)) {
   # Build scenarios -  method 1
   S <- strategy
-  bop_fit = seq(from = max(y) - S[1] - S[2] + 1, to = min(y), by = -1 * S[3])
+  bop_fit = rev(seq(from = max(y) - S[1] - S[2] + 1, to = min(y), by = -1 * S[3]))
   eop_fit = bop_fit + S[1] - 1
   bop_fc  = eop_fit + 1
   eop_fc  = bop_fc + S[2] - 1

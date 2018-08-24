@@ -2,15 +2,15 @@
 % Please edit documentation in R/doRanking.R
 \name{doRanking}
 \alias{doRanking}
-\title{Rank models based on the accuracy results}
+\title{Rank models based on the accuracy or robustness results}
 \usage{
 doRanking(A)
 }
 \arguments{
-\item{A}{Table containing accuracy measures.}
+\item{A}{Table containing accuracy or robustness measures.}
 }
 \description{
-Rank models based on the accuracy results
+Rank models based on the accuracy or robustness results
 }
 \examples{
 # For examples go to ?doBackTesting or ?doBBackTesting

@@ -2,7 +2,7 @@
 
 #' Get Fitted Values
 #' @param object An object of class \code{MortalityModels}.
-#' @inheritParams getAccuracy.doBackTesting
+#' @inheritParams evalAccuracy.doBackTesting
 #' @seealso \code{\link{doMortalityModels}}
 #' @author Marius D. Pascariu
 #' @examples 

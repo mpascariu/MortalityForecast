@@ -52,7 +52,7 @@ BB <- doBBackTesting(data = dx, x, y,
                      models = c("MRWD", "LeeCarter", "HyndmanUllah"),
                      strategy = c(20, 20, 3))
 
-A <- getAccuracy(BB, data.out = "ex")
+A <- evalAccuracy(BB, data.out = "ex")
 A
 
 R <- doRanking(A)
@@ -60,9 +60,8 @@ R
 }
 \seealso{
 \code{\link{doBackTesting}}
-\code{\link{doMortalityModels}}
-\code{\link{doForecasts}}
-\code{\link{getAccuracy}}
+\code{\link{evalAccuracy.doBBackTesting}}
+\code{\link{evalRobustness.doBBackTesting}}
 }
 \author{
 Marius D. Pascariu
