@@ -11,17 +11,18 @@
 #' @inheritParams doForecasts
 #' @seealso \code{\link{fitMaxEntMortality}}
 #' @examples
-#' y  <- 1965:2014
 #' x  <- 0:110
+#' y  <- 1985:2016
 #' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
 #' M  <- fitMaxEntMortality(dx, x, y, n = 5)
+#' P  <- predict(M, h = 16, x.h = 0:120)
 #' 
-#' # Forecast the distribution 16 year ahead for ages: 0-110
-#' P1 <- predict(object = M, h = 16)
+#' plot(P, plotType = "mean")
+#' plot(P, plotType = "lower")
+#' plot(P, plotType = "upper")
 #' 
-#' # Forecast for ages: 0-130
-#' P2 <- predict(object = M, h = 16, x.h = 0:130)
-#' 
+#' plot(P, M, plotType = "raw_moments")
+#' plot(P, M, plotType = "normalised_moments")
 #' @export
 predict.fitMaxEntMortality <- function(object, h, x.h = NULL, level = 95,
                         jumpchoice = c("actual", "fit"),

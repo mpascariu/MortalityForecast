@@ -9,18 +9,7 @@
 #' Default: \code{"mean"}.
 #' @inheritParams plot.fitMaxEntMortality
 #' @examples
-#' x  <- 0:110
-#' y  <- 1965:2014
-#' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
-#' M  <- fitMaxEntMortality(dx, x, y, n = 5)  
-#' P  <- predict(M, h = 16, x.h = 0:120)
-#' 
-#' plot(P, plotType = "mean")
-#' plot(P, plotType = "lower")
-#' plot(P, plotType = "upper")
-#' 
-#' plot(P, M, plotType = "raw_moments")
-#' plot(P, M, plotType = "normalised_moments")
+#' # For examples go to ?predict.fitMaxEntMortality
 #' @export
 plot.predict.fitMaxEntMortality <- function(x, y = NULL,
                                 plotType = c("mean", "lower", "upper", 

@@ -55,14 +55,17 @@ Forecast the Age at Death Distribution using CoDa-LC model.
 }
 \examples{
 # Example 1 ----------------------
-# Fit CoDa-LC Mortality Model
-D <- MortalityForecast.data$dx
-M <- fitOeppen(D)
+x  <- 0:100
+y  <- 1980:2014
+dx <- MortalityForecast.data$dx[paste(x), paste(y)]
+M  <- fitOeppen(dx, x, y)
+P  <- predict(M, h = 16)
 
-# Predict life expectancy 20 years in the future using CoDa-LC model
-P <- predict(M, h = 20)
+plot(P, plotType = "mean")
+plot(P, plotType = "lower")
+plot(P, plotType = "upper")
 
-# Example 2 ----------------------
+#' # Example 2 ----------------------
 # One can specify manually the ARIMA order, a drift to be included or not 
 # and the jump choice of the first forecast year.
 P2 <- predict(M, h = 20, order = c(0,1,0), include.drift = TRUE, jumpchoice = "fit")
