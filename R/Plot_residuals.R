@@ -103,7 +103,7 @@ plot.residMF <- function(x, plotType = c("scatter", "colourmap", "signplot"),
 #' should be produced.
 #' @param zeroLine Logical value indicating if a horizontal line at zero
 #' should be plotted.
-#' @inheritParams plot.MEM
+#' @inheritParams plot.residMF
 #' @keywords internal
 scatterplotAPC <- function(mat, ages, years, plotAge = TRUE, plotYear = TRUE, 
                            plotCohort  = TRUE, zeroLine  = TRUE, ...) {

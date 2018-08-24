@@ -4,7 +4,7 @@
 \alias{ggplotDistribConvergence}
 \title{Plot Convergence in Age at Death Distribution}
 \usage{
-ggplotDistribConvergence(mat, x, ny, quant)
+ggplotDistribConvergence(mat, x, ny, level)
 }
 \arguments{
 \item{mat}{Matrix containing the observed or fitted value.}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/demography-models.R
 \name{fitHyndmanUllah}
 \alias{fitHyndmanUllah}
-\title{Functional Demographic Model}
+\title{The Functional Demographic Model}
 \usage{
 fitHyndmanUllah(data, x, y, ...)
 }
@@ -18,10 +18,33 @@ Default: \code{NULL}.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }
+\value{
+Object of class \dQuote{fdm} with the following components:
+\item{label}{Name of country}
+\item{age}{Ages from \code{data} object.}
+\item{year}{Years from \code{data} object.}
+\item{<series>}{Matrix of demographic data as contained in \code{data}. It takes the name given by the series argument.}
+\item{fitted}{Matrix of fitted values.}
+\item{residuals}{Residuals (difference between observed and fitted).}
+\item{basis}{Matrix of basis functions evaluated at each age level (one column for each basis function). The first column is the fitted mean.}
+\item{coeffs}{Matrix of coefficients (one column for each coefficient series). The first column are all ones.}
+\item{mean.se}{Standard errors for the estimated mean function.}
+\item{varprop}{Proportion of variation explained by each basis function.}
+\item{weights}{Weight associated with each time period.}
+\item{v}{Measure of variation for each time period.}
+\item{type}{Data type (mortality, fertility, etc.)}
+\item{y}{The data stored as a functional time series object.}
+}
 \description{
-Functional Demographic Model
+The Functional Demographic Model
+}
+\details{
+\insertNoCite{hyndman2007}{MortalityForecast}
+}
+\references{
+\insertAllCited{}
 }
 \seealso{
 \code{\link{fitLeeCarter}}
-\code{\link{coda}}
+\code{\link{fitOeppen}}
 }

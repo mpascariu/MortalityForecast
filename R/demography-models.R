@@ -1,11 +1,13 @@
 
 
-#' Lee-Carter Demographic Model
+#' The Lee-Carter Mortality Model
 #' @inheritParams doMortalityModels
 #' @inherit demography::lca details return
 #' @seealso 
 #' \code{\link{fitHyndmanUllah}}
-#' \code{\link{coda}}
+#' \code{\link{fitOeppen}}
+#' @details \insertNoCite{lee1992}{MortalityForecast}
+#' @references \insertAllCited{}
 #' @export
 fitLeeCarter <- function(data, x, y, ...) {
   demo_data <- demogdata(data = data, ages = x, years = y, 
@@ -19,11 +21,14 @@ fitLeeCarter <- function(data, x, y, ...) {
 }
 
 
-#' Functional Demographic Model
+#' The Functional Demographic Model
 #' @inheritParams doMortalityModels
+#' @inherit demography::fdm details return
 #' @seealso 
 #' \code{\link{fitLeeCarter}}
-#' \code{\link{coda}}
+#' \code{\link{fitOeppen}}
+#' @details \insertNoCite{hyndman2007}{MortalityForecast}
+#' @references \insertAllCited{}
 #' @export
 fitHyndmanUllah <- function(data, x, y, ...) {
   demo_data <- demogdata(data = data, ages = x, years = y, 

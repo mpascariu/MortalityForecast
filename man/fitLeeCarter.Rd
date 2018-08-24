@@ -2,7 +2,7 @@
 % Please edit documentation in R/demography-models.R
 \name{fitLeeCarter}
 \alias{fitLeeCarter}
-\title{Lee-Carter Demographic Model}
+\title{The Lee-Carter Mortality Model}
 \usage{
 fitLeeCarter(data, x, y, ...)
 }
@@ -34,16 +34,15 @@ Object of class \dQuote{lca} with the following components:
 \item{mdev}{Mean deviance of total and base lack of fit, as described in Booth, Maindonald and Smith.}
 }
 \description{
-Lee-Carter Demographic Model
+The Lee-Carter Mortality Model
 }
 \details{
-All mortality or fertility data are assumed to be in matrices of
-mortality or fertility rates within \code{data$rate}. Each row is one age group
-(assumed to be single years). Each column is one year. The
-function produces a model for the \code{series} mortality or fertility rate matrix
-within \code{data$rate}. Forecasts from this model can be obtained using \code{\link{forecast.lca}}.
+\insertNoCite{lee1992}{MortalityForecast}
+}
+\references{
+\insertAllCited{}
 }
 \seealso{
 \code{\link{fitHyndmanUllah}}
-\code{\link{coda}}
+\code{\link{fitOeppen}}
 }

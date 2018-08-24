@@ -3,13 +3,13 @@ library(MortalityForecast)
 
 # Test model fitting
 D <- MortalityForecast.data$dx
-M1 <- coda(D, x = 0:110, y = 1960:2016)
-M2 <- coda(D)
+M1 <- fitOeppen(D, x = 0:110, y = 1960:2016)
+M2 <- fitOeppen(D)
 vsn <- 1e-200
 
 testCodaFit <- function(M){
   test_that("Test model fitting",{
-    expect_s3_class(M, "coda")
+    expect_s3_class(M, "fitOeppen")
     expect_output(print(M))
     expect_output(print(summary(M)))
     expect_warning(print(M), regexp = NA) # Expect no warning
@@ -34,7 +34,7 @@ P2 <- predict(M2, h = 10)
 
 testCodaPred <- function(P){
   test_that("Test model prediction", {
-    expect_s3_class(P, "predict.coda")
+    expect_s3_class(P, "predict.fitOeppen")
     expect_output(print(P))
     expect_true(all(P$predicted.values >= 0))
     expect_true(all(P$conf.intervals$L80 >= 0))
@@ -57,8 +57,8 @@ for (i in 1:2) testCodaPred(get(paste0("P", i)))
 # Test plots
 test_that("Test that plots are produced",{
   expect_false(is.null(plot(M1)))
-  expect_false(is.null(plot(M1, plotType = "coef")))
-  expect_false(is.null(plot(M1, plotType = "data")))
+  expect_false(is.null(plot(M1, plotType = "observed")))
+  expect_false(is.null(plot(M1, plotType = "fitted")))
   expect_false(is.null(plot(resid(M1))))
   expect_false(is.null(plot(resid(M1), plotType = "scatter")))
   expect_false(is.null(plot(resid(M1), plotType = "colourmap")))
@@ -69,15 +69,15 @@ test_that("Test that plots are produced",{
 
 # Validate input tests
 
-expect_error(coda(CoDa.data, x = c(NA,1:109), y = 1960:2016))
-expect_error(coda(CoDa.data, x = 0:110, y = c(NA,1961:2016)))
-expect_error(coda(CoDa.data, y = 1960:20160))
-expect_error(coda(CoDa.data, x = 0:1000))
+expect_error(fitOeppen(D, x = c(NA,1:109), y = 1960:2016))
+expect_error(fitOeppen(D, x = 0:110, y = c(NA,1961:2016)))
+expect_error(fitOeppen(D, y = 1960:20160))
+expect_error(fitOeppen(D, x = 0:1000))
 
 dNA <- D
 dNA[1,1] <- NA
-expect_error(coda(dNA))
+expect_error(fitOeppen(dNA))
 
 dNeg <- dNA
 dNeg[1,1] <- -1
-expect_error(coda(dNeg))
+expect_error(fitOeppen(dNeg))

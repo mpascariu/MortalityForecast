@@ -1,3 +1,5 @@
+# Fri Aug 24 12:35:23 2018 --------- Marius D. Pascariu ---
+
 
 #' ggplot the observed and fitted values of a Maximum-Entropy Mortality Model 
 #' 
@@ -5,31 +7,26 @@
 #' \code{"fitted"}, \code{"observed"}. Default: \code{"fitted"}.
 #' @inheritParams plot.residMF
 #' @inheritParams fitted2dens
-#' @param quant Sets the number of quantiles the data should be broken into. 
-#' Default: c(0.1, 0.9).
+#' @param level Sets the number of quantiles the data should be broken into. 
+#' Default: 80.
 #' @details Note: the output is a ggplot2 object. Therefore, one can add or 
 #' modify the components of the figure.
+#' @seealso \code{\link{fitMaxEntMortality}}
 #' @examples 
-#' x  <- 0:110
-#' y  <- 1965:2014
-#' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
-#' M  <- MEM(dx, x, y, n = 5)
-#' 
-#' plot(M, plotType = "fitted")
-#' plot(M, plotType = "observed")
+#' # For examples go to ?fitMaxEntMortality
 #' @export   
-plot.MEM <- function(x, plotType = c("fitted", "observed"), 
-                        ny = 7, quant = c(0.1, 0.9), ...) 
+plot.fitMaxEntMortality <- function(x, plotType = c("fitted", "observed"), 
+                                    ny = 7, level = 80, ...) 
 {
   plotType <- match.arg(plotType)
   if (plotType == "fitted") {
     mat = x$fitted.values
-    P <- ggplotDistribConvergence(mat, x = x$x, ny, quant) + 
+    P <- ggplotDistribConvergence(mat, x = x$x, ny, level) + 
       labs(subtitle = "Fitted Values")
     
   } else if (plotType == "observed") {
     mat = x$observed.values
-    P <- ggplotDistribConvergence(mat, x = x$x, ny, quant) + 
+    P <- ggplotDistribConvergence(mat, x = x$x, ny, level) + 
       labs(subtitle = "Observed Values")
   } 
   suppressMessages(print(P))
@@ -39,12 +36,13 @@ plot.MEM <- function(x, plotType = c("fitted", "observed"),
 #' Plot Convergence in Age at Death Distribution
 #' 
 #' @inheritParams fitted2dens
-#' @inheritParams MEM
+#' @inheritParams fitMaxEntMortality
 #' @keywords internal
-ggplotDistribConvergence <- function(mat, x, ny, quant) {
+ggplotDistribConvergence <- function(mat, x, ny, level) {
   dx = y = ..quantile.. <- NULL # hack CRAN note
   Z <- mat %>% fitted2dens(ny = ny)
   rx <- range(x)
+  quant <- abs(c(0, -1) + (1 - level/100)/2)
   
   P <- ggplot(Z, aes(x = dx, y = y, fill = factor(..quantile..))) +
     stat_density_ridges(geom = "density_ridges_gradient", calc_ecdf = T, 
@@ -64,7 +62,7 @@ ggplotDistribConvergence <- function(mat, x, ny, quant) {
 }
 
 
-#' Prepare data for ggplots in plot.MEM function
+#' Prepare data for ggplots in plot.fitMaxEntMortality function
 #' 
 #' @param mat Matrix containing the observed or fitted value.
 #' @param ny Number of years to be selected from input data and to be added in the plot.
@@ -73,7 +71,7 @@ ggplotDistribConvergence <- function(mat, x, ny, quant) {
 #' x  <- 0:110
 #' y  <- 1965:2014
 #' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
-#' M  <- MEM(dx, x, y, n = 5)
+#' M  <- fitMaxEntMortality(dx, x, y, n = 5)
 #' fitted2dens(fitted(M))
 #' @keywords internal
 #' @export

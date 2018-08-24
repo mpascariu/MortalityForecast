@@ -2,7 +2,7 @@
 % Please edit documentation in R/MEM_Plot_fit.R
 \name{fitted2dens}
 \alias{fitted2dens}
-\title{Prepare data for ggplots in plot.MEM function}
+\title{Prepare data for ggplots in plot.fitMaxEntMortality function}
 \usage{
 fitted2dens(mat, ny = 7, lx0 = 300)
 }
@@ -14,13 +14,13 @@ fitted2dens(mat, ny = 7, lx0 = 300)
 \item{lx0}{Adjusting parameter.}
 }
 \description{
-Prepare data for ggplots in plot.MEM function
+Prepare data for ggplots in plot.fitMaxEntMortality function
 }
 \examples{
 x  <- 0:110
 y  <- 1965:2014
 dx <- MortalityForecast.data$dx[paste(x), paste(y)]
-M  <- MEM(dx, x, y, n = 5)
+M  <- fitMaxEntMortality(dx, x, y, n = 5)
 fitted2dens(fitted(M))
 }
 \keyword{internal}

@@ -1,18 +1,18 @@
 
 #' ggplot the predicted values of a Maximum-Entropy Mortality Model
 #' 
-#' @param x An object of the class \code{\link{predict.MEM}}.
-#' @param y An object of the class \code{\link{MEM}}. 
+#' @param x An object of the class \code{\link{predict.fitMaxEntMortality}}.
+#' @param y An object of the class \code{\link{fitMaxEntMortality}}. 
 #' Needed only for ploting moments. See \code{plotType}.
 #' @param plotType The type of the plot. The alternatives are 
 #' \code{"mean", "lower", "upper", "raw_moments", "normalised_moments"}. 
 #' Default: \code{"mean"}.
-#' @inheritParams plot.MEM
+#' @inheritParams plot.fitMaxEntMortality
 #' @examples
 #' x  <- 0:110
 #' y  <- 1965:2014
 #' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
-#' M  <- MEM(dx, x, y, n = 5)  
+#' M  <- fitMaxEntMortality(dx, x, y, n = 5)  
 #' P  <- predict(M, h = 16, x.h = 0:120)
 #' 
 #' plot(P, plotType = "mean")
@@ -22,25 +22,25 @@
 #' plot(P, M, plotType = "raw_moments")
 #' plot(P, M, plotType = "normalised_moments")
 #' @export
-plot.predict.MEM <- function(x, y = NULL,
+plot.predict.fitMaxEntMortality <- function(x, y = NULL,
                                 plotType = c("mean", "lower", "upper", 
                                              "raw_moments", "normalised_moments"), 
-                                ny = 7, quant = c(0.1, 0.9), ...) 
+                                ny = 7, level = 80, ...) 
 {
   plotType <- match.arg(plotType)
   if (plotType == "mean") {
     mat = x$predicted.values
-    P <- ggplotDistribConvergence(mat, x = x$x, ny, quant) + 
+    P <- ggplotDistribConvergence(mat, x = x$x, ny, level) + 
       labs(subtitle = "Forecast Values - Best estimate")
     
   } else if (plotType == "lower") {
     mat = x$conf.intervals$predicted.values[[1]]
-    P <- ggplotDistribConvergence(mat, x = x$x, ny, quant) + 
+    P <- ggplotDistribConvergence(mat, x = x$x, ny, level) + 
       labs(subtitle = "Forecast Values - lower bound")
     
   } else if (plotType == "upper") {
     mat = x$conf.intervals$predicted.values[[2]]
-    P <- ggplotDistribConvergence(mat, x = x$x, ny, quant) + 
+    P <- ggplotDistribConvergence(mat, x = x$x, ny, level) + 
       labs(subtitle = "Forecast Values - upper bound")
     
   } else {

@@ -1,15 +1,12 @@
 remove(list = ls())
-library(MortalityForecast)
+
 
 x  <- 0:110
 y  <- 1985:2014
 dx <- MortalityForecast.data$dx[paste(x), paste(y)]
-M  <- MEM(data = dx, n = 6)
+M  <- fitMaxEntMortality(data = dx, n = 6)
 P1 <- predict(M, h = 16, x.h = 0:110, jumpchoice = 'fit')
 P2 <- predict(M, h = 16, x.h = 0:130, jumpchoice = 'actual')
-
-
-M$fitted.values >= 0 
 
 
 test_that("Test for positive densities.", {
@@ -20,7 +17,7 @@ test_that("Test for positive densities.", {
 })
 
 
-test_that("Test that MEM plots are produced.", {
+test_that("Test that fitMaxEntMortality plots are produced.", {
   res <- resid(M)
   expect_error(plot(res, plotType = 'scatterxxx'))
   expect_false(is.null(plot(res)))

@@ -1,17 +1,17 @@
 
-#' Fit CoDa Mortality Model
+#' The Compositional-Data Lee-Carter Mortality Model (CoDa-LC)
 #' 
-#' Fit Compositional Data (CoDa) model for forecasting the life table 
+#' Fit Compositional Data model for forecasting the life table 
 #' distribution of deaths. CoDa is a Lee-Carter type model. A key difference 
 #' between the \insertCite{lee1992;textual}{MortalityForecast}
-#' method and the Compositional Data model (CoDa) is that the former fits and 
+#' method and the Compositional Data model (CoDa-LC) is that the former fits and 
 #' forecasts the death rates (mx) while the latter is based on the life table 
 #' death distribution (dx). 
 #' \insertCite{@See @oeppen2008 and @bergeron2017;textual}{MortalityForecast} 
 #' for a detail description and mathematical formulation.
 #' 
 #' @inheritParams doMortalityModels 
-#' @return The output is an object of class \code{"coda"} with the components:
+#' @return The output is an object of class \code{fitOeppen} with the components:
 #'  \item{input}{List with arguments provided in input. Saved for convenience.}
 #'  \item{call}{An unevaluated function call, that is, an unevaluated 
 #'  expression which consists of the named function applied to the given arguments.}
@@ -20,20 +20,34 @@
 #'  \item{residuals}{Deviance residuals.} 
 #'  \item{x}{Vector of ages used in the fitting.} 
 #'  \item{y}{Vector of years used in the fitting.} 
-#' @seealso \code{\link{predict.coda}}
+#' @seealso 
+#' \code{\link{predict.fitOeppen}}
+#' \code{\link{plot.fitOeppen}}
 #' @references \insertAllCited{}
 #' @examples
-#' # Fit CoDa model
-#' D <- MortalityForecast.data$dx
-#' M <- coda(D)
-#' summary(M)
+#' # Data
+#' x  <- 0:100
+#' y  <- 1980:2014
+#' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
 #' 
-#' # Forecast life expectancy
-#' P <- predict(M, h = 20)
+#' # Fit CoDa-LC model
+#' M <- fitOeppen(dx, x, y)
+#' M
+#' R <- residuals(M)
+#' 
+#' summary(M)
+#' coef(M)
+#' 
+#' plot(M, plotType = "observed")
+#' plot(M, plotType = "fitted")
+#' 
+#' plot(R, plotType = "scatter")
+#' plot(R, plotType = "colourmap")
+#' plot(R, plotType = "signplot")
 #' @export
-coda <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
+fitOeppen <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   input <- c(as.list(environment()))
-  coda.input.check(input)
+  fitOeppen.input.check(input)
   x <- x %||% 1:nrow(data)
   y <- y %||% 1:ncol(data)
   
@@ -61,21 +75,28 @@ coda <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   clr.proj.fit <- matrix(kt, ncol = 1) %*% bx # projections
   BK.proj.fit  <- unclass(clrInv(clr.proj.fit)) # Inv clr
   proj.fit     <- sweep(BK.proj.fit, 2, close.ax, FUN = "*") # add geometric mean
-  fit          <- t(proj.fit/rowSums(proj.fit))
-  resid        <- data - fit
-  dimnames(fit) = dimnames(resid) = dimnames(data) <- list(x, y)
+  fD    <- t(proj.fit/rowSums(proj.fit))
+  oD    <- apply(data, 2, FUN = function(x) x/sum(x)) # observed dx - same scale as fitted dx
+  resid <- oD - fD
+  dimnames(fD) = dimnames(resid) = dimnames(data) <- list(x, y)
   
-  out <- list(input = input, call = match.call(), fitted.values = fit, 
+  modelLN <- "Compositional-Data Lee-Carter Mortality Model"
+  modelSN <- "CoDa-LC"
+  modelF <- "clr d[x,t] = a[x] + b[x]k[t]"
+  info <- list(name = modelLN, name.short = modelSN, formula = modelF)
+  
+  out <- list(input = input, info = info, call = match.call(), 
+              fitted.values = fD, observed.values = oD,
               coefficients = cf, residuals = resid, x = x, y = y)
-  out <- structure(class = 'coda', out)
+  out <- structure(class = 'fitOeppen', out)
   return(out)
 }
 
 
 #' Validate input values
-#' @param X A list with input arguments provided in \code{\link{coda}} function
+#' @param X A list with input arguments provided in \code{\link{fitOeppen}} function
 #' @keywords internal
-coda.input.check <- function(X) {
+fitOeppen.input.check <- function(X) {
   # Validate the other arguments
   with(X, {
     if (any(data < 0)) {
@@ -108,22 +129,22 @@ coda.input.check <- function(X) {
 
 
 # S3 ----------------------------------------------
-#' Residuals of the CoDa Mortality Model
-#' @inheritParams summary.coda
+#' Residuals of the CoDa-LC Mortality Model
+#' @inheritParams summary.fitOeppen
 #' @export
-residuals.coda <- function(object, ...){
+residuals.fitOeppen <- function(object, ...){
   structure(class = "residMF", as.matrix(object$residuals))
 }
 
 
-#' Print coda
-#' @param x An object of class \code{"coda"}
+#' Print fitOeppen
+#' @param x An object of class \code{"fitOeppen"}
 #' @param ... Further arguments passed to or from other methods.
 #' @keywords internal
 #' @export
-print.coda <- function(x, ...) {
-  cat('\nFit  : Compositional-Data Lee-Carter Mortality Model')
-  cat('\nModel: clr d[x,t] = a[x] + b[x]k[t]')
+print.fitOeppen <- function(x, ...) {
+  cat('\nFit  :', x$info$name)
+  cat('\nModel:', x$info$formula)
   cat('\nCall : '); print(x$call)
   cat('\nAges  in fit:', paste(range(x$x), collapse = ' - '))
   cat('\nYears in fit:', paste(range(x$y), collapse = ' - '))
@@ -131,31 +152,31 @@ print.coda <- function(x, ...) {
 }
 
 
-#' Summary coda
-#' @param object An object of class \code{"coda"}.
-#' @inheritParams print.coda
+#' Summary fitOeppen
+#' @param object An object of class \code{"fitOeppen"}.
+#' @inheritParams print.fitOeppen
 #' @keywords internal
 #' @export
-summary.coda <- function(object, ...) {
+summary.fitOeppen <- function(object, ...) {
   axbx <- data.frame(ax = object$coefficients$ax, 
                      bx = object$coefficients$bx,
                      row.names = object$x)
   kt <- data.frame(kt = object$coefficients$kt)
-  out = structure(class = 'summary.coda', 
+  out = structure(class = 'summary.fitOeppen', 
                   list(A = axbx, K = kt, call = object$call,
                        y = object$y, x_ = object$x))
   return(out)
 }
 
 
-#' Print summary.coda
-#' @param x An object of class \code{"summary.coda"}.
-#' @inheritParams print.coda
+#' Print summary.fitOeppen
+#' @param x An object of class \code{"summary.fitOeppen"}.
+#' @inheritParams print.fitOeppen
 #' @keywords internal
 #' @export
-print.summary.coda <- function(x, ...){
-  cat('\nFit  : Compositional-Data Lee-Carter Mortality Model')
-  cat('\nModel: clr d[x,t] = a[x] + b[x]k[t]')
+print.summary.fitOeppen <- function(x, ...){
+  cat('\nFit  :', x$info$name)
+  cat('\nModel:', x$info$formula)
   cat('\nCoefficients:\n')
   A <- head_tail(x$A, digits = 5, hlength = 6, tlength = 6)
   K <- head_tail(data.frame(. = '|', y = as.integer(x$y), kt = x$K),

@@ -1,7 +1,7 @@
 
-#' Predict distribution of deaths using CoDa model.
+#' Forecast the Age at Death Distribution using CoDa-LC model.
 #' 
-#' @param object An object of class \code{coda}.
+#' @param object An object of class \code{fitOeppen}.
 #' @param order A specification of the non-seasonal part of the ARIMA model: 
 #'  the three components (p, d, q) are the AR order, the degree of differencing, 
 #'  and the MA order. If \code{order = NULL}, the ARIMA order will be estimated 
@@ -13,11 +13,11 @@
 #'  maximum likelihood (\code{"ML"}) and \code{"CSS"}.
 #' @param ... Additional arguments to be passed to \code{\link[forecast]{Arima}}
 #' @inheritParams doForecasts
-#' @return The output is an object of class \code{"predict.coda"} with the components:
+#' @return The output is an object of class \code{"predict.fitOeppen"} with the components:
 #'  \item{call}{An unevaluated function call, that is, an unevaluated 
 #'  expression which consists of the named function applied to the given arguments.}
 #'  \item{predicted.values}{A list containing the predicted values together
-#'  with the associated prediction intervals given by the estimated \code{link{coda}} 
+#'  with the associated prediction intervals given by the estimated \code{link{fitOeppen}} 
 #'  model over the forecast horizon \code{h}.}
 #'  \item{kt}{The extrapolated kt parameters.}
 #'  \item{conf.intervals}{The extrapolated kt parameters.}
@@ -27,11 +27,11 @@
 #'  \item{y}{Vector of years used in prediction.} 
 #' @examples 
 #' # Example 1 ----------------------
-#' # Fit CoDa Mortality Model
+#' # Fit CoDa-LC Mortality Model
 #' D <- MortalityForecast.data$dx
-#' M <- coda(D)
+#' M <- fitOeppen(D)
 #' 
-#' # Predict life expectancy 20 years in the future using CoDa model
+#' # Predict life expectancy 20 years in the future using CoDa-LC model
 #' P <- predict(M, h = 20)
 #' 
 #' # Example 2 ----------------------
@@ -47,7 +47,7 @@
 #' lt <- LifeTable(x = P$x, dx = dx)
 #' }
 #' @export
-predict.coda <- function(object, h, order = NULL, include.drift = NULL,
+predict.fitOeppen <- function(object, h, order = NULL, include.drift = NULL,
                          level = c(80, 95), 
                          jumpchoice = c("actual", "fit"), 
                          method = "ML", 
@@ -81,14 +81,14 @@ predict.coda <- function(object, h, order = NULL, include.drift = NULL,
   out <- list(call = match.call(), predicted.values = pv, 
               kt = fkt, conf.intervals = CI,
               deep = tsm, x = object$x, y = fcy)
-  out <- structure(class = 'predict.coda', out)
+  out <- structure(class = 'predict.fitOeppen', out)
   return(out)
 }
 
 
 #' Internal function
-#' @inheritParams coda
-#' @inheritParams predict.coda
+#' @inheritParams fitOeppen
+#' @inheritParams predict.fitOeppen
 #' @param kt Estimated kt vector of parameters
 #' @param ax Estimated ax vector of parameters
 #' @param bx Estimated bx vector of parameters
@@ -122,12 +122,12 @@ compute_dx <- function(dx, kt, ax, bx, fit, y, jumpchoice) {
 # S3 ----------------------------------------------
 
 
-#' Print predict.coda
-#' @param x An object of class \code{"predict.coda"}
-#' @inheritParams print.coda
+#' Print predict.fitOeppen
+#' @param x An object of class \code{"predict.fitOeppen"}
+#' @inheritParams print.fitOeppen
 #' @keywords internal
 #' @export
-print.predict.coda <- function(x, ...) {
+print.predict.fitOeppen <- function(x, ...) {
   cat('\nForecast: Compositional-Data Lee-Carter Mortality Model')
   cat('\nModel   : clr d[x,t] = a[x] + b[x]k[t]')
   cat('\nCall    : '); print(x$call)
