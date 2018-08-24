@@ -19,3 +19,12 @@ Various life table indices are accepted:
 \description{
 Get Observed Values
 }
+\examples{
+# For examples go to ?doMortalityModels
+}
+\seealso{
+\code{\link{doMortalityModels}}
+}
+\author{
+Marius D. Pascariu
+}

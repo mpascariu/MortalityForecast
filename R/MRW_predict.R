@@ -11,6 +11,8 @@
 #' \item{conf.intervals}{ List with lower and upper limits for prediction intervals.}
 #' \item{x}{ Numerical vector indicating the age classes in output.}
 #' \item{y}{ Numerical vector indicating the years in output.}
+#' @source The original implementation of this function was taken from StMoMo R package.
+#' @author Marius D. Pascariu
 #' @export
 predict.fitMRandomWalk <- function(object, h = 10, level = c(80, 95), ...) {
   

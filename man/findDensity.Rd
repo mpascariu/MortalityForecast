@@ -27,7 +27,7 @@ An object with the estimated densities.
 \description{
 Function for estimating the probability density function starting from 
 a limited number of raw statistical moments. The method is based on 
-Maximum Entropy method (Mead & Papanicolaou 1984).
+Maximum Entropy method \insertCite{mead1984}{MortalityForecast}.
 }
 \examples{
 # Example 1 -- simple case ---------------
@@ -57,11 +57,8 @@ legend("topleft", legend = c("observed", "estimated"), col = 1:2,
        pch = c(16, NA), lty = c(NA, 1), lwd = 2, bty = "n")
 }
 \references{
-Mead L.R., & Papanicolaou N. (1984).
-\href{http://aip.scitation.org/doi/abs/10.1063/1.526446}{
-Maximum entropy in the problem of moments.} Journal of Mathematical Physics, 
-25(8), 2404-2417.
+\insertAllCited{}
 }
 \author{
-Adam Lenart and Marius D. Pascariu
+Adam Lenart and Marius D. Pascariu.
 }

@@ -10,6 +10,7 @@
 #' \code{\link{doMortalityModels}}
 #' \code{\link{doForecasts}}
 #' \code{\link{getAccuracy}}
+#' @author Marius D. Pascariu
 #' @examples 
 #' x  <- 0:95
 #' y  <- 1970:2016
@@ -17,66 +18,84 @@
 #' 
 #' BB <- doBBackTesting(data = dx, x, y,
 #'                      data.in = "dx", 
-#'                      data.out = "ex", 
-#'                      models = c("MRWD", "LC"),
-#'                      strategy = c(20, 20, 5))
+#'                      models = c("MRWD", "LeeCarter", "HyndmanUllah"),
+#'                      strategy = c(20, 20, 3))
+#' 
+#' A <- getAccuracy(BB, data.out = "ex")
+#' A
+#' 
+#' R <- doRanking(A)
+#' R
 #' @export
 doBBackTesting <- function(data, x, y,
                            data.in = c("qx", "mx", "dx", "lx"),
-                           data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                            models = c("MRWD", "LC"),
-                           measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
                            strategy = c(f = 20, h = 20, s = 2),
-                           xa = x[-length(x)], ya = NULL,
                            level = 95,
                            jumpchoice = c("actual", "fit"),
                            verbose = TRUE, ...) {
   
-  data.in <- match.arg(data.in)
-  data.out <- match.arg(data.out)
+  data.in    <- match.arg(data.in)
   jumpchoice <- match.arg(jumpchoice)
-  call <- match.call()
+  input <- as.list(environment())
+  call  <- match.call()
   S <- buildScenarios(y, strategy)
   
   # Do Back-testing
-  nc = nrow(S) # no. of cases
-  B <- list()
-  A <- 0
+  nc <- nrow(S) # no. of cases
+  B  <- list()
   for (k in 1:nc) {
     yf <- S[[k, "fit"]]
     yh <- S[[k, "forecast"]]
     y_ <- c(yf, yh)
     if (verbose) cat(paste0("\nTest scenario ", k, "/", nc, ": "))
     Bk <- doBackTesting(data = data[, paste(y_)], 
-                        x = x, 
-                        y.fit = yf, 
-                        y.for = yh, 
-                        data.in = data.in, data.out = data.out,
-                        models = models, xa = xa, ya = ya, ...)
-    Ak <- Bk$accuracy$results
-    
+                        x = x, y.fit = yf, y.for = yh, data.in = data.in,
+                        models = models, level = level, jumpchoice = jumpchoice, 
+                        verbose = FALSE, ...)
     B[[k]] <- Bk
-    A <- A + Ak/nc
-    remove(k, yf, yh, y_, Bk, Ak)
+    remove(k, yf, yh, y_, Bk)
   }
   names(B) <- paste0("S", 1:nc)
-  R <- doRanking(A)
-  
-  accuracy <- structure(class = "getAccuracy", list(index = data.out, results = A, 
-                                                    rank = R$rank, GC = R$GC))
-  out <- list(call = call, accuracy = accuracy, scenarios = S, results = B)
+  out <- list(input = input, call = call, scenarios = S, results = B)
   out <- structure(class = "doBBackTesting", out)
   return(out)
 }
 
 
-#' Build Scenarios for doBackTESTING
+#' Build Scenarios for doBBackTesting function
+#' 
+#' This is a utility function used in the \code{\link{doBBackTesting}} function
+#' to define the rolling evaluation windows.
 #' @param strategy Fitting-Forecasting strategy. Format: numerical vector.
 #' The strategy \code{c(f, h, s)} consists in \code{f} number of years to use in 
-#' fitting, \code{h} number of years to forecast and step \code{s} to change the
-#' fitting-forecasting window.
+#' fitting, \code{h} number of years to forecast and the step \code{s} to roll the
+#' evaluation window.
 #' @inheritParams doMortalityModels
-#' @keywords internal
+#' @seealso \code{\link{doBBackTesting}}
+#' @author Marius D. Pascariu
+#' @examples 
+#' y = 1900:2016
+#' 
+#' # Strategy
+#' S = c(f = 20, h = 20, s = 1)
+#' # This means that:
+#' # - 20 years of data are used to fit the models;
+#' # - forecast 20 years and evaluate the results;
+#' # - roll the evaluation window 1 year and repeat the process.
+#' 
+#' # 78 scenarios are created using this years and strategy.
+#' W = buildScenarios(y, S)
+#' W
+#' 
+#' # The first scenario will be:
+#' W[[1, "fit"]]
+#' W[[1, "forecast"]]
+#' 
+#' # The last scenario will be:
+#' W[[78, "fit"]]
+#' W[[78, "forecast"]]
+#' @export
 buildScenarios <- function(y, strategy = c(f = 20, h = 20, s = 2)) {
   # Build scenarios -  method 1
   S <- strategy

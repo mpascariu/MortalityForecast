@@ -25,6 +25,8 @@
 #'  \item{residuals}{ Residuals from the fitted model. That is 
 #'  observed minus fitted values.}
 #' @references \insertAllCited{}
+#' @source The original implementation of this function was taken from StMoMo R package.
+#' @author Marius D. Pascariu
 #' @examples 
 #' # Forecast mortality using a Multivariate Random Walk with Drift model
 #' x  <- 0:100

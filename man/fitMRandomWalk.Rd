@@ -3,6 +3,9 @@
 \name{fitMRandomWalk}
 \alias{fitMRandomWalk}
 \title{Multivariate Random Walk Model}
+\source{
+The original implementation of this function was taken from StMoMo R package.
+}
 \usage{
 fitMRandomWalk(data, x = NULL, y = NULL, include.drift = TRUE, ...)
 }
@@ -56,4 +59,7 @@ matplot(t(pv), type = "l", log = "y")
 }
 \references{
 \insertAllCited{}
+}
+\author{
+Marius D. Pascariu
 }

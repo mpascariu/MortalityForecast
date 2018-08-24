@@ -2,67 +2,24 @@
 % Please edit documentation in R/getAccuracy.R
 \name{getAccuracy}
 \alias{getAccuracy}
-\title{Get Accuracy Measures}
+\title{Generic for Computing Accuracy Measure from the \code{doBackTesting} and 
+\code{doBBackTesting} objects}
 \usage{
-getAccuracy(object, data, data.in = c("qx", "mx", "dx", "lx"),
-  data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-  measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
-  xa = NULL, ya = NULL, na.rm = TRUE, ...)
+getAccuracy(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{doForecasts}.}
-
-\item{data}{Validation set of demographic data.}
-
-\item{data.in}{Specify the type of input \code{data}. Various life table 
-indices are accepted: \code{"qx", "mx", "dx", "lx"}.}
-
-\item{data.out}{Specify the type of data to be returned in output. 
-Various life table indices are accepted: 
-\code{"qx", "mx", "dx", "lx", "Lx", "Tx", "ex"}.}
-
-\item{measures}{What accurracy measure to compute? Various alternatives are 
-available, \itemize{
- \item{Mean error measures: } \code{"ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"};
- \item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "MdRAE", "MdASE"};
- \item{Squared error measures: } \code{"MSE", "RMSE", "RMSPE", "RMdSPE"};
- \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}}
-
-\item{xa}{Ages to be considered in model accuracy evaluation. It can be used 
-to calculate the measures on a subset of the results. If \code{xa = NULL} 
-(default) the entire age-range in input is considered.}
-
-\item{ya}{Years to be considered in accuracy computation. Default: \code{ya = NULL}.}
-
-\item{na.rm}{A logical value indicating whether NA values should be stripped 
-before the computation proceeds.}
+\item{object}{An object of the class \code{doBackTesting} or \code{doBBackTesting}.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }
 \description{
-Get Accuracy Measures
-}
-\details{
-See \insertCite{hyndman2006;textual}{MortalityForecast} for a 
-comprehensive discussion of the accuracy measures.
+Generic for Computing Accuracy Measure from the \code{doBackTesting} and 
+\code{doBBackTesting} objects
 }
 \examples{
-x = 0:100             # Ages
-y1 = 1980:1995        # Training period
-y2 = 1996:2005        # Validation period
-h = max(y2) - max(y1) # Forecasting horizon
-
-D1 <- MortalityForecast.data$dx[paste(x), paste(y1)]
-D2 <- MortalityForecast.data$dx[paste(x), paste(y2)]
-
-MM = c("MRWD", "LC", "CoDa")
-M <- doMortalityModels(data = D1, x, y1, data.in = "dx", models = MM)
-P <- doForecasts(M, h)
-A <- getAccuracy(P, D2, xa = 0:95, data.in = "dx", data.out = "qx")
-
-A
-plot(A)
+# For examples go to ?doBackTesting and ?doBBackTesting
 }
-\references{
-\insertAllCited{}
+\author{
+Marius D. Pascariu
 }
+\keyword{internal}

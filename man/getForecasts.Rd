@@ -19,3 +19,9 @@ Various life table indices are accepted:
 \description{
 Get Predicted Values
 }
+\seealso{
+\code{\link{doForecasts}}
+}
+\author{
+Marius D. Pascariu
+}

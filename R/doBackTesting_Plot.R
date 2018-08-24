@@ -4,18 +4,18 @@
 #' @param x An object of the class \code{doBackTesting}.
 #' @param facet What facets to include? Options: \code{"x", "y"}.
 #' @param which Which \code{x} or which \code{y} to be plotted. Numerical vector.
+#' @inheritParams getAccuracy.doBackTesting
 #' @inheritParams wide2long
 #' @export
-plot.doBackTesting <- function(x, facet = c("x", "y"),
+plot.doBackTesting <- function(x, data.out, facet = c("x", "y"),
                                which = NULL, ...) {
   B  <- x
   x  <- B$input$x
   y1 <- B$input$y.fit
   y2 <- B$input$y.for
-  index <- B$input$data.out
   facet <- match.arg(facet)
   
-  y_lab <- switch(index,
+  y_lab <- switch(data.out,
                   mx = "Central death rate at age x, \nm[x]",
                   qx = "Probability of dying between age x and x+1, \nq[x]",
                   dx = "Life Table d[x]",
@@ -27,9 +27,9 @@ plot.doBackTesting <- function(x, facet = c("x", "y"),
   # Observed values
   O <- convertFx(x, data = B$input$data, 
                  from = B$input$data.in, 
-                 to = B$input$data.out, lx0 = 1)
+                 to = data.out, lx0 = 1)
   # Forecast values
-  H <- B$datasets$forecasts
+  H  <- getForecasts(B$Forecast, data.out)
   
   # ggplot method
   if (facet == "y") {

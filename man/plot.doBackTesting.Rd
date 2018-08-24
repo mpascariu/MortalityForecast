@@ -4,10 +4,15 @@
 \alias{plot.doBackTesting}
 \title{Plot method for objects of the class doBackTesting}
 \usage{
-\method{plot}{doBackTesting}(x, facet = c("x", "y"), which = NULL, ...)
+\method{plot}{doBackTesting}(x, data.out, facet = c("x", "y"),
+  which = NULL, ...)
 }
 \arguments{
 \item{x}{An object of the class \code{doBackTesting}.}
+
+\item{data.out}{Specify the type of data to be returned in output. 
+Various life table indices are accepted: 
+\code{"qx", "mx", "dx", "lx", "Lx", "Tx", "ex"}.}
 
 \item{facet}{What facets to include? Options: \code{"x", "y"}.}
 

@@ -3,6 +3,9 @@
 \name{predict.fitMRandomWalk}
 \alias{predict.fitMRandomWalk}
 \title{Forecast a Multivariate Random Walk Model}
+\source{
+The original implementation of this function was taken from StMoMo R package.
+}
 \usage{
 \method{predict}{fitMRandomWalk}(object, h = 10, level = c(80, 95),
   ...)
@@ -26,4 +29,7 @@ An object of the class \code{"predict.fitMRandomWalk"} with components:
 \description{
 Returns forecasts and other information for a Multivariate 
 Random Walk Model.
+}
+\author{
+Marius D. Pascariu
 }

@@ -5,11 +5,8 @@
 \title{Perform In-Sample Testing of Mortality Forecasts Over Multiple Time Periods}
 \usage{
 doBBackTesting(data, x, y, data.in = c("qx", "mx", "dx", "lx"),
-  data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-  models = c("MRWD", "LC"), measures = c("ME", "MAE", "MAPE", "sMAPE",
-  "MRAE", "MASE"), strategy = c(f = 20, h = 20, s = 2),
-  xa = x[-length(x)], ya = NULL, level = 95,
-  jumpchoice = c("actual", "fit"), verbose = TRUE, ...)
+  models = c("MRWD", "LC"), strategy = c(f = 20, h = 20, s = 2),
+  level = 95, jumpchoice = c("actual", "fit"), verbose = TRUE, ...)
 }
 \arguments{
 \item{data}{A data.frame or a matrix containing mortality data 
@@ -24,33 +21,12 @@ Default: \code{NULL}.}
 \item{data.in}{Specify the type of input \code{data}. Various life table 
 indices are accepted: \code{"qx", "mx", "dx", "lx"}.}
 
-\item{data.out}{Specify the type of data to be returned in output. 
-Various life table indices are accepted: 
-\code{"qx", "mx", "dx", "lx", "Lx", "Tx", "ex"}.}
-
 \item{models}{Mortality models to be evaluated.}
-
-\item{measures}{What accurracy measure to compute? Various alternatives are 
-available, \itemize{
- \item{Mean error measures: } \code{"ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"};
- \item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "MdRAE", "MdASE"};
- \item{Squared error measures: } \code{"MSE", "RMSE", "RMSPE", "RMdSPE"};
- \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}}
 
 \item{strategy}{Fitting-Forecasting strategy. Format: numerical vector.
 The strategy \code{c(f, h, s)} consists in \code{f} number of years to use in 
-fitting, \code{h} number of years to forecast and step \code{s} to change the
-fitting-forecasting window.}
-
-\item{xa}{Ages to be considered in model accuracy evaluation. It can be used 
-to calculate the measures on a subset of the results. If \code{xa = NULL} 
-the entire age-range in \code{x} is considered. Default: \code{xa = x[-length(x)]}.
-In default mode the last row of results (last row in the life table) is 
-excluded from evaluation. Because of different methods applied to force closing of 
-the life table (input-specific), the errors can be "false positives" in the last row.}
-
-\item{ya}{Years to be considered in accuracy computation. If \code{ya = NULL} 
-(default) the entire period in \code{y} is considered.}
+fitting, \code{h} number of years to forecast and the step \code{s} to roll the
+evaluation window.}
 
 \item{level}{Significance level of the confidence interval.}
 
@@ -73,13 +49,21 @@ dx <- MortalityForecast.data$dx[paste(x), paste(y)]
 
 BB <- doBBackTesting(data = dx, x, y,
                      data.in = "dx", 
-                     data.out = "ex", 
-                     models = c("MRWD", "LC"),
-                     strategy = c(20, 20, 5))
+                     models = c("MRWD", "LeeCarter", "HyndmanUllah"),
+                     strategy = c(20, 20, 3))
+
+A <- getAccuracy(BB, data.out = "ex")
+A
+
+R <- doRanking(A)
+R
 }
 \seealso{
 \code{\link{doBackTesting}}
 \code{\link{doMortalityModels}}
 \code{\link{doForecasts}}
 \code{\link{getAccuracy}}
+}
+\author{
+Marius D. Pascariu
 }

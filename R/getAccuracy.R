@@ -1,116 +1,134 @@
 
-#' Get Accuracy Measures
-#' @param object An object of class \code{doForecasts}.
-#' @param data Validation set of demographic data.
+
+#' Generic for Computing Accuracy Measure from the \code{doBackTesting} and 
+#' \code{doBBackTesting} objects
+#' @param object An object of the class \code{doBackTesting} or \code{doBBackTesting}.
+#' @inheritParams doMortalityModels
+#' @keywords internal
+#' @author Marius D. Pascariu
+#' @examples 
+#' # For examples go to ?doBackTesting and ?doBBackTesting
+#' @export
+getAccuracy = function(object, ...)
+  UseMethod("getAccuracy")
+
+
+#' Get Accuracy Measures from \code{doBackTesting}
+#' @param object An object of class \code{doBackTesting}.
 #' @param data.out Specify the type of data to be returned in output. 
 #' Various life table indices are accepted: 
 #' \code{"qx", "mx", "dx", "lx", "Lx", "Tx", "ex"}.
 #' @inheritParams doMortalityModels
 #' @inheritParams computeAccuracy
 #' @inherit computeAccuracy details references
+#' @seealso \code{\link{doBackTesting}}
+#' @author Marius D. Pascariu
 #' @examples 
-#' x = 0:100             # Ages
-#' y1 = 1980:1995        # Training period
-#' y2 = 1996:2005        # Validation period
-#' h = max(y2) - max(y1) # Forecasting horizon
-#' 
-#' D1 <- MortalityForecast.data$dx[paste(x), paste(y1)]
-#' D2 <- MortalityForecast.data$dx[paste(x), paste(y2)]
-#' 
-#' MM = c("MRWD", "LC", "CoDa")
-#' M <- doMortalityModels(data = D1, x, y1, data.in = "dx", models = MM)
-#' P <- doForecasts(M, h)
-#' A <- getAccuracy(P, D2, xa = 0:95, data.in = "dx", data.out = "qx")
-#' 
-#' A
-#' plot(A)
+#' # For examples go to ?doBackTesting
 #' @export
-getAccuracy <- function(object, data, 
-                        data.in = c("qx", "mx", "dx", "lx"),
+getAccuracy.doBackTesting <- function(object, 
                         data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                        measures = c("ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"),
-                        xa = NULL, ya = NULL,
-                        na.rm = TRUE, ...) {
+                        measures = c("ME", "MAE", "MAPE", "sMAPE", "sMRAE", "MASE"),
+                        ...) {
   
-  data.in  <- match.arg(data.in)
+  x <- object$input$x
+  data.in  <- object$input$data.in
   data.out <- match.arg(data.out)
+  validation.set <- object$Datasets$validation.set
   
-  O  <- convertFx(x = object$x, data, from = data.in, to = data.out, lx0 = 1, ...) # observed data
-  H  <- getForecasts(object, data.out)                              # forecast data
-  B  <- H[[1]] # Benchmark model
-  Mn <- object$input$object$input$models # Model names
+  O  <- convertFx(x = x, data = validation.set, 
+                  from = data.in, to = data.out, lx0 = 1, ...) # observed data
+  H  <- getForecasts(object$Forecast, data.out)                # forecast data
+  B  <- H[[1]]              # Benchmark model
+  Mn <- object$input$models # Model names
   
-  fn <- function(X) computeAccuracy(O, X, B, xa, ya, measures, na.rm)
+  fn <- function(X) computeAccuracy(O, X, B, measures)
   A  <- lapply(H, fn)
   z  <- NULL
   
   for (i in 1:length(A)) {
     z <- rbind(z, A[[i]]) 
   }
-  rownames(z) <- Mn
-  R  <- doRanking(z)
+  zt  <- add_column(as.tibble(z), Scenario = "Total", Model = Mn, 
+                    LifeTableIndex = data.out, .before = T)
+  zt
+}
+
+
+#' Get Accuracy Measures from \code{doBBackTesting}
+#' @inheritParams getAccuracy.doBackTesting
+#' @inherit getAccuracy.doBackTesting details references
+#' @seealso \code{\link{doBBackTesting}}
+#' @author Marius D. Pascariu
+#' @examples 
+#' # For examples go to ?doBBackTesting
+#' @export
+getAccuracy.doBBackTesting <- function(object,
+                                       data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                                       measures = c("ME", "MAE", "MAPE", "sMAPE", "sMRAE", "MASE"),
+                                       ...) {
+  data.out <- match.arg(data.out)
+  N  <- -c(1:3)
+  ns <- nrow(object$scenarios)  # no. of scenarios
+  A  <- tibble()
+  AA <- 0
   
-  out <- list(index = data.out, results = z, rank = R$rank, GC = R$GC)
-  out <- structure(class = "getAccuracy", out)
+  for (s in 1:ns) {
+    As <- getAccuracy(object = object$results[[s]], data.out, measures, ...)
+    As$Scenario <- s
+    A <- rbind(A, As)
+    AA <- AA + As[, N]/ns  # compute mean values over all scenarios
+  }
+  
+  As[, N] <- AA
+  As$Scenario <- "Total"
+  out <- rbind(As, A)
   return(out)
 }
 
 
-#' Rank models based on the accuracy results
-#' @param z Table containing accuracy measures.
-#' @export
-doRanking <- function(z) {
-  zz <- z
-  zz[, "ME"] <- abs(zz[, "ME"])
-  r  <- floor(apply(zz, 2, rank))
-  s2 <- floor(rank(apply(r, 1, median)))
-  out <- list(rank = r, GC = s2)
-  return(out)
-}
-
-
-#' Print getAccuracy
-#' @param x An object of the class \code{getAccuracy}
-#' @inheritParams summary.getResiduals
-#' @keywords internal
-#' @export
-print.getAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L), 
-                              ...) {
-  cat("\nForecasting Accuracy Measures")
-  cat("\nLife Table Index:", x$index, "\n\n")
-  print(round(x$results, digits))
-  cat("\nRanks - Best performing models in each category:\n")
-  print(x$rank)
-  cat("\nGeneral Classification:\n")
-  # res <- t(data.frame(MeanRank = x$rankMean, MedianRank = x$rankMedian))
-  print(x$GC)
-}
+# #' Print getAccuracy
+# #' @param x An object of the class \code{getAccuracy}
+# #' @inheritParams summary.getResiduals
+# #' @keywords internal
+# #' @export
+# print.getAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L), 
+#                               ...) {
+#   cat("\nForecasting Accuracy Measures")
+#   cat("\nLife Table Index:", x$index, "\n\n")
+#   print(round(x$results, digits))
+#   cat("\nRanks - Best performing models in each category:\n")
+#   print(x$rank)
+#   cat("\nGeneral Classification:\n")
+#   # res <- t(data.frame(MeanRank = x$rankMean, MedianRank = x$rankMedian))
+#   print(x$GC)
+# }
 
 
 #' Get Measures of Forecast Accuracy
 #' 
 #' @param u Validation dataset.
 #' @param u.hat In-sample forecast data.
-#' @param b Benchmark forecast data. Usualy a naive or Random-Walk forecast.
+#' @param b Benchmark forecast data. Usualy a naive or Random-Walk w drift forecast.
+#' @param measures What accurracy measure to compute? Various alternatives are 
+#' available, \itemize{
+#'  \item{Mean error measures: } \code{"ME", "MAE", "MAPE", "sMAPE", "sMRAE", "MASE"};
+#'  \item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "sMdRAE", "MdASE"};
+#'  \item{Squared error measures: } \code{"MSE", "RMSE", "RMSPE", "RMdSPE"};
+#'  \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}
 #' @param xa Ages to be considered in model accuracy evaluation. It can be used 
 #' to calculate the measures on a subset of the results. If \code{xa = NULL} 
 #' (default) the entire age-range in input is considered.
 #' @param ya Years to be considered in accuracy computation. Default: \code{ya = NULL}.
-#' @param measures What accurracy measure to compute? Various alternatives are 
-#' available, \itemize{
-#'  \item{Mean error measures: } \code{"ME", "MAE", "MAPE", "sMAPE", "MRAE", "MASE"};
-#'  \item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "MdRAE", "MdASE"};
-#'  \item{Squared error measures: } \code{"MSE", "RMSE", "RMSPE", "RMdSPE"};
-#'  \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}
 #' @param na.rm A logical value indicating whether NA values should be stripped 
 #' before the computation proceeds.
 #' @details See \insertCite{hyndman2006;textual}{MortalityForecast} for a 
 #' comprehensive discussion of the accuracy measures.
 #' @references \insertAllCited{}
+#' @author Marius D. Pascariu
 #' @keywords internal
-#' @export
-computeAccuracy <- function(u, u.hat, b, xa = NULL, ya = NULL,
-                            measures, na.rm = TRUE){
+computeAccuracy <- function(u, u.hat, b, measures, 
+                            xa = NULL, ya = NULL, na.rm = TRUE){
   if (is.null(xa)) xa <- rownames(u)
   if (is.null(ya)) ya <- colnames(u)
   L1 <- rownames(u) %in% xa
@@ -170,13 +188,13 @@ computeAccuracy <- function(u, u.hat, b, xa = NULL, ya = NULL,
   
   bE  <- u - b       # benchmark errors
   bAE <- abs(bE)
-  # RAE <- AE/bAE      # relative absolute errors.
-  RAE <- 2 * AE/(AE + bAE)  # relative absolute errors.
+  RAE <- AE/bAE      # relative absolute errors.
+  sRAE <- 2 * AE/(AE + bAE)  # relative absolute errors.
   
   # 13.Mean Relative Absolute Error
-  MRAE <- mean(RAE, na.rm = N)
+  sMRAE <- mean(sRAE, na.rm = N)
   # 14.Median Relative Absolute Error
-  MdRAE <- median(RAE, na.rm = N)
+  sMdRAE <- median(sRAE, na.rm = N)
   
   # 15.Geometric Mean Relative Absolute Error
   # geometric mean function for positive values
@@ -197,8 +215,8 @@ computeAccuracy <- function(u, u.hat, b, xa = NULL, ya = NULL,
   # Absolute errors and square errors tell the same thing. Because we do not 
   # want to receive the same information multiple times we do not export
   # MSE, RMSE, RMSPE and RMdSPE.
-  out <- data.frame(ME,   MAE,  MAPE,  sMAPE,  MRAE,  MASE, # means
-                    MdE, MdAE, MdAPE, sMdAPE, MdRAE, MdASE, # medians
+  out <- data.frame(ME,   MAE,  MAPE,  sMAPE,  sMRAE,  MASE, # means
+                    MdE, MdAE, MdAPE, sMdAPE, sMdRAE, MdASE, # medians
                     MSE, RMSE, RMSPE, RMdSPE,               # squared errors
                     GMRAE)                                  # geometric mean
   out <- out[, measures]

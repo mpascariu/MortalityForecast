@@ -78,3 +78,6 @@ dx <- P$predicted.values$mean
 lt <- LifeTable(x = P$x, dx = dx)
 }
 }
+\author{
+Marius D. Pascariu, Marie-Pier Bergeron-Boucher and Jim Oeppen
+}

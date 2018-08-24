@@ -2,7 +2,7 @@
 % Please edit documentation in R/doBBackTesting.R
 \name{buildScenarios}
 \alias{buildScenarios}
-\title{Build Scenarios for doBackTESTING}
+\title{Build Scenarios for doBBackTesting function}
 \usage{
 buildScenarios(y, strategy = c(f = 20, h = 20, s = 2))
 }
@@ -12,10 +12,38 @@ Default: \code{NULL}.}
 
 \item{strategy}{Fitting-Forecasting strategy. Format: numerical vector.
 The strategy \code{c(f, h, s)} consists in \code{f} number of years to use in 
-fitting, \code{h} number of years to forecast and step \code{s} to change the
-fitting-forecasting window.}
+fitting, \code{h} number of years to forecast and the step \code{s} to roll the
+evaluation window.}
 }
 \description{
-Build Scenarios for doBackTESTING
+This is a utility function used in the \code{\link{doBBackTesting}} function
+to define the rolling evaluation windows.
 }
-\keyword{internal}
+\examples{
+y = 1900:2016
+
+# Strategy
+S = c(f = 20, h = 20, s = 1)
+# This means that:
+# - 20 years of data are used to fit the models;
+# - forecast 20 years and evaluate the results;
+# - roll the evaluation window 1 year and repeat the process.
+
+# 78 scenarios are created using this years and strategy.
+W = buildScenarios(y, S)
+W
+
+# The first scenario will be:
+W[[1, "fit"]]
+W[[1, "forecast"]]
+
+# The last scenario will be:
+W[[78, "fit"]]
+W[[78, "forecast"]]
+}
+\seealso{
+\code{\link{doBBackTesting}}
+}
+\author{
+Marius D. Pascariu
+}

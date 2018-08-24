@@ -1,5 +1,5 @@
 
 
 .onAttach <- function(lib, pkg){
-  packageStartupMessage("This is MortalityForecast 0.3.1")
+  packageStartupMessage("This is MortalityForecast 0.3.8")
 }

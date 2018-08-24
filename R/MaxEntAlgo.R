@@ -3,7 +3,7 @@
 #' 
 #' Function for estimating the probability density function starting from 
 #' a limited number of raw statistical moments. The method is based on 
-#' Maximum Entropy method (Mead & Papanicolaou 1984).
+#' Maximum Entropy method \insertCite{mead1984}{MortalityForecast}.
 #' @param data A numeric vector or a data.frame/matrix with raw moments.
 #' @param x A numeric vector with ages. The density frequencies are 
 #' returned only for the specified ages. 
@@ -13,12 +13,9 @@
 #' should be an old age; otherwise the MaxEnt might fail to converge. 
 #' Numeric scalar.
 #' @inheritParams fitMaxEntMortality
-#' @author Adam Lenart and Marius D. Pascariu
 #' @return An object with the estimated densities.
-#' @references Mead L.R., & Papanicolaou N. (1984).
-#' \href{http://aip.scitation.org/doi/abs/10.1063/1.526446}{
-#' Maximum entropy in the problem of moments.} Journal of Mathematical Physics, 
-#' 25(8), 2404-2417.
+#' @author Adam Lenart and Marius D. Pascariu.
+#' @references \insertAllCited{}
 #' @examples 
 #' # Example 1 -- simple case ---------------
 #' 
@@ -46,7 +43,6 @@
 #' legend("topleft", legend = c("observed", "estimated"), col = 1:2, 
 #'        pch = c(16, NA), lty = c(NA, 1), lwd = 2, bty = "n")
 #' @export
-#' 
 findDensity <- function(data, x, omega = 103, verbose = FALSE) {
   
   if (is.matrix(data) || is.data.frame(data)) {

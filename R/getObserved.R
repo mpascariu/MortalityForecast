@@ -2,6 +2,10 @@
 
 #' Get Observed Values
 #' @inheritParams getFitted
+#' @seealso \code{\link{doMortalityModels}}
+#' @author Marius D. Pascariu
+#' @examples 
+#' # For examples go to ?doMortalityModels
 #' @export
 getObserved <- function(object, 
                         data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),

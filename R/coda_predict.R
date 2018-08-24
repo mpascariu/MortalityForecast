@@ -24,7 +24,8 @@
 #'  \item{deep}{An object of class \code{ARIMA} that contains all the
 #'  components of the fitted time series model used in \code{kt} prediction.} 
 #'  \item{x}{Vector of ages used in prediction.} 
-#'  \item{y}{Vector of years used in prediction.} 
+#'  \item{y}{Vector of years used in prediction.}
+#' @author Marius D. Pascariu, Marie-Pier Bergeron-Boucher and Jim Oeppen 
 #' @examples 
 #' # Example 1 ----------------------
 #' x  <- 0:100

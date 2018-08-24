@@ -2,7 +2,11 @@
 
 #' Get Fitted Values
 #' @param object An object of class \code{MortalityModels}.
-#' @inheritParams getAccuracy
+#' @inheritParams getAccuracy.doBackTesting
+#' @seealso \code{\link{doMortalityModels}}
+#' @author Marius D. Pascariu
+#' @examples 
+#' # For examples go to ?doMortalityModels
 #' @export
 getFitted <- function(object, 
                       data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),

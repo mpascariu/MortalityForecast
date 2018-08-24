@@ -70,3 +70,6 @@ plot(R, plotType = "signplot")
 \code{\link{predict.fitOeppen}}
 \code{\link{plot.fitOeppen}}
 }
+\author{
+Marius D. Pascariu, Marie-Pier Bergeron-Boucher and Jim Oeppen
+}

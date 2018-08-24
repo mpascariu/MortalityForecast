@@ -24,6 +24,7 @@
 #' \code{\link{predict.fitOeppen}}
 #' \code{\link{plot.fitOeppen}}
 #' @references \insertAllCited{}
+#' @author Marius D. Pascariu, Marie-Pier Bergeron-Boucher and Jim Oeppen 
 #' @examples
 #' # Data
 #' x  <- 0:100

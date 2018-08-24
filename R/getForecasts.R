@@ -3,7 +3,9 @@
 
 #' Get Predicted Values
 #' @param object An object of class \code{doForecasts}.
-#' @inheritParams getAccuracy
+#' @inheritParams getAccuracy.doBackTesting
+#' @seealso \code{\link{doForecasts}}
+#' @author Marius D. Pascariu
 #' @export
 getForecasts <- function(object, 
                          data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
