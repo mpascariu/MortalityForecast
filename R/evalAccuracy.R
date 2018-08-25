@@ -162,13 +162,13 @@ computeAccuracy <- function(u, u.hat, b, measures,
   PE <- E[u > 0]/u[u > 0] # percentage error
   APE <- abs(PE)
   # 7.Mean Absolute Percentage Error
-  MAPE <- mean(APE, na.rm = N)
+  MAPE <- mean(100 * APE, na.rm = N)
   # 8.Median Absolute Percentage Error
-  MdAPE <- median(APE, na.rm = N)
+  MdAPE <- median(100 * APE, na.rm = N)
   # 9.Root Mean Square Percentage Erorr
-  RMSPE <- sqrt(mean(PE^2, na.rm = N))
+  RMSPE <- sqrt(mean((100 * PE)^2, na.rm = N))
   # 10.Root Median Square Percentage Error
-  RMdSPE <- sqrt(median(PE^2, na.rm = N))
+  RMdSPE <- sqrt(median((100 * PE)^2, na.rm = N))
   
   # ----------------------------------------------
   # III. Symmetric errors
@@ -178,9 +178,9 @@ computeAccuracy <- function(u, u.hat, b, measures,
   # measures (Makridakis, 1993).
   
   # 11.Symmetric Mean Absolute Percentage Error
-  sMAPE <- mean(2 * AE/(u + u.hat), na.rm = N)
+  sMAPE <- mean(200 * AE/(u + u.hat), na.rm = N)
   # 12.Symmetric Median Absolute Percentage Error
-  sMdAPE <- median(2 * AE/(u + u.hat), na.rm = N)
+  sMdAPE <- median(200 * AE/(u + u.hat), na.rm = N)
   
   # ---------------------------------------------------------------
   # IV. Measures based on relative errors
@@ -189,8 +189,8 @@ computeAccuracy <- function(u, u.hat, b, measures,
   
   bE  <- u - b       # benchmark errors
   bAE <- abs(bE)
-  RAE <- AE/bAE      # relative absolute errors.
-  sRAE <- 2 * AE/(AE + bAE)  # relative absolute errors.
+  # RAE <- AE/bAE      # relative absolute errors.
+  sRAE <- 200 * AE/(AE + bAE)  # relative absolute errors.
   
   # 13.Mean Relative Absolute Error
   sMRAE <- mean(sRAE, na.rm = N)
@@ -199,12 +199,12 @@ computeAccuracy <- function(u, u.hat, b, measures,
   
   # 15.Geometric Mean Relative Absolute Error
   # geometric mean function for positive values
-  gm_mean = function(z) exp(mean(log(z[z > 0]), na.rm = N))
-  GMRAE <- gm_mean(RAE) 
+  # gm_mean = function(z) exp(mean(log(z[z > 0]), na.rm = N))
+  # GMRAE <- gm_mean(RAE) 
   
   # ---------------------------------------------------------------
   # V. Scaled measures
-  f   <- sum(diff(t(u))) / (nrow(u) * (ncol(u) - 1)) # scaling factor
+  f   <- mean(abs(diff(t(u))), na.rm = N)
   SE  <- E / f # scaled errors
   ASE <- abs(SE)
   # 16.Mean Absolute Scaled Error
@@ -218,8 +218,7 @@ computeAccuracy <- function(u, u.hat, b, measures,
   # MSE, RMSE, RMSPE and RMdSPE.
   out <- data.frame(ME,   MAE,  MAPE,  sMAPE,  sMRAE,  MASE, # means
                     MdE, MdAE, MdAPE, sMdAPE, sMdRAE, MdASE, # medians
-                    MSE, RMSE, RMSPE, RMdSPE,               # squared errors
-                    GMRAE)                                  # geometric mean
+                    MSE, RMSE, RMSPE, RMdSPE)               # squared errors
   out <- out[, measures]
   out <- as.matrix(out)
   return(out)

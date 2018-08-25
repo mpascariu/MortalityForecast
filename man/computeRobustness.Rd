@@ -17,8 +17,8 @@ computeRobustness(F1, F2, B1, B2, measures, na.rm = TRUE)
 
 \item{measures}{What robustness measure to compute? Various alternatives are 
 available, \itemize{
- \item{Mean delta measures: } \code{"MD", "MAD", "sMRAD", "MASD"};
- \item{Median delta measures: } \code{"MdD", "MdAD", "sMdRAD", "MdASD"}.
+ \item{Mean delta measures: } \code{"MD", "MAD", "sMRAD"};
+ \item{Median delta measures: } \code{"MdD", "MdAD", "sMdRAD"}.
  }}
 
 \item{na.rm}{A logical value indicating whether NA values should be stripped 

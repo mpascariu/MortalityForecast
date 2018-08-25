@@ -28,7 +28,7 @@ evalRobustness = function(object, ...)
 #' @export  
 evalRobustness.doBBackTesting <- function(object,
                            data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                           measures = c("MD", "MAD", "sMRAD", "MASD"),
+                           measures = c("MD", "MAD", "sMRAD"),
                            ...) {
   
   data.out <- match.arg(data.out)
@@ -76,8 +76,8 @@ evalRobustness.doBBackTesting <- function(object,
 #' @param B2 Forecast scenario 2 - benchmark.
 #' @param measures What robustness measure to compute? Various alternatives are 
 #' available, \itemize{
-#'  \item{Mean delta measures: } \code{"MD", "MAD", "sMRAD", "MASD"};
-#'  \item{Median delta measures: } \code{"MdD", "MdAD", "sMdRAD", "MdASD"}.
+#'  \item{Mean delta measures: } \code{"MD", "MAD", "sMRAD"};
+#'  \item{Median delta measures: } \code{"MdD", "MdAD", "sMdRAD"}.
 #'  }
 #' @param na.rm A logical value indicating whether NA values should be stripped 
 #' before the computation proceeds. Default: \code{TRUE}.
@@ -115,15 +115,8 @@ computeRobustness <- function(F1, F2, B1, B2,
   MdAD <- median(AD, na.rm = N)
   sMdRAD <- median(sRAD, na.rm = N)
   
-  # V. Scaled Delta
-  f   <- sum(diff(t(D))) / (nrow(D) * (ncol(D) - 1)) # scaling factor
-  SD  <- D / f # scaled delta
-  ASD <- abs(SD)
-  MASD <- mean(ASD, na.rm = N) # Mean Absolute Scaled Delta
-  MdASD <- median(ASD, na.rm = N) # Median Absolute Scaled Delta
-  
-  out <- tibble(MD, MAD, sMRAD, MASD,     # mean deltas
-                MdD, MdAD, sMdRAD, MdASD) # median deltas
+  out <- tibble(MD, MAD, sMRAD,     # mean deltas
+                MdD, MdAD, sMdRAD) # median deltas
   out <- out[, measures]
   return(out)
 }

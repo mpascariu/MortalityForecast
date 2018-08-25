@@ -5,8 +5,7 @@
 \title{Evaluating the Robustness of the Forcasting Mortality Models}
 \usage{
 \method{evalRobustness}{doBBackTesting}(object, data.out = c("qx", "mx",
-  "dx", "lx", "Lx", "Tx", "ex"), measures = c("MD", "MAD", "sMRAD",
-  "MASD"), ...)
+  "dx", "lx", "Lx", "Tx", "ex"), measures = c("MD", "MAD", "sMRAD"), ...)
 }
 \arguments{
 \item{object}{An object of class \code{doBBackTesting}.}
