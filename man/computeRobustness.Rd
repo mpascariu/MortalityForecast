@@ -4,7 +4,7 @@
 \alias{computeRobustness}
 \title{Compute robustness measures}
 \usage{
-computeRobustness(F1, F2, B1, B2, measures, na.rm = TRUE)
+computeRobustness(F1, F2, B1, B2, ND, measures, na.rm = TRUE)
 }
 \arguments{
 \item{F1}{Forecast scenario 1.}

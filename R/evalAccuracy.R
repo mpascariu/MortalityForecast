@@ -204,9 +204,10 @@ computeAccuracy <- function(u, u.hat, b, measures,
   
   # ---------------------------------------------------------------
   # V. Scaled measures
-  f   <- mean(abs(diff(t(u))), na.rm = N)
-  SE  <- E / f # scaled errors
-  ASE <- abs(SE)
+  meanT <- function(z) mean(z, na.rm = TRUE) # mean() function
+  scale <- apply(abs(t(diff(t(u)))), 1, meanT)  # compute a scale factor for each time series
+  SE    <- sweep(E, 1, scale, FUN = "/")     # scaled errors
+  ASE   <- abs(SE)
   # 16.Mean Absolute Scaled Error
   MASE <- mean(ASE, na.rm = N)
   # 17.Median Absolute Scaled Error

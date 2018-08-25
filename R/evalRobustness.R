@@ -28,7 +28,7 @@ evalRobustness = function(object, ...)
 #' @export  
 evalRobustness.doBBackTesting <- function(object,
                            data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                           measures = c("MD", "MAD", "sMRAD"),
+                           measures = c("MD", "MAD", "sMRAD", "MASD"),
                            ...) {
   
   data.out <- match.arg(data.out)
@@ -37,6 +37,8 @@ evalRobustness.doBBackTesting <- function(object,
   sn <- nrow(object$scenarios)  # no. of scenarios
   Mn <- object$input$models # Model names
   MN <- length(Mn) # no. of models tested
+  
+  naive_deltas <- computeNaiveDelta(object, data.out)
   
   R  <- tibble()
   RR <- 0
@@ -53,7 +55,8 @@ evalRobustness.doBBackTesting <- function(object,
     for (m in 1:MN) {
       f1 <- F1[[m]]
       f2 <- F2[[m]]
-      r <- computeRobustness(f1, f2, b1, b2, measures = measures)
+      r <- computeRobustness(f1, f2, b1, b2, ND = naive_deltas,
+                             measures = measures)
       r <- add_column(Scenario = scenario, Model = Mn[m], 
                       LifeTableIndex = data.out, r, .before = T)
       Rs <- rbind(Rs, r)
@@ -66,6 +69,9 @@ evalRobustness.doBBackTesting <- function(object,
   out <- rbind(Rs, R)
   return(out)
 }
+
+
+
 
 
 #' Compute robustness measures
@@ -83,7 +89,7 @@ evalRobustness.doBBackTesting <- function(object,
 #' before the computation proceeds. Default: \code{TRUE}.
 #' @author Marius D. Pascariu
 #' @keywords internal
-computeRobustness <- function(F1, F2, B1, B2, 
+computeRobustness <- function(F1, F2, B1, B2, ND,
                               measures,
                               na.rm = TRUE) {
   # Identify the common years in the 2 forcasts
@@ -95,28 +101,49 @@ computeRobustness <- function(F1, F2, B1, B2,
   F2 <- as.matrix(F2[, y])
   B1 <- as.matrix(B1[, y])
   B2 <- as.matrix(B2[, y])
+  ND <- as.matrix(ND[, y])
   
   # The % change in point forecast from A to B
   delta   = (F2/F1 - 1) * 100
   delta.b = (B2/B1 - 1) * 100
   
   N  <- na.rm
-  D  <- delta
-  bD <- delta.b
-  AD <- abs(D)
-  bAD  <- abs(bD)
+  AD <- abs(delta)
+  bAD  <- abs(delta.b)
   sRAD <- 2 * AD/(AD + bAD)
   
-  MD <- mean(D, na.rm = N)
+  MD <- mean(delta, na.rm = N)
   MAD <- mean(AD, na.rm = N)
   sMRAD <- mean(sRAD, na.rm = N)
   
-  MdD <- median(D, na.rm = N)
+  MdD <- median(delta, na.rm = N)
   MdAD <- median(AD, na.rm = N)
   sMdRAD <- median(sRAD, na.rm = N)
   
-  out <- tibble(MD, MAD, sMRAD,     # mean deltas
-                MdD, MdAD, sMdRAD) # median deltas
+  # ---------------------------------------------------------------
+  # V. Scaled measures
+  meanT <- function(z) mean(z, na.rm = TRUE) # mean() function
+  scale <- apply(abs(ND), 1, meanT)  # compute a scale factor for each time series
+  SD    <- sweep(delta, 1, scale, FUN = "/") # scaled errors
+  ASD   <- abs(SD)
+  
+  MASD  <- mean(ASD, na.rm = N)    # Mean Absolute Scaled Deltas
+  MdASD <- median(ASD, na.rm = N)  # Median Absolute Scaled Error
+  
+  out <- tibble(MD, MAD, sMRAD, MASD,     # mean deltas
+                MdD, MdAD, sMdRAD, MdASD) # median deltas
   out <- out[, measures]
   return(out)
+}
+
+
+#' @keywords internal
+computeNaiveDelta <- function(object, data.out) {
+  x <- object$input$x
+  data.in <- object$input$data.in
+  
+  A <- object$input$data
+  B <- convertFx(x, data = A, from = data.in, to = data.out)
+  C <- (B[, -1] / B[, -ncol(B)] - 1) * 100
+  return(C)
 }
