@@ -29,17 +29,17 @@ plot.predict.fitOeppen <- function(x, plotType = c("mean", "lower", "upper"),
   plotType <- match.arg(plotType)
   if (plotType == "mean") {
     mat = x$predicted.values
-    P <- ggplotDistribConvergence(mat, x = x$x, ny, level) + 
+    P <- ggplotDistribConvergence(mat, x = x$x, y = x$y, ny, level) + 
       labs(subtitle = "Forecast Values - Best estimate")
     
   } else if (plotType == "lower") {
     mat = x$conf.intervals[[1]]
-    P <- ggplotDistribConvergence(mat, x = x$x, ny, level) + 
+    P <- ggplotDistribConvergence(mat, x = x$x, y = x$y, ny, level) + 
       labs(subtitle = "Forecast Values - lower bound")
     
   } else if (plotType == "upper") {
     mat = x$conf.intervals[[length(x$conf.intervals)/2 + 1]]
-    P <- ggplotDistribConvergence(mat, x = x$x, ny, level) + 
+    P <- ggplotDistribConvergence(mat, x = x$x, y = x$y, ny, level) + 
       labs(subtitle = "Forecast Values - upper bound")
     
   } 

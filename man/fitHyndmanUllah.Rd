@@ -4,11 +4,10 @@
 \alias{fitHyndmanUllah}
 \title{The Functional Demographic Model}
 \usage{
-fitHyndmanUllah(data, x, y, ...)
+fitHyndmanUllah(data, x, y, order = 1, ...)
 }
 \arguments{
-\item{data}{A data.frame or a matrix containing mortality data 
-with ages \code{x} as row and time \code{y} as column.}
+\item{data}{demogdata object. Output from read.demogdata.}
 
 \item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
 Default: \code{NULL}.}
@@ -16,7 +15,9 @@ Default: \code{NULL}.}
 \item{y}{Numerical vector indicating the years in input \code{data}. Optional.
 Default: \code{NULL}.}
 
-\item{...}{Arguments to be passed to or from other methods.}
+\item{order}{Number of basis functions to fit.}
+
+\item{...}{Extra arguments passed to \code{\link[ftsa]{ftsm}}.}
 }
 \value{
 Object of class \dQuote{fdm} with the following components:

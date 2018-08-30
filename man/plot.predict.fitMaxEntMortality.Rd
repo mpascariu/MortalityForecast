@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{predict.fitMaxEntMortality}(x, y = NULL,
   plotType = c("mean", "lower", "upper", "raw_moments",
-  "normalised_moments"), ny = 7, level = 80, ...)
+  "normalised_moments", "scaled_moments"), ny = 7, level = 80, ...)
 }
 \arguments{
 \item{x}{An object of the class \code{\link{predict.fitMaxEntMortality}}.}
@@ -15,7 +15,7 @@
 Needed only for ploting moments. See \code{plotType}.}
 
 \item{plotType}{The type of the plot. The alternatives are 
-\code{"mean", "lower", "upper", "raw_moments", "normalised_moments"}. 
+\code{"mean", "lower", "upper", "raw_moments", "normalised_moments", "scaled_moments"}. 
 Default: \code{"mean"}.}
 
 \item{ny}{Number of years to be selected from input data and to be added in the plot.}

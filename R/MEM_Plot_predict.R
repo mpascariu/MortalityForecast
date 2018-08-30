@@ -5,7 +5,7 @@
 #' @param y An object of the class \code{\link{fitMaxEntMortality}}. 
 #' Needed only for ploting moments. See \code{plotType}.
 #' @param plotType The type of the plot. The alternatives are 
-#' \code{"mean", "lower", "upper", "raw_moments", "normalised_moments"}. 
+#' \code{"mean", "lower", "upper", "raw_moments", "normalised_moments", "scaled_moments"}. 
 #' Default: \code{"mean"}.
 #' @inheritParams plot.fitMaxEntMortality
 #' @examples
@@ -13,23 +13,23 @@
 #' @export
 plot.predict.fitMaxEntMortality <- function(x, y = NULL,
                                 plotType = c("mean", "lower", "upper", 
-                                             "raw_moments", "normalised_moments"), 
+                                             "raw_moments", "normalised_moments", "scaled_moments"), 
                                 ny = 7, level = 80, ...) 
 {
   plotType <- match.arg(plotType)
   if (plotType == "mean") {
     mat = x$predicted.values
-    P <- ggplotDistribConvergence(mat, x = x$x, ny, level) + 
+    P <- ggplotDistribConvergence(mat, x = x$x, y = x$y, ny, level) + 
       labs(subtitle = "Forecast Values - Best estimate")
     
   } else if (plotType == "lower") {
     mat = x$conf.intervals$predicted.values[[1]]
-    P <- ggplotDistribConvergence(mat, x = x$x, ny, level) + 
+    P <- ggplotDistribConvergence(mat, x = x$x, y = x$y, ny, level) + 
       labs(subtitle = "Forecast Values - lower bound")
     
   } else if (plotType == "upper") {
     mat = x$conf.intervals$predicted.values[[2]]
-    P <- ggplotDistribConvergence(mat, x = x$x, ny, level) + 
+    P <- ggplotDistribConvergence(mat, x = x$x, y = x$y, ny, level) + 
       labs(subtitle = "Forecast Values - upper bound")
     
   } else {
@@ -43,7 +43,8 @@ plot.predict.fitMaxEntMortality <- function(x, y = NULL,
 
 #' @keywords internal
 ggplotPredict <- function(P, M, plotType = c("raw_moments", 
-                                             "normalised_moments")) {
+                                             "normalised_moments",
+                                             "scaled_moments")) {
   year = value = lw = up = type <- NULL # hack CRAN note
   plotType <- match.arg(plotType)
   data <- prepare_ggdata(P, M, plotType)
@@ -51,7 +52,7 @@ ggplotPredict <- function(P, M, plotType = c("raw_moments",
   G <- ggplot(data, aes(year, value)) +
     geom_ribbon(aes(ymin = lw, ymax = up, fill = type)) +
     geom_line(aes(colour = type)) +
-    facet_wrap(~ moment, scales = "free_y") +
+    facet_wrap(~ moment, scales = "free_y", nrow = 2) +
     scale_color_manual(name = "Legend: ", values = c("blue", 1)) +
     scale_fill_manual(name = "Legend: ", values = alpha(c(4, NA), c(0.2, NA))) +
     xlab("\nTime (years)") + ylab("") 
@@ -67,10 +68,10 @@ prepare_ggdata <- function(P, M, plotType) {
             uRM = P$conf.intervals$predicted.raw.moments[[1]],
             lRM = P$conf.intervals$predicted.raw.moments[[2]])
   
-  if (plotType == "raw_moments") fn = function(Z) Z
-  if (plotType == "normalised_moments") {
-    fn = function(Z) convertMoments(Z, "raw", "normalized")
-  }
+  fn <- switch(plotType,
+               raw_moments = function(Z) Z,
+               normalised_moments = function(Z) convertMoments(Z, "raw", "normalized"),
+               scaled_moments = function(Z) log(abs(convertMoments(Z, "raw", "normalized"))))
   
   L1 <- lapply(L, as.data.frame)
   L2 <- lapply(L1, fn)

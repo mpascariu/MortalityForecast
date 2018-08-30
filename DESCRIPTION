@@ -1,14 +1,14 @@
 Package: MortalityForecast
 Type: Package
 Title: Standard Tools to Compare and Evaluate Mortality Forecasting Methods
-Version: 0.4.1
-Date: 2018-08-23
+Version: 0.4.2
+Date: 2018-08-27
 Authors@R: c(
-  person("Marius D.", "Pascariu", role = c("aut", "cre", "cph"), 
-  email = "rpascariu@outlook.com"),
+  person("Marius D.", "Pascariu", role = c("aut", "cre", "cph"), email = "rpascariu@outlook.com"),
   person("Adam", "Lenart", role = "ctb"),
   person("Marie-Pier", "Bergeron-Boucher", role = "ctb"),
-  person("Jim", "Oeppen", role = "ctb"))
+  person("Jim", "Oeppen", role = "ctb")
+  )
 Description: Standard tools to compare and evaluate mortality forecasting methods.
 License: GPL-3
 LazyData: TRUE

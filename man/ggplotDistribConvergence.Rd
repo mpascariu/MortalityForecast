@@ -4,12 +4,15 @@
 \alias{ggplotDistribConvergence}
 \title{Plot Convergence in Age at Death Distribution}
 \usage{
-ggplotDistribConvergence(mat, x, ny, level)
+ggplotDistribConvergence(mat, x, y, ny, level)
 }
 \arguments{
 \item{mat}{Matrix containing the observed or fitted value.}
 
 \item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
+Default: \code{NULL}.}
+
+\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
 Default: \code{NULL}.}
 
 \item{ny}{Number of years to be selected from input data and to be added in the plot.}

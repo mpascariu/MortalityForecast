@@ -4,9 +4,9 @@
 \alias{doBBackTesting}
 \title{Perform In-Sample Testing of Mortality Forecasts Over Multiple Time Periods}
 \usage{
-doBBackTesting(data, x, y, data.in = c("qx", "mx", "dx", "lx"),
-  models = c("MRWD", "LC"), strategy = c(f = 20, h = 20, s = 2),
-  level = 95, jumpchoice = c("actual", "fit"), verbose = TRUE, ...)
+doBBackTesting(data, x, y, data.in = c("qx", "mx", "dx", "lx"), models,
+  strategy = c(f = 20, h = 20, s = 2), level = 95,
+  jumpchoice = c("actual", "fit"), verbose = TRUE, ...)
 }
 \arguments{
 \item{data}{A data.frame or a matrix containing mortality data 

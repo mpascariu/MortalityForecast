@@ -21,12 +21,12 @@ plot.fitMaxEntMortality <- function(x, plotType = c("fitted", "observed"),
   plotType <- match.arg(plotType)
   if (plotType == "fitted") {
     mat = x$fitted.values
-    P <- ggplotDistribConvergence(mat, x = x$x, ny, level) + 
+    P <- ggplotDistribConvergence(mat, x = x$x, y = x$y[-1], ny, level) + 
       labs(subtitle = "Fitted Values")
     
   } else if (plotType == "observed") {
     mat = x$observed.values
-    P <- ggplotDistribConvergence(mat, x = x$x, ny, level) + 
+    P <- ggplotDistribConvergence(mat, x = x$x, y = x$y, ny, level) + 
       labs(subtitle = "Observed Values")
   } 
   suppressMessages(print(P))
@@ -38,9 +38,10 @@ plot.fitMaxEntMortality <- function(x, plotType = c("fitted", "observed"),
 #' @inheritParams fitted2dens
 #' @inheritParams fitMaxEntMortality
 #' @keywords internal
-ggplotDistribConvergence <- function(mat, x, ny, level) {
-  dx = y = ..quantile.. <- NULL # hack CRAN note
-  Z <- mat %>% fitted2dens(ny = ny)
+ggplotDistribConvergence <- function(mat, x, y, ny, level) {
+  dx = ..quantile.. <- NULL # hack CRAN note
+  
+  Z  <- fitted2dens(mat, x, y, ny = ny)
   rx <- range(x)
   quant <- abs(c(0, -1) + (1 - level/100)/2)
   
@@ -67,19 +68,18 @@ ggplotDistribConvergence <- function(mat, x, ny, level) {
 #' @param mat Matrix containing the observed or fitted value.
 #' @param ny Number of years to be selected from input data and to be added in the plot.
 #' @param lx0 Adjusting parameter.
+#' @inheritParams doMortalityModels
 #' @examples 
 #' x  <- 0:110
 #' y  <- 1965:2014
 #' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
 #' M  <- fitMaxEntMortality(dx, x, y, n = 5)
-#' fitted2dens(fitted(M))
+#' fitted2dens(fitted(M), x, y[-1])
 #' @keywords internal
 #' @export
-fitted2dens <- function(mat, ny = 7, lx0 = 300) {
+fitted2dens <- function(mat, x, y, ny = 7, lx0 = 300) {
   
-  x <- as.numeric(rownames(mat))
-  y <- as.numeric(colnames(mat))
-  years <- rev(round(quantile(y[-1], probs = seq(0, 1, length.out = ny))))
+  years <- rev(round(quantile(y, probs = seq(0, 1, length.out = ny))))
   
   H <- cbind(x, mat) %>% as.data.frame() %>% 
     tidyr::gather(key = "Year", value = "dx", -x)

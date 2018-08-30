@@ -28,7 +28,7 @@
 #' @export
 doBBackTesting <- function(data, x, y,
                            data.in = c("qx", "mx", "dx", "lx"),
-                           models = c("MRWD", "LC"),
+                           models,
                            strategy = c(f = 20, h = 20, s = 2),
                            level = 95,
                            jumpchoice = c("actual", "fit"),
