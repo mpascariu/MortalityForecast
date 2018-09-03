@@ -14,6 +14,7 @@
 #' @importFrom tidyr gather
 #' @importFrom tibble as.tibble tibble add_column
 #' @importFrom utils head tail
+#' @importFrom forcats fct_recode fct_inorder
 #' @importFrom ggplot2 ggplot geom_line  geom_point geom_ribbon facet_wrap    
 #' theme theme_minimal element_text labs ylab xlab unit
 #' aes alpha guide_legend guides margin

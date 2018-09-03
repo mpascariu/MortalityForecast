@@ -56,6 +56,7 @@ doMortalityModels <- function(data, x = NULL, y = NULL,
   # Oeppen (2008)
   if ("CoDa" %in% models) CoDa <- fitOeppen(data = dx.data, x, y)
   # Maximum Entropy Mortality Models - PLC (2018)
+  if ("MEM2" %in% models)  MEM2 <- fitMaxEntMortality(data = dx.data, x, y, n = 2)
   if ("MEM3" %in% models)  MEM3 <- fitMaxEntMortality(data = dx.data, x, y, n = 3)
   if ("MEM4" %in% models)  MEM4 <- fitMaxEntMortality(data = dx.data, x, y, n = 4)
   if ("MEM5" %in% models)  MEM5 <- fitMaxEntMortality(data = dx.data, x, y, n = 5)

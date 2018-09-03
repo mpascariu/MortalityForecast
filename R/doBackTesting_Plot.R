@@ -56,6 +56,7 @@ plot_x_facets <- function(O, H, x, y1, y2, which) {
   }
   
   H <- wide.list.2.long.df(data = H, x = x, y = y2, which.x = which)
+  H$Name <- change_model_factor_levels(H$Name)
   O <- wide2long(data = O, x = x, y = c(y1, y2), which.x = which)
   O$DATA <- NA
   O[O$y %in% y1, "DATA"] <- "Training Set"
@@ -63,8 +64,8 @@ plot_x_facets <- function(O, H, x, y1, y2, which) {
   
   P <- ggplot(H) + 
     facet_wrap(~x, scales = "free") +
-    geom_line(aes(x = y, y = value, color = Name, linetype = Name)) +
     geom_point(data = O, aes(x = y, y = value, fill = DATA), shape = 21) +
+    geom_line(aes(x = y, y = value, color = Name, linetype = Name)) +
     scale_fill_manual(values = 1:2) +
     xlab("Time period (Years)") 
   P
@@ -85,12 +86,35 @@ plot_y_facets <- function(O, H, x, y1, y2, which) {
   
   P <- ggplot(H) + 
     facet_wrap(~y, scales = "free") +
-    geom_line(aes(x = x, y = value, color = Name, linetype = Name)) +
     geom_point(data = O, aes(x = x, y = value, fill = DATA), shape = 21, alpha = 0.3) +
+    geom_line(aes(x = x, y = value, color = Name, linetype = Name)) +
     scale_fill_manual(values = 2) +
     xlab("Age (x)") + 
     scale_y_continuous(trans = 'log10')
   P
 }
 
+
+
+#' Change factor levels in order to get nice legends in ggplots
+#' @param vect A vector of the class \code{factor}.
+#' @examples 
+#' x <- factor(c("MRWD", "LeeCarter", "HyndmanUllah", "CoDa", "MEM6"))
+#' new.x <- change_model_factor_levels(x)
+#' @keywords internal
+#' @export
+change_model_factor_levels <- function(vect) {
+  X <- suppressWarnings(forcats::fct_recode(vect, 
+                                            "M.Random-Walk w Drift" = "MRWD", 
+                                            "Lee-Carter" = "LeeCarter", 
+                                            "Hyndman-Ullah" = "HyndmanUllah", 
+                                            "Oeppen" = "CoDa",
+                                            "MaxEntMortality-2" = "MEM2",
+                                            "MaxEntMortality-3" = "MEM3",
+                                            "MaxEntMortality-4" = "MEM4",
+                                            "MaxEntMortality-5" = "MEM5",
+                                            "MaxEntMortality-6" = "MEM6"))
+  out <- fct_inorder(X)
+  return(out)
+}
 
