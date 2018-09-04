@@ -1,4 +1,6 @@
-# Tue Aug 21 12:01:50 2018 --------- Marius D. Pascariu ---
+# Tue Sep  4 14:13:00 2018 --------- Marius D. Pascariu ---
+remove(list = ls())
+
 # Code used for downloading and creating of the testing data object in the packages
 remove(list = ls())
 library(MortalityLaws)
@@ -6,7 +8,7 @@ library(dplyr)
 library(tidyr)
 
 # Download HMD data
-HMDusr = '...@outlook.com'
+HMDusr = '...'
 psd = '...'
 cntr = 'GBRTENW'
 
@@ -16,7 +18,7 @@ HMD_LTm <- ReadHMD(what = 'LT_m', countries = cntr,
                   username = HMDusr, password = psd, save = F)
 
 x <- 0:110
-yr <- 1960:2016
+yr <- 1950:2016
 LTm <- HMD_LTm$data %>% filter(country == cntr, Year %in% yr) %>% 
   select(Year, Age, dx, ex)
 
@@ -26,7 +28,7 @@ dxm <- LTm %>% select(-ex) %>% spread(key = Year, value = dx) %>% select(-Age)
 rownames(dxm) <- x
 # ----------------------------------------------
 # mx values
-mxm <- convertFx(x, dxm, In = "dx", Out = "mx")
+mxm <- convertFx(x, dxm, from = "dx", to = "mx")
 # ----------------------------------------------
 # ex values
 exm <- LTm %>% filter(Age == 0) %>% select(ex) %>% c

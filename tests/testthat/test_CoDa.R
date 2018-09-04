@@ -2,8 +2,10 @@ remove(list = ls())
 library(MortalityForecast)
 
 # Test model fitting
-D <- MortalityForecast.data$dx
-M1 <- fitOeppen(D, x = 0:110, y = 1960:2016)
+x = 0:110
+y = 1960:2016
+D <- MortalityForecast.data$dx[paste(x), paste(y)]
+M1 <- fitOeppen(D, x = x, y = y)
 M2 <- fitOeppen(D)
 vsn <- 1e-200
 

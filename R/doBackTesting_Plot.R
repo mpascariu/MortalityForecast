@@ -63,7 +63,7 @@ plot_x_facets <- function(O, H, x, y1, y2, which) {
   O[O$y %in% y2, "DATA"] <- "Validation Set"
   
   P <- ggplot(H) + 
-    facet_wrap(~x, scales = "free") +
+    facet_wrap(~ x, scales = "free_y", nrow = 2) +
     geom_point(data = O, aes(x = y, y = value, fill = DATA), shape = 21) +
     geom_line(aes(x = y, y = value, color = Name, linetype = Name)) +
     scale_fill_manual(values = 1:2) +
@@ -85,7 +85,7 @@ plot_y_facets <- function(O, H, x, y1, y2, which) {
   O$DATA <- "Validation Set"
   
   P <- ggplot(H) + 
-    facet_wrap(~y, scales = "free") +
+    facet_wrap(~ y, scales = "free_y", nrow = 2) +
     geom_point(data = O, aes(x = x, y = value, fill = DATA), shape = 21, alpha = 0.3) +
     geom_line(aes(x = x, y = value, color = Name, linetype = Name)) +
     scale_fill_manual(values = 2) +

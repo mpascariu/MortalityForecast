@@ -43,7 +43,7 @@ the n-th moment of the probability distribution, where: \cr
 \examples{
 x  <- 0:110
 y  <- 1960:2016
-dx <- MortalityForecast.data$dx
+dx <- MortalityForecast.data$dx[paste(x), paste(y)]
 findMoments(data = dx, x = x, y = y, n = 4)
 }
 \seealso{

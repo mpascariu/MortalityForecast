@@ -29,7 +29,7 @@
 #' @examples 
 #' x  <- 0:110
 #' y  <- 1960:2016
-#' dx <- MortalityForecast.data$dx
+#' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
 #' findMoments(data = dx, x = x, y = y, n = 4)
 #' @export
 findMoments <- function(data, x, y = NULL, n, na.rm = TRUE) {
@@ -85,7 +85,6 @@ findMoments <- function(data, x, y = NULL, n, na.rm = TRUE) {
 #' # raw moments
 #' RM <- c(1, 68.75099, 4991.724, 371531.9, 28199680,  
 #'         2176435499, 170477697491)
-#' 
 #' 
 #' CM1 <- convertMoments(RM, from = "raw", to = "central")    # raw to central
 #' NM1 <- convertMoments(RM, from = "raw", to = "normalized") # raw to normalized
