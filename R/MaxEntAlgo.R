@@ -12,7 +12,7 @@
 #' on the right-hand side. In the case of age-at-death distribution, \code{omega} 
 #' should be an old age; otherwise the MaxEnt might fail to converge. 
 #' Numeric scalar.
-#' @inheritParams fitMaxEntMortality
+#' @inheritParams fit_MEM
 #' @return An object with the estimated densities.
 #' @author Adam Lenart and Marius D. Pascariu.
 #' @references \insertAllCited{}
@@ -43,7 +43,7 @@
 #' legend("topleft", legend = c("observed", "estimated"), col = 1:2, 
 #'        pch = c(16, NA), lty = c(NA, 1), lwd = 2, bty = "n")
 #' @export
-findDensity <- function(data, x, omega = 103, verbose = FALSE) {
+findDensity <- function(data, x, omega = 110, verbose = FALSE) {
   
   if (is.matrix(data) || is.data.frame(data)) {
     # If matrix or data.frame do the for-loop below

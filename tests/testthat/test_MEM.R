@@ -4,7 +4,7 @@ remove(list = ls())
 x  <- 0:110
 y  <- 1985:2014
 dx <- MortalityForecast.data$dx[paste(x), paste(y)]
-M  <- fitMaxEntMortality(data = dx, n = 6)
+M  <- fit_MEM(data = dx, n = 6)
 P1 <- predict(M, h = 16, x.h = 0:110, jumpchoice = 'fit')
 P2 <- predict(M, h = 16, x.h = 0:130, jumpchoice = 'actual')
 

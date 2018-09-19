@@ -4,7 +4,7 @@
 \alias{findDensity}
 \title{Estimate density function based on Maximum Entropy method (MaxEnt)}
 \usage{
-findDensity(data, x, omega = 103, verbose = FALSE)
+findDensity(data, x, omega = 110, verbose = FALSE)
 }
 \arguments{
 \item{data}{A numeric vector or a data.frame/matrix with raw moments.}

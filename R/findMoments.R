@@ -11,7 +11,7 @@
 #' The order should be at least 2.  
 #' @param na.rm Logical value. If \code{TRUE}, remove \code{NA} values. 
 #' Otherwise, keep \code{NA} values.
-#' @inheritParams fitMaxEntMortality
+#' @inheritParams fit_MEM
 #' @return An object containing:
 #' \itemize{
 #' \item \code{central.moments} --- Moments about the mean (c = mean). The zeroth moment is 

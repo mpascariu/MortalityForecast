@@ -109,11 +109,11 @@ change_model_factor_levels <- function(vect) {
                                             "Lee-Carter" = "LeeCarter", 
                                             "Hyndman-Ullah" = "HyndmanUllah", 
                                             "Oeppen" = "CoDa",
-                                            "MaxEntMortality-2" = "MEM2",
-                                            "MaxEntMortality-3" = "MEM3",
-                                            "MaxEntMortality-4" = "MEM4",
-                                            "MaxEntMortality-5" = "MEM5",
-                                            "MaxEntMortality-6" = "MEM6"))
+                                            "MEM-2" = "MEM2",
+                                            "MEM-3" = "MEM3",
+                                            "MEM-4" = "MEM4",
+                                            "MEM-5" = "MEM5",
+                                            "MEM-6" = "MEM6"))
   out <- fct_inorder(X)
   return(out)
 }
