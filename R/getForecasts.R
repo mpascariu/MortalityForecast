@@ -15,31 +15,41 @@ getForecasts <- function(object,
   x  <- object$x
   y  <- object$y  
   
-  DX <- list()
+  MX <- list()
   for (i in 1:length(Mn)) {
     M <- with(object, get(Mn[i]))
     
     if (Mn[i] %in% c("LC", "PLAT")) {
       mx <- M$rates
-      dx <- convertFx(x, mx, from = "mx", to = "dx", lx0 = 1, ...)
       
     } else if (Mn[i] %in% c("HyndmanUllah", "LeeCarter")) {
       mx <- M$rate$mean
       dimnames(mx) <- list(x, y)
-      dx <- convertFx(x, mx, from = "mx", to = "dx", lx0 = 1, ...)
       
     } else if (Mn[i] %in% c("MRW", "MRWD")) {
       mx <- exp(M$predicted.values)
-      dx <- convertFx(x, mx, from = "mx", to = "dx", lx0 = 1, ...)
       
     } else {
       dx <- M$predicted.values
+      mx <- convertFx(x, dx, from = "dx", to = "mx", lx0 = 1)
     }
-    DX[[i]] <- dx
+    MX[[i]] <- mx
   }
   
-  fn  <- function(Z) convertFx(x, Z, from = "dx", to = data.out, lx0 = 1)
-  out <- lapply(DX, fn)
+  fn <- function(mx, x_max = 110) {
+    if (max(x) < x_max) {
+      x_fit  <- 80:max(x - 2)
+      x_extr <- max(x - 2):x_max
+      data   <- extra_mortality(mx, x, x_fit, x_extr, law = "kannisto")$values
+      x      <- min(x):x_max
+    }
+    Z <- convertFx(x, data, from = "mx", to = data.out, lx0 = 1)
+    is_zero <- apply(Z, 2, function(x) all(x == 0))
+    Z[, is_zero] <- NA
+    Z[paste(object$x), ]
+  }
+  
+  out <- lapply(MX, fn)
   names(out) <- Mn
   out <- structure(class = "getForecasts", out)
   return(out)

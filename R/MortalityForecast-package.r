@@ -3,7 +3,7 @@
 
 #' @details \insertNoCite{*}{MortalityForecast}
 #' @references \insertAllCited{}
-#' @importFrom MortalityLaws convertFx
+#' @importFrom MortalityLaws convertFx MortalityLaw
 #' @importFrom StMoMo StMoMo lc genWeightMat
 #' @importFrom compositions acomp geometricmeanCol clr clrInv
 #' @importFrom magrittr %>%

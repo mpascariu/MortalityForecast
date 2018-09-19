@@ -4,8 +4,8 @@
 \alias{getObserved}
 \title{Get Observed Values}
 \usage{
-getObserved(object, data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx",
-  "ex"), ...)
+getObserved(object = NULL, data.out = c("qx", "mx", "dx", "lx", "Lx",
+  "Tx", "ex"), data.in = NULL, data = NULL, x = NULL, ...)
 }
 \arguments{
 \item{object}{An object of class \code{MortalityModels}.}
@@ -13,6 +13,15 @@ getObserved(object, data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx",
 \item{data.out}{Specify the type of data to be returned in output. 
 Various life table indices are accepted: 
 \code{"qx", "mx", "dx", "lx", "Lx", "Tx", "ex"}.}
+
+\item{data.in}{Specify the type of input \code{data}. Various life table 
+indices are accepted: \code{"qx", "mx", "dx", "lx"}.}
+
+\item{data}{A data.frame or a matrix containing mortality data 
+with ages \code{x} as row and time \code{y} as column.}
+
+\item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
+Default: \code{NULL}.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }

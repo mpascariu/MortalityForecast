@@ -24,12 +24,11 @@ plot.doBackTesting <- function(x, data.out, facet = c("x", "y"),
                   Tx = "Tx",
                   ex = "The expectation of life at age x, \ne[x]")
   
-  # Observed values
-  O <- convertFx(x, data = B$input$data, 
-                 from = B$input$data.in, 
-                 to = data.out, lx0 = 1)
-  # Forecast values
-  H  <- getForecasts(B$Forecast, data.out)
+  O  <- getObserved(x = x, # Observed values
+                    data.in = B$input$data.in,    
+                    data.out = data.out, 
+                    data = B$input$data)
+  H  <- getForecasts(B$Forecast, data.out) # Forecast values
   
   # ggplot method
   if (facet == "y") {
@@ -52,7 +51,7 @@ plot_x_facets <- function(O, H, x, y1, y2, which) {
   y = value = Name = DATA <- NULL # hack CRAN note
   
   if (is.null(which)) {
-    which <- unique(floor(quantile(x, probs = seq(0,1, length.out = 6))))
+    which <- unique(floor(quantile(x, probs = seq(0, 1, length.out = 6))))
   }
   
   H <- wide.list.2.long.df(data = H, x = x, y = y2, which.x = which)
