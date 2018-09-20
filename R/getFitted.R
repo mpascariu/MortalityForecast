@@ -33,15 +33,17 @@ getFitted <- function(object,
   }
   
   fn <- function(mx, x_max = 110) {
-    if (max(x) < x_max) {
-      x_fit  <- 80:max(x - 2)
-      x_extr <- max(x - 2):x_max
-      data   <- extra_mortality(mx, x, x_fit, x_extr, law = "kannisto")$values
-      x      <- min(x):x_max
-    }
-    Z <- convertFx(x, data, from = "mx", to = data.out, lx0 = 1)
-    is_zero <- apply(Z, 2, function(x) all(x == 0))
-    Z[, is_zero] <- NA
+    xx <- x
+    data.in <- "mx"
+    # if (max(x) < x_max) {
+    #   x_fit <- 80:max(x - 2)
+    #   x_extr<- max(x - 2):x_max
+    #   mx    <- extra_mortality(mx, x, x_fit, x_extr, law = "kannisto")$values
+    #   xx    <- min(x):x_max
+    # }
+    Z <- convertFx(xx, mx, from = data.in, to = data.out, lx0 = 1, ...)
+    # is_zero <- apply(Z, 2, function(x) all(x == 0))
+    # Z[, is_zero] <- NA
     Z[paste(object$x), ]
   }
   

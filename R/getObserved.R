@@ -26,14 +26,15 @@ getObserved <- function(object = NULL,
     out <- data
   } else {
     xx <- x
-    if (max(x) < x_max) {
-      mx     <- convertFx(x, data, from = data.in, to = "mx", lx0 = 1, ...)
-      x_fit  <- 80:max(x - 2)
-      x_extr <- max(x - 2):x_max
-      data   <- extra_mortality(mx, x, x_fit, x_extr, law = "kannisto")$values
-      xx     <- min(x):x_max
-    }
-    out <- convertFx(xx, data, from = "mx", to = data.out, lx0 = 1, ...)
+    # if (max(x) < x_max) {
+    #   mx     <- convertFx(x, data, from = data.in, to = "mx", lx0 = 1, ...)
+    #   x_fit  <- 80:max(x - 2)
+    #   x_extr <- max(x - 2):x_max
+    #   data   <- extra_mortality(mx, x, x_fit, x_extr, law = "kannisto")$values
+    #   xx     <- min(x):x_max
+    #   data.in <- "mx"
+    # }
+    out <- convertFx(xx, data, from = data.in, to = data.out, lx0 = 1, ...)
     out <- out[paste(x), ]
   }
   return(out)
