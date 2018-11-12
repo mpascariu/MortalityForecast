@@ -164,7 +164,7 @@ summary.Oeppen <- function(object, ...) {
                      row.names = object$x)
   kt <- data.frame(kt = object$coefficients$kt)
   out = structure(class = 'summary.Oeppen', 
-                  list(A = axbx, K = kt, call = object$call,
+                  list(A = axbx, K = kt, call = object$call, info = object$info,
                        y = object$y, x_ = object$x))
   return(out)
 }
@@ -178,7 +178,7 @@ summary.Oeppen <- function(object, ...) {
 print.summary.Oeppen <- function(x, ...){
   cat('\nFit  :', x$info$name)
   cat('\nModel:', x$info$formula)
-  cat('\nCoefficients:\n')
+  cat('\n\nCoefficients:\n')
   A <- head_tail(x$A, digits = 5, hlength = 6, tlength = 6)
   K <- head_tail(data.frame(. = '|', y = as.integer(x$y), kt = x$K),
                  digits = 5, hlength = 6, tlength = 6)
@@ -205,16 +205,18 @@ print.summary.Oeppen <- function(x, ...){
 #' @inheritParams doForecasts
 #' @return The output is an object of class \code{"predict.Oeppen"} with the components:
 #'  \item{call}{An unevaluated function call, that is, an unevaluated 
-#'  expression which consists of the named function applied to the given arguments.}
+#'  expression which consists of the named function applied to the given arguments;}
 #'  \item{predicted.values}{A list containing the predicted values together
-#'  with the associated prediction intervals given by the estimated \code{\link{fit_Oeppen}} 
-#'  model over the forecast horizon \code{h}.}
-#'  \item{kt}{The extrapolated kt parameters.}
-#'  \item{conf.intervals}{The extrapolated kt parameters.}
-#'  \item{deep}{An object of class \code{ARIMA} that contains all the
-#'  components of the fitted time series model used in \code{kt} prediction.} 
-#'  \item{x}{Vector of ages used in prediction.} 
-#'  \item{y}{Vector of years used in prediction.}
+#'  with the associated prediction intervals given by the estimated 
+#'  model over the forecast horizon \code{h};}
+#'  \item{kt.arima}{An object of class \code{ARIMA} that contains all the
+#'  components of the fitted time series model used in \code{kt} prediction;} 
+#'  \item{kt}{The extrapolated \code{kt} parameters;}
+#'  \item{conf.intervals}{Confidence intervals for the extrapolated \code{kt} 
+#'  parameters;}
+#'  \item{x}{Vector of ages used in prediction;} 
+#'  \item{y}{Vector of years used in prediction;}
+#'  \item{info}{Short details about the model.}
 #' @author Marius D. Pascariu, Marie-Pier Bergeron-Boucher and Jim Oeppen 
 #' @examples 
 #' # Example 1 ----------------------
@@ -241,11 +243,15 @@ print.summary.Oeppen <- function(x, ...){
 #' lt <- LifeTable(x = P$x, dx = dx)
 #' }
 #' @export
-predict.Oeppen <- function(object, h, order = NULL, include.drift = NULL,
-                              level = c(80, 95), 
-                              jumpchoice = c("actual", "fit"), 
-                              method = "ML", 
-                              verbose = TRUE, ...){
+predict.Oeppen <- function(object,
+                           h, 
+                           order = NULL, 
+                           include.drift = NULL,
+                           level = c(80, 95), 
+                           jumpchoice = c("actual", "fit"), 
+                           method = "ML", 
+                           verbose = TRUE, ...){
+  
   dx  <- t(object$input$data)
   bop <- max(object$y) + 1
   eop <- bop + h - 1
@@ -272,9 +278,9 @@ predict.Oeppen <- function(object, h, order = NULL, include.drift = NULL,
   CI <- fdx[-1]
   names(CI) <- Cnames[-1]
   
-  out <- list(call = match.call(), predicted.values = pv, 
-              kt = fkt, conf.intervals = CI,
-              deep = tsm, x = object$x, y = fcy)
+  out <- list(call = match.call(), predicted.values = pv,
+              kt.arima = tsm, kt = fkt, 
+              conf.intervals = CI, x = object$x, y = fcy, info = object$info)
   out <- structure(class = 'predict.Oeppen', out)
   return(out)
 }
@@ -322,10 +328,10 @@ compute_dx <- function(dx, kt, ax, bx, fit, y, jumpchoice) {
 #' @keywords internal
 #' @export
 print.predict.Oeppen <- function(x, ...) {
-  cat('\nForecast: Compositional-Data Lee-Carter Mortality Model')
-  cat('\nModel   : clr d[x,t] = a[x] + b[x]k[t]')
+  cat('\nForecast:', x$info$name)
+  cat('\nModel   :', x$info$formula)
   cat('\nCall    : '); print(x$call)
-  cat('\nkt TS method     :', arima.string1(x$deep, padding = TRUE))
+  cat('\nk[t]-ARIMA method:', arima.string1(x$kt.arima, padding = TRUE))
   cat('\nAges  in forecast:', paste(range(x$x), collapse = ' - '))
   cat('\nYears in forecast:', paste(range(x$y), collapse = ' - '))
   cat('\n')

@@ -10,7 +10,7 @@ computeAccuracy(u, u.hat, b, measures, xa = NULL, ya = NULL,
 \arguments{
 \item{u}{Validation dataset.}
 
-\item{u.hat}{In-sample forecast data.}
+\item{u.hat}{Out-sample forecast data.}
 
 \item{b}{Benchmark forecast data. Usualy a naive or Random-Walk w drift forecast.}
 

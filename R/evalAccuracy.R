@@ -109,7 +109,7 @@ evalAccuracy.doBBackTesting <- function(object,
 #' Get Measures of Forecast Accuracy
 #' 
 #' @param u Validation dataset.
-#' @param u.hat In-sample forecast data.
+#' @param u.hat Out-sample forecast data.
 #' @param b Benchmark forecast data. Usualy a naive or Random-Walk w drift forecast.
 #' @param measures What accurracy measure to compute? Various alternatives are 
 #' available, \itemize{
