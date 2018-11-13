@@ -38,8 +38,9 @@ doForecasts <- function(object, h, level = 95,
     
     if (Mn[i] %in% c("LC", "PLAT", "HyndmanUllah", "LeeCarter")) {
       P <- forecast(M, h = h, jumpchoice = jumpchoice, level = level)
+      
     } else {
-      P <- predict(M, h = h, jumpchoice = jumpchoice, level = level)
+      P <- predict(M, h = h, jumpchoice = jumpchoice, level = level, ...)
     }
     assign(Mn[i], P)
   }
@@ -50,3 +51,17 @@ doForecasts <- function(object, h, level = 95,
   return(out)
 }
 
+
+#' Print function for doForecasts
+#' @param x An object of class \code{"doForecasts"}
+#' @param ... Further arguments passed to or from other methods.
+#' @keywords internal
+#' @export
+print.doForecasts <- function(x, ...) {
+  cat("Stochastic Mortality Models - Forecast")
+  cat("\nCall : "); print(x$call)
+  cat("\nModels in forecast:", paste(x$input$object$input$models, collapse = ", "))
+  cat("\nAges  in forecast :", paste(range(x$x), collapse = " - "))
+  cat("\nYears in forecast :", paste(range(x$y), collapse = " - "))
+  cat("\n")
+}

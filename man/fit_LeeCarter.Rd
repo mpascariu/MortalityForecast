@@ -4,7 +4,7 @@
 \alias{fit_LeeCarter}
 \title{The Lee-Carter Mortality Model}
 \usage{
-fit_LeeCarter(data, x, y, ...)
+fit_LeeCarter(data, x, y, adjust = "none", ...)
 }
 \arguments{
 \item{data}{A data.frame or a matrix containing mortality data 
@@ -15,6 +15,10 @@ Default: \code{NULL}.}
 
 \item{y}{Numerical vector indicating the years in input \code{data}. Optional.
 Default: \code{NULL}.}
+
+\item{adjust}{method to use for adjustment of coefficients \eqn{k_t}{kt}. Possibilities are \dQuote{dxt} (BMS method),
+\dQuote{dt} (Lee-Carter method), \dQuote{e0} (method based on life expectancy) and \dQuote{none}.
+Defaults are \dQuote{dxt} for \code{bms()} and \dQuote{dt} for \code{lca()}.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }

@@ -9,11 +9,11 @@
 #' @details \insertNoCite{hyndman2007}{MortalityForecast}
 #' @references \insertAllCited{}
 #' @export
-fit_HyndmanUllah <- function(data, x, y, order = 1, ...) {
+fit_HyndmanUllah <- function(data, x, y, order = 1, transform = TRUE, ...) {
   demo_data <- demogdata(data = data, ages = x, years = y, 
                          pop = data * 0, label = "demography", 
                          name = "mean", lambda = 0, type = "mortality")
-  FDMfit <- fdm(demo_data, order = order, ...)
+  FDMfit <- fdm(demo_data, order = order, transform = transform, ...)
   
   dimnames(FDMfit$fitted$y) <- list(x, y)
   

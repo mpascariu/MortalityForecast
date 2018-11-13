@@ -1,7 +1,10 @@
 # Marius D. Pascariu --- Mon Nov 12 14:00:33 2018 ------------------------------
 
 #' The Lee-Carter Mortality Model
+#' @param data A data.frame or a matrix containing mortality data 
+#' with ages \code{x} as row and time \code{y} as column.
 #' @inheritParams doMortalityModels
+#' @inheritParams demography::lca
 #' @inherit demography::lca details return
 #' @seealso 
 #' \code{\link{fit_HyndmanUllah}}
@@ -9,17 +12,26 @@
 #' @details \insertNoCite{lee1992}{MortalityForecast}
 #' @references \insertAllCited{}
 #' @export
-fit_LeeCarter <- function(data, x, y, ...) {
+fit_LeeCarter <- function(data, x, y, adjust = "none", ...) {
   demo_data <- demogdata(data = data, ages = x, years = y, 
                          pop = data * 0, label = "demography", 
                          name = "mean", lambda = 0, type = "mortality")
-  LCfit <- lca(demo_data, ...)
+  LCfit <- lca(demo_data, restype = "rates", adjust = adjust, ...)
   
   dimnames(LCfit$fitted$y) <- list(x, y)
   
   return(LCfit)
 }
 
+
+#' Residuals of the Lee-Carter Mortality Model
+#' @inheritParams summary.LeeCarter2
+#' @export
+residuals.lca <- function(object, ...){
+  r <- object$residuals$y
+  colnames(r) <- object$year
+  structure(class = "residMF", as.matrix(r))
+}
 
 # ------------------------------------------
 # Lee-Carter model - 2nd implementation
@@ -112,8 +124,8 @@ fit_LeeCarter2 <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
 #' @export
 predict.LeeCarter2 <- function(object, 
                                h, 
-                               order = NULL, 
-                               include.drift = NULL,
+                               order = c(0, 1, 0), 
+                               include.drift = TRUE,
                                level = c(80, 95),
                                jumpchoice = c("actual", "fit"),
                                method = "ML",
@@ -200,6 +212,7 @@ get_mx_values <- function(object, kt, jumpchoice, y){
     return(fmx)
   }
 }
+
 
 # S3 ----------------------------------------------
 #' Residuals of the Lee-Carter Mortality Model

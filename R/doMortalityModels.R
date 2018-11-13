@@ -43,14 +43,27 @@ doMortalityModels <- function(data, x = NULL, y = NULL,
   # lx.data <- convertFx(x, data, from = data.in, to = "lx", lx0 = 1)
 
   # The Naive model - Multivariate Random-Walk
-  if ("MRW" %in% models) MRW <- fit_MRW(data = log(mx.data), x, y, include.drift = FALSE)
+  if ("MRW" %in% models) {
+    MRW <- fit_MRW(data = log(mx.data), x, y, include.drift = FALSE)
+  }
   # Random Walk with drift
-  if ("MRWD" %in% models) MRWD <- fit_MRW(data = log(mx.data), x, y, include.drift = TRUE)
+  if ("MRWD" %in% models) {
+    MRWD <- fit_MRW(data = log(mx.data), x, y, include.drift = TRUE)
+  }
   # Lee-Carter (1992)
-  if ("LC" %in% models) LC <- LC(data = mx.data, x, y, link = "log")
-  if ("LeeCarter" %in% models) LeeCarter <- fit_LeeCarter(data = mx.data, x, y)
+  if ("LC" %in% models) {
+    LC <- LC(data = mx.data, x, y, link = "log")
+  }
+  if ("LeeCarter" %in% models) {
+    LeeCarter <- fit_LeeCarter(data = mx.data, x, y)
+  }
+  if ("LeeCarter2" %in% models) {
+    LeeCarter2 <- fit_LeeCarter2(data = mx.data, x, y)
+  }
   # Hyndman-Ullah (1992)
-  if ("HyndmanUllah" %in% models) HyndmanUllah <- fit_HyndmanUllah(data = mx.data, x, y)
+  if ("HyndmanUllah" %in% models) {
+    HyndmanUllah <- fit_HyndmanUllah(data = mx.data, x, y)
+  }
   # Plat (2009)
   if ("PLAT" %in% models) PLAT <- PLAT(data = mx.data, x, y)
   # Oeppen (2008)
@@ -71,5 +84,17 @@ doMortalityModels <- function(data, x = NULL, y = NULL,
 
 
 
-
+#' Print function for doMortalityModels
+#' @param x An object of class \code{"MortalityModels"}
+#' @param ... Further arguments passed to or from other methods.
+#' @keywords internal
+#' @export
+print.MortalityModels <- function(x, ...) {
+  cat("Stochastic Mortality Models - FIT")
+  cat("\nCall : "); print(x$call)
+  cat("\nModels in fit:", paste(x$input$models, collapse = ", "))
+  cat("\nAges  in fit :", paste(range(x$x), collapse = " - "))
+  cat("\nYears in fit :", paste(range(x$y), collapse = " - "))
+  cat("\n")
+}
 

@@ -5,7 +5,7 @@
 \title{Extrapolate old-age human mortality curve using mortality laws}
 \usage{
 extra_mortality(mx, x, x_fit = x, x_extr, law = c("kannisto",
-  "gompertz", "ggompertz", "makeham", "beard", "makehambeard",
+  "gompertz", "ggompertz", "makeham", "beard", "beard_makeham",
   "quadratic"), opt.method = c("LF2", "LF1", "LF3", "LF4", "LF5", "LF6",
   "poissonL", "binomialL"), ...)
 }

@@ -4,8 +4,7 @@
 \alias{summary.getFitted}
 \title{Summary for getFitted}
 \usage{
-\method{summary}{getFitted}(object, ..., digits = max(4L,
-  getOption("digits") - 2L))
+\method{summary}{getFitted}(object, ..., digits = NULL)
 }
 \arguments{
 \item{object}{An object of class \code{\link{getFitted}}.}

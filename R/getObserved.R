@@ -15,28 +15,22 @@ getObserved <- function(object = NULL,
                         x = NULL,
                         ...) {
   
-  if (is.null(x)) x <- object$x
-  if (is.null(data)) data <- object$input$data
-  if (is.null(data.in)) data.in <- object$input$data.in 
-  
+  x <- x %||% object$x
+  data <- data %||% object$input$data
+  data.in  <- data.in %||% object$input$data.in
   data.out <- match.arg(data.out)
-  x_max <- 110
   
   if (data.in == data.out) {
     out <- data
+    
   } else {
     xx <- x
-    # if (max(x) < x_max) {
-    #   mx     <- convertFx(x, data, from = data.in, to = "mx", lx0 = 1, ...)
-    #   x_fit  <- 80:max(x - 2)
-    #   x_extr <- max(x - 2):x_max
-    #   data   <- extra_mortality(mx, x, x_fit, x_extr, law = "kannisto")$values
-    #   xx     <- min(x):x_max
-    #   data.in <- "mx"
-    # }
-    out <- convertFx(xx, data, from = data.in, to = data.out, lx0 = 1, ...)
+    out <- convertFx(x = xx, data = data, 
+                     from = data.in, to = data.out, 
+                     lx0 = 1, ...)
     out <- out[paste(x), ]
   }
+  
   return(out)
 }
 
@@ -111,7 +105,7 @@ getObserved <- function(object = NULL,
 #' @export
 extra_mortality <- function(mx, x, x_fit = x, x_extr,
                             law = c("kannisto", "gompertz", "ggompertz", "makeham", 
-                                    "beard", "makehambeard", "quadratic"), 
+                                    "beard", "beard_makeham", "quadratic"), 
                             opt.method = c("LF2", "LF1", "LF3", "LF4", "LF5", "LF6",
                                            "poissonL", "binomialL"), ...) {
   # Save the input

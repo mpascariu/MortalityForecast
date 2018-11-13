@@ -4,7 +4,7 @@
 \alias{fit_HyndmanUllah}
 \title{The Functional Demographic Model}
 \usage{
-fit_HyndmanUllah(data, x, y, order = 1, ...)
+fit_HyndmanUllah(data, x, y, order = 1, transform = TRUE, ...)
 }
 \arguments{
 \item{data}{demogdata object. Output from read.demogdata.}
@@ -16,6 +16,8 @@ Default: \code{NULL}.}
 Default: \code{NULL}.}
 
 \item{order}{Number of basis functions to fit.}
+
+\item{transform}{If TRUE, the data are transformed with a Box-Cox transformation before the model is fitted.}
 
 \item{...}{Extra arguments passed to \code{\link[ftsa]{ftsm}}.}
 }

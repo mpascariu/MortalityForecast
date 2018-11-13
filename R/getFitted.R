@@ -22,28 +22,25 @@ getFitted <- function(object,
     if (Mn[i] %in% c("MRW", "MRWD", "LC", "PLAT")) {
       mx <- exp(fitted(M))
       
-    } else if (Mn[i] %in% c("HyndmanUllah", "LeeCarter")) {
+    } else if (Mn[i] %in% c("HyndmanUllah")) {
       mx <- exp(fitted(M)$y)
+      
+    } else if (Mn[i] %in% c("LeeCarter")) {
+      mx <- fitted(M)$y
+      
+    } else if (Mn[i] %in% c("LeeCarter2")) {
+      mx <- fitted(M)
       
     } else {
       dx <- fitted(M)
-      mx <- convertFx(x, dx, from = "dx", to = "mx", lx0 = 1)
+      mx <- convertFx(x = x, data = dx, from = "dx", to = "mx", lx0 = 1)
     }
     MX[[i]] <- mx
   }
   
   fn <- function(mx, x_max = 110) {
     xx <- x
-    data.in <- "mx"
-    # if (max(x) < x_max) {
-    #   x_fit <- 80:max(x - 2)
-    #   x_extr<- max(x - 2):x_max
-    #   mx    <- extra_mortality(mx, x, x_fit, x_extr, law = "kannisto")$values
-    #   xx    <- min(x):x_max
-    # }
-    Z <- convertFx(xx, mx, from = data.in, to = data.out, lx0 = 1, ...)
-    # is_zero <- apply(Z, 2, function(x) all(x == 0))
-    # Z[, is_zero] <- NA
+    Z <- convertFx(x = xx, data = mx, from = "mx", to = data.out, lx0 = 1, ...)
     Z[paste(object$x), ]
   }
   
@@ -59,6 +56,7 @@ getFitted <- function(object,
 #' @inheritParams summary.getResiduals
 #' @keywords internal
 #' @export
-summary.getFitted <- function(object, ..., digits = max(4L, getOption("digits") - 2L)) {
+summary.getFitted <- function(object, ..., digits = NULL) {
+  digits <- digits %||% max(4L, getOption("digits") - 2L)
   summary.getResiduals(object, ..., digits)
 }

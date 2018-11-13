@@ -4,8 +4,8 @@
 \alias{predict.LeeCarter2}
 \title{Forecast age-specific death rates using the Lee-Carter model.}
 \usage{
-\method{predict}{LeeCarter2}(object, h, order = NULL,
-  include.drift = NULL, level = c(80, 95), jumpchoice = c("actual",
+\method{predict}{LeeCarter2}(object, h, order = c(0, 1, 0),
+  include.drift = TRUE, level = c(80, 95), jumpchoice = c("actual",
   "fit"), method = "ML", verbose = TRUE, ...)
 }
 \arguments{
