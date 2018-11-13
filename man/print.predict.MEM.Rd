@@ -7,7 +7,7 @@
 \method{print}{predict.MEM}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{MEM}.}
+\item{x}{An predict object;}
 
 \item{...}{Further arguments passed to or from other methods.}
 }

@@ -7,7 +7,7 @@
 \method{residuals}{lca}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{"LeeCarter2"}.}
+\item{object}{An object of class \code{"lca"}}
 
 \item{...}{Further arguments passed to or from other methods.}
 }

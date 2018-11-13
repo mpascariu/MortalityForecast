@@ -7,7 +7,7 @@
 \method{print}{predict.Oeppen}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{"predict.Oeppen"}}
+\item{x}{An object of class \code{"predict.Oeppen"};}
 
 \item{...}{Further arguments passed to or from other methods.}
 }

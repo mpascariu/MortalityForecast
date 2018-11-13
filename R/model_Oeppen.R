@@ -131,25 +131,21 @@ Oeppen.input.check <- function(X) {
 
 # S3 ----------------------------------------------
 #' Residuals of the CoDa-LC Mortality Model
-#' @inheritParams summary.Oeppen
+#' @param object An object of class \code{"Oeppen"}
+#' @inheritParams residuals_default
 #' @export
 residuals.Oeppen <- function(object, ...){
-  structure(class = "residMF", as.matrix(object$residuals))
+  residuals_default(object, ...)
 }
 
 
 #' Print Oeppen
 #' @param x An object of class \code{"Oeppen"}
-#' @param ... Further arguments passed to or from other methods.
+#' @inheritParams print_default
 #' @keywords internal
 #' @export
 print.Oeppen <- function(x, ...) {
-  cat('\nFit  :', x$info$name)
-  cat('\nModel:', x$info$formula)
-  cat('\nCall : '); print(x$call)
-  cat('\nAges  in fit:', paste(range(x$x), collapse = ' - '))
-  cat('\nYears in fit:', paste(range(x$y), collapse = ' - '))
-  cat('\n')
+  print_default(x, ...)
 }
 
 
@@ -323,17 +319,13 @@ compute_dx <- function(dx, kt, ax, bx, fit, y, jumpchoice) {
 
 
 #' Print predict.Oeppen
-#' @param x An object of class \code{"predict.Oeppen"}
+#' @param x An object of class \code{"predict.Oeppen"};
 #' @inheritParams print.Oeppen
 #' @keywords internal
 #' @export
 print.predict.Oeppen <- function(x, ...) {
-  cat('\nForecast:', x$info$name)
-  cat('\nModel   :', x$info$formula)
-  cat('\nCall    : '); print(x$call)
-  cat('\nk[t]-ARIMA method:', arima.string1(x$kt.arima, padding = TRUE))
-  cat('\nAges  in forecast:', paste(range(x$x), collapse = ' - '))
-  cat('\nYears in forecast:', paste(range(x$y), collapse = ' - '))
+  print_predict_default(x, ...)
+  cat('k[t]-ARIMA method:', arima.string1(x$kt.arima, padding = TRUE))
   cat('\n')
 }
 

@@ -124,8 +124,39 @@ whatsYourName <- function(x) {
 }
 
 
+# S3 - default ---------------------------------
 
+#' Print function for mortality models
+#' @param x A fitted mortality model
+#' @param ... Further arguments passed to or from other methods.
+#' @keywords internal
+print_default <- function(x, ...) {
+  cat("\nFit  :", x$info$name)
+  cat("\nModel:", x$info$formula)
+  cat("\nCall : "); print(x$call)
+  cat("Ages  in fit:", paste(range(x$x), collapse = " - "))
+  cat("\nYears in fit:", paste(range(x$y), collapse = " - "))
+  cat("\n")
+}
 
+#' Default print function for predict methods
+#' @param x An predict object;
+#' @param ... Further arguments passed to or from other methods.
+#' @keywords internal
+print_predict_default <- function(x, ...) {
+  cat("\nForecast:", x$info$name)
+  cat("\nModel   :", x$info$formula)
+  cat("\nCall    : "); print(x$call)
+  cat("Ages  in forecast:", paste(range(x$x), collapse = " - "))
+  cat("\nYears in forecast:", paste(range(x$y), collapse = " - "))
+  cat("\n")
+}
 
-
+#' Residuals function for mortality models
+#' @param object A fitted mortality model
+#' @inheritParams print_default
+#' @export
+residuals_default <- function(object, ...){
+  structure(class = "residMF", as.matrix(object$residuals))
+}
 

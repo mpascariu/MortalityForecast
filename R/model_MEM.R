@@ -45,6 +45,12 @@
 fit_MEM <- function(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...) {
   input <- c(as.list(environment()))
 
+  # Info
+  modelLN <- "Maximum-Entropy Mortality Model "
+  modelSN <- "MEM"
+  modelF  <- "d[x,t] = MaxEnt a[n] + M[n, t] + e[n,t]"
+  info <- list(name = modelLN, name.short = modelSN, formula = modelF)
+  
   AY  <- find_ages_and_years(data, x, y)
   x   <- AY$x
   y   <- AY$y
@@ -64,11 +70,7 @@ fit_MEM <- function(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...) {
   res <- oD - fD                                    # residuals
   dimnames(oD) = dimnames(fD) = dimnames(res) = list(x = x, y = y)
   
-  modelLN <- "Maximum-Entropy Mortality Model "
-  modelSN <- "MEM"
-  modelF <- "MaxEnt M[n,t] = ..."
-  info <- list(name = modelLN, name.short = modelSN, formula = modelF)
-  
+  # Exit
   out <- list(input = input, info = info, call = match.call(),
               fitted.values = fD, observed.values = oD, coefficients = coef(V),
               residuals = res, fitted.raw.moments = frM, observed.raw.moments = orM, 
@@ -119,8 +121,8 @@ find_ages_and_years <- function(data, x, y) {
 #' Residuals of the Maximum-Entropy Mortality Model 
 #' 
 #' Computed deviance residuals for a fitted Maximum-Entropy Mortality Model.
-#' @param object An object of class \code{MEM}.
-#' @param ... Further arguments passed to or from other methods.
+#' @param object An object of class \code{MEM};
+#' @inheritParams residuals_default
 #' @examples 
 #' x  <- 0:110
 #' y  <- 1965:2014
@@ -129,23 +131,19 @@ find_ages_and_years <- function(data, x, y) {
 #' residuals(M)
 #' @export
 residuals.MEM <- function(object, ...) {
-  structure(class = "residMF", as.matrix(object$residuals))
+  residuals_default(object, ...)
 }
 
 
 #' Print function for Maximum-Entropy Mortality Model 
-#' @param x An object of class \code{MEM}.
-#' @inheritParams residuals.MEM
+#' @param x An object of class \code{MEM};
+#' @inheritParams print_default
 #' @keywords internal
 #' @export
 print.MEM <- function(x, ...) {
-  cat('\nFit  :', x$info$name)
-  cat('\nModel:', x$info$formula)
-  cat('\nCall : '); print(x$call)
-  cat('\nAges in fit   : ', paste0(range(x$x), collapse = ' - '))
-  cat('\nYears in fit  : ', paste0(range(x$y), collapse = ' - '))
-  cat('\nMoments in fit: ', paste0("M", c(0, x$input$n), collapse = ' - '))
-  cat('\n')
+  print_default(x, ...)
+  cat("Moments in fit: ", paste0("M", c(0, x$input$n), collapse = " - "))
+  cat("\n")
 }
 
 
@@ -209,7 +207,8 @@ predict.MEM <- function(object, h, x.h = NULL, level = 95,
   out <- list(call = match.call(),
               predicted.values = px[[N]], 
               predicted.raw.moments = rM[[N]], 
-              conf.intervals = CI, VAR = W, x = x.h, y = y.h)
+              conf.intervals = CI, VAR = W, x = x.h, y = y.h, 
+              info = object$info)
   out <- structure(class = 'predict.MEM', out)
   return(out)
 }
@@ -239,17 +238,14 @@ correct_jump_off <- function(X, object, jumpchoice, h){
 
 
 #' Print function for \code{\link{predict.MEM}}
-#' @inherit print.MEM
+#' @inherit print_predict_default
 #' @keywords internal
 #' @export
 print.predict.MEM <- function(x, ...) {
-  cat('\nForecast: Maximum Entropy Mortality Model')
-  cat('\nCall    : '); print(x$call)
-  cat('\nAges in forecast   : ', paste0(range(x$x), collapse = ' - '))
-  cat('\nYears in forecast  : ', paste0(range(x$y), collapse = ' - '))
-  cat('\nMoments in forecast: ', paste0("M", c(0, ncol(x$predicted.raw.moments) - 1), 
-                                        collapse = ' - '))
-  cat('\n')
+  print_predict_default(x, ...)
+  cat("Moments in forecast: ", paste0("M", c(0, ncol(x$predicted.raw.moments) - 1), 
+                                        collapse = " - "))
+  cat("\n")
 }
 
 

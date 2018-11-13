@@ -47,6 +47,12 @@ fit_MRW <- function(data, x = NULL, y = NULL, include.drift = TRUE, ...) {
   input <- as.list(environment())
   call  <- match.call()
   
+  # Info
+  modelLN <- "Multivariate Random-Walk Model"
+  modelSN <- "MRW"
+  modelF  <- "log m[x,t] = a + log m[x,t] + e[x,t]"
+  info <- list(name = modelLN, name.short = modelSN, formula = modelF)
+  
   # Prepare data
   x <- x %||% 1:nrow(data)
   y <- y %||% 1:ncol(data)
@@ -67,7 +73,7 @@ fit_MRW <- function(data, x = NULL, y = NULL, include.drift = TRUE, ...) {
   dimnames(fit) <- dimnames(res) <- dimnames(data)
   
   # Exit
-  out <- list(input = input, call = call, drift = d, sigma = sigma, 
+  out <- list(input = input, info = info, call = call, drift = d, sigma = sigma, 
               fitted = fit, residuals = res, x = x, y = y)
   out <- structure(class = "MRW", out)  
   return(out)
@@ -121,8 +127,8 @@ predict.MRW <- function(object, h = 10, level = c(80, 95), ...) {
   dn <- apply(expand.grid(c("L", "U"), level), 1, paste, collapse = "")
   CI <- c(lower, upper)
   names(CI) <- dn
-  out <- list(predicted.values = mean, conf.intervals = CI,
-              x = xf, y = yf)
+  out <- list(call = match.call(), predicted.values = mean, conf.intervals = CI,
+              x = xf, y = yf, info = object$info)
   out <- structure(class = "predict.MRW", out)  
   return(out)
 }
@@ -130,29 +136,32 @@ predict.MRW <- function(object, h = 10, level = c(80, 95), ...) {
 
 #' Residuals of a Multivariate Random-Walk Model 
 #' 
-#' Computed deviance residuals for a Multivariate Random-Walk model .
-#' @param object An object of class \code{MRW}.
-#' @param ... Further arguments passed to or from other methods.
-#' @seealso \code{\link{fit_MRW}}
+#' Computed deviance residuals for a Multivariate Random-Walk model.
+#' @param object An object of class \code{MRW};
+#' @inheritParams residuals_default
 #' @export
 residuals.MRW <- function(object, ...) {
-  structure(class = "residMF", as.matrix(object$residuals))
+  residuals_default(object, ...)
 }
 
 
 #' Print function for MRW method
 #' @param x An object of class \code{MRW}.
-#' @inheritParams residuals.MRW
+#' @inheritParams print_default
 #' @keywords internal
 #' @export
 print.MRW <- function(x, ...) {
-  cat('\nFit  : Multivariate Random-Walk Model')
-  cat('\nDrift:', x$input$include.drift)
-  cat('\nCall : '); print(x$call)
-  cat('\nAges in fit : ', paste0(range(x$x), collapse = ' - '))
-  cat('\nYears in fit: ', paste0(range(x$y), collapse = ' - '))
-  cat('\n')
+  print_default(x, ...)
 }
 
+
+#' Print function
+#' @param x An object of class \code{"predict.MRW"};
+#' @inheritParams print_predict_default
+#' @keywords internal
+#' @export
+print.predict.MRW <- function(x, ...) {
+  print_predict_default(x, ...)
+}
 
 

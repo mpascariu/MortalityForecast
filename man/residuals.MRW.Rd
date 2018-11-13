@@ -7,13 +7,10 @@
 \method{residuals}{MRW}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{MRW}.}
+\item{object}{An object of class \code{MRW};}
 
 \item{...}{Further arguments passed to or from other methods.}
 }
 \description{
-Computed deviance residuals for a Multivariate Random-Walk model .
-}
-\seealso{
-\code{\link{fit_MRW}}
+Computed deviance residuals for a Multivariate Random-Walk model.
 }

@@ -7,7 +7,7 @@
 \method{print}{MEM}(x, ...)
 }
 \arguments{
-\item{x}{An object of class \code{MEM}.}
+\item{x}{An object of class \code{MEM};}
 
 \item{...}{Further arguments passed to or from other methods.}
 }

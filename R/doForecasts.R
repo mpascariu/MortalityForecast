@@ -36,7 +36,7 @@ doForecasts <- function(object, h, level = 95,
     cat(Mn[i], " ")
     M <- with(object, get(Mn[i]))
     
-    if (Mn[i] %in% c("LC", "PLAT", "HyndmanUllah", "LeeCarter")) {
+    if (Mn[i] %in% c("LC", "PLAT", "LeeCarter")) {
       P <- forecast(M, h = h, jumpchoice = jumpchoice, level = level)
       
     } else {

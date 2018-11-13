@@ -7,7 +7,7 @@
 \method{residuals}{MEM}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{MEM}.}
+\item{object}{An object of class \code{MEM};}
 
 \item{...}{Further arguments passed to or from other methods.}
 }

@@ -7,7 +7,7 @@
 \method{residuals}{Oeppen}(object, ...)
 }
 \arguments{
-\item{object}{An object of class \code{"Oeppen"}.}
+\item{object}{An object of class \code{"Oeppen"}}
 
 \item{...}{Further arguments passed to or from other methods.}
 }

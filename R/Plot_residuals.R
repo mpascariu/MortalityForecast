@@ -1,4 +1,5 @@
 
+
 #' Plot the deviance residuals
 #' 
 #' Plots the deviance residuals of a Mortality Model model. 
