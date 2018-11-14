@@ -17,7 +17,7 @@
 #' @examples 
 #' x  <- 0:100
 #' y  <- 2005:2016
-#' D  <- MortalityForecast.data$dx[paste(x), paste(y)]
+#' D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' MM <- c("MRWD", "LeeCarter", "HyndmanUllah", "CoDa")
 #' 
 #' M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)

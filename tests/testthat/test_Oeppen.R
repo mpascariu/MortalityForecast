@@ -1,10 +1,14 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# Last update: Wed Nov 14 15:40:18 2018
+# --------------------------------------------------- #
 remove(list = ls())
 library(MortalityForecast)
 
 # Test model fitting
 x = 0:110
 y = 1960:2016
-D <- MortalityForecast.data$dx[paste(x), paste(y)]
+D <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 M1 <- fit_Oeppen(D, x = x, y = y)
 M2 <- fit_Oeppen(D)
 vsn <- 1e-200

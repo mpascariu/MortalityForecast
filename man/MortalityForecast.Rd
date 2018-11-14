@@ -26,8 +26,8 @@ Useful links:
 
 Other contributors:
 \itemize{
-  \item Adam Lenart [contributor]
   \item Marie-Pier Bergeron-Boucher [contributor]
+  \item Adam Lenart [contributor]
   \item Jim Oeppen [contributor]
 }
 

@@ -13,7 +13,7 @@
 #' @examples 
 #' x  <- 0:95
 #' y  <- 1970:2016
-#' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
+#' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' 
 #' BB <- doBBackTesting(data = dx, x, y,
 #'                      data.in = "dx", 
@@ -98,15 +98,15 @@ doBBackTesting <- function(data, x, y,
 buildScenarios <- function(y, strategy = c(f = 20, h = 20, s = 2)) {
   # Build scenarios -  method 1
   S <- strategy
-  bop_fit = rev(seq(from = max(y) - S[1] - S[2] + 1, to = min(y), by = -1 * S[3]))
-  eop_fit = bop_fit + S[1] - 1
-  bop_fc  = eop_fit + 1
-  eop_fc  = bop_fc + S[2] - 1
+  bop_fit <- rev(seq(from = max(y) - S[1] - S[2] + 1, to = min(y), by = -1 * S[3]))
+  eop_fit <- bop_fit + S[1] - 1
+  bop_fc  <- eop_fit + 1
+  eop_fc  <- bop_fc + S[2] - 1
   
   out <- tibble(
     scenario = paste0("S", 1:length(bop_fit)),
-    fit = mapply(":", bop_fit, eop_fit, SIMPLIFY = F),
-    forecast = mapply(":", bop_fc, eop_fc, SIMPLIFY = F)
+    fit = mapply(":", bop_fit, eop_fit, SIMPLIFY = FALSE),
+    forecast = mapply(":", bop_fc, eop_fc, SIMPLIFY = FALSE)
   )
   
   return(out)

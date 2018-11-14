@@ -31,7 +31,7 @@ Fit the Lee-Carter mortality model
 # Data
 x  <- 0:89
 y  <- 1985:2014
-mx <- MortalityForecast.data$mx[paste(x), paste(y)]
+mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
 
 # Fit the model
 M <- fit_LeeCarter2(data = mx, x = x, y = y)

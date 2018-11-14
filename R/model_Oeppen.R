@@ -29,7 +29,7 @@
 #' # Data
 #' x  <- 0:100
 #' y  <- 1980:2014
-#' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
+#' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' 
 #' # Fit CoDa-LC model
 #' M <- fit_Oeppen(dx, x, y)
@@ -218,7 +218,7 @@ print.summary.Oeppen <- function(x, ...){
 #' # Example 1 ----------------------
 #' x  <- 0:100
 #' y  <- 1980:2014
-#' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
+#' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' M  <- fit_Oeppen(dx, x, y)
 #' P  <- predict(M, h = 16)
 #' 

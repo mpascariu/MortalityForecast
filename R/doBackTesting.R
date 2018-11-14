@@ -20,7 +20,7 @@
 #' y  = c(y1, y2)
 #' h = max(y2) - max(y1) # Forecasting horizon
 #' 
-#' D <- MortalityForecast.data$dx[paste(x), paste(y)] # DATA
+#' D <- HMD_male$dx$GBRTENW[paste(x), paste(y)] # DATA
 #' 
 #' # Select various mortality models
 #' MM <- c("MRWD", "LeeCarter", "CoDa", "MEM6")

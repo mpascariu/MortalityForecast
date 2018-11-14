@@ -47,7 +47,7 @@ The Maximum-Entropy Mortality Model
 # Data
 x  <- 0:110
 y  <- 1985:2014
-dx <- MortalityForecast.data$dx[paste(x), paste(y)]
+dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 
 # Fit model the Maximum-Entropy Mortality of order 5,
 # that is using the first 6 statistical moments (moment 0 to 5).

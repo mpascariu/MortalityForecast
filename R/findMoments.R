@@ -29,7 +29,7 @@
 #' @examples 
 #' x  <- 0:110
 #' y  <- 1960:2016
-#' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
+#' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' findMoments(data = dx, x = x, y = y, n = 4)
 #' @export
 findMoments <- function(data, x, y = NULL, n, na.rm = TRUE) {

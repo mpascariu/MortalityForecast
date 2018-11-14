@@ -45,7 +45,7 @@ Perform In-Sample Testing of Mortality Forecasts Over Multiple Time Periods
 \examples{
 x  <- 0:95
 y  <- 1970:2016
-dx <- MortalityForecast.data$dx[paste(x), paste(y)]
+dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 
 BB <- doBBackTesting(data = dx, x, y,
                      data.in = "dx", 

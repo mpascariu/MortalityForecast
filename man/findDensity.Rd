@@ -42,7 +42,7 @@ ed <- findDensity(raw_moments, x)
 
 x   <- 0:110
 y   <- 1965:2016
-dx  <- MortalityForecast.data$dx[paste(x), paste(y)]
+dx  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 mom <- findMoments(dx, x, y, n = 7)$raw.moments
 
 dx.hat <- findDensity(mom, x)

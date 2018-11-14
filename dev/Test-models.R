@@ -1,4 +1,7 @@
-# Marius D. Pascariu --- Tue Nov 13 14:59:44 2018 ------------------------------
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# Last update: Wed Nov 14 15:49:52 2018
+# --------------------------------------------------- #
 remove(list = ls())
 library(MortalityForecast)
 library(MortalityLaws)
@@ -6,8 +9,11 @@ library(MortalityLaws)
 
 x  <- 0:100
 y  <- 1985:2014
-mx <- MortalityForecast.data$mx[paste(x), paste(y)]
-dx <- MortalityForecast.data$dx[paste(x), paste(y)]
+mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
+dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
+
+
+
 
 M0 <- fit_MRW(data = log(mx), x = x, y = y, include.drift = TRUE)
 M1 <- fit_LeeCarter2(data = mx, x = x, y = y)

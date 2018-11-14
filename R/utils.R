@@ -139,6 +139,7 @@ print_default <- function(x, ...) {
   cat("\n")
 }
 
+
 #' Default print function for predict methods
 #' @param x An predict object;
 #' @param ... Further arguments passed to or from other methods.
@@ -152,10 +153,11 @@ print_predict_default <- function(x, ...) {
   cat("\n")
 }
 
+
 #' Residuals function for mortality models
 #' @param object A fitted mortality model
 #' @inheritParams print_default
-#' @export
+#' @keywords internal
 residuals_default <- function(object, ...){
   structure(class = "residMF", as.matrix(object$residuals))
 }

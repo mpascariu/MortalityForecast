@@ -26,7 +26,7 @@
 #' # Data
 #' x  <- 0:110
 #' y  <- 1985:2014
-#' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
+#' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' 
 #' # Fit model the Maximum-Entropy Mortality of order 5,
 #' # that is using the first 6 statistical moments (moment 0 to 5).
@@ -126,7 +126,7 @@ find_ages_and_years <- function(data, x, y) {
 #' @examples 
 #' x  <- 0:110
 #' y  <- 1965:2014
-#' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
+#' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' M  <- fit_MEM(dx, x, y, n = 5)
 #' residuals(M)
 #' @export
@@ -162,7 +162,7 @@ print.MEM <- function(x, ...) {
 #' @examples
 #' x  <- 0:110
 #' y  <- 1985:2016
-#' dx <- MortalityForecast.data$dx[paste(x), paste(y)]
+#' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' M  <- fit_MEM(dx, x, y, n = 5)
 #' P  <- predict(M, h = 16, x.h = 0:120)
 #' 

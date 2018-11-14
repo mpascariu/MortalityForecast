@@ -31,7 +31,7 @@ Perform Multiple Forecast of Mortality Using Various Models
 x  <- 0:100
 y  <- 1985:1999
 h  <- 17
-D  <- MortalityForecast.data$dx[paste(x), paste(y)]
+D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 MM <- c("MRWD", "LeeCarter", "HyndmanUllah", "CoDa", "MEM6")
 
 M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)

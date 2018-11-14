@@ -59,7 +59,7 @@ Forecast the Age at Death Distribution using CoDa-LC model.
 # Example 1 ----------------------
 x  <- 0:100
 y  <- 1980:2014
-dx <- MortalityForecast.data$dx[paste(x), paste(y)]
+dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 M  <- fit_Oeppen(dx, x, y)
 P  <- predict(M, h = 16)
 

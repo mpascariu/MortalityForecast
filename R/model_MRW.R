@@ -32,7 +32,7 @@
 #' # Forecast mortality using a Multivariate Random Walk with Drift model
 #' x  <- 0:100
 #' y  <- 1980:2000
-#' mx <- MortalityForecast.data$mx[paste(x), paste(y)]
+#' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
 #' 
 #' M <- fit_MRW(data = log(mx), x = x, y = y, include.drift = TRUE)
 #' P <- predict(M, h = 16)

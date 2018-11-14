@@ -51,7 +51,7 @@ fit_HyndmanUllah <- function(data, x, y, order = 1, transform = TRUE, ...) {
 #' # Data
 #' x  <- 0:89
 #' y  <- 1985:2014
-#' mx <- MortalityForecast.data$mx[paste(x), paste(y)]
+#' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
 #' 
 #' M <- fit_HyndmanUllah(data = mx, x = x, y = y) # fit
 #' P <- predict(M, h = 20)  # forecast

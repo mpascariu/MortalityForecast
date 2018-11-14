@@ -14,3 +14,4 @@ residuals_default(object, ...)
 \description{
 Residuals function for mortality models
 }
+\keyword{internal}
