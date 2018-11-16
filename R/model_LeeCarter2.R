@@ -34,6 +34,7 @@
 #' @export
 fit_LeeCarter2 <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   input <- c(as.list(environment()))
+  if (any(data == 0)) data <- replace_value_zero(data)
   x <- x %||% 1:nrow(data)
   y <- y %||% 1:ncol(data)
   
@@ -44,12 +45,12 @@ fit_LeeCarter2 <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Estimate model parameters: a[x], b[x], k[t]
-  ax  <- apply(log(data), 1, mean)
-  cmx <- sweep(log(data), 1, ax, FUN = "-")
-  S   <- svd(cmx)
-  kt  <- S$v[,1] * sum(S$u[, 1]) * S$d[1]
-  bx  <- S$u[,1] / sum(S$u[, 1])
-  cf  <- list(ax = as.numeric(ax), bx = as.numeric(bx), kt = as.numeric(kt))
+  ax   <- apply(log(data), 1, mean)
+  cmx  <- sweep(log(data), 1, ax, FUN = "-")
+  S    <- svd(cmx)
+  kt   <- S$v[,1] * sum(S$u[, 1]) * S$d[1]
+  bx   <- S$u[,1] / sum(S$u[, 1])
+  cf   <- list(ax = as.numeric(ax), bx = as.numeric(bx), kt = as.numeric(kt))
   
   # Variability
   var <- cumsum(S$d^2 / sum(S$d^2))[1]
@@ -106,14 +107,12 @@ predict.LeeCarter2 <- function(object,
   
   # Identify the k[t] ARIMA order
   C <- coef(object)
-  ts_auto <- auto.arima(C$kt)
-  order  <- order %||% arimaorder(ts_auto)
-  drift  <- include.drift %||% any(names(coef(ts_auto)) %in% "drift")
+  A <- find_arima(C$kt)
   
   # Estimate/fit k[t] time-series model
   tsm <- forecast::Arima(y = C$kt, 
-                         order = order, 
-                         include.drift = drift, 
+                         order = order %||% A$order, 
+                         include.drift = include.drift %||% A$drift,
                          method = method)
   
   # Forecast k[t] using the time-series model
@@ -147,8 +146,9 @@ predict.LeeCarter2 <- function(object,
 #' @inheritParams predict.LeeCarter2 
 #' @inheritParams fit_LeeCarter2
 #' @param kt Estimated kt vector of parameters in the Lee-Carter model;
+#' @param LL_adjustment Adjustment to be used in the Li-Lee model.
 #' @keywords internal
-get_mx_values <- function(object, kt, jumpchoice, y){
+get_mx_values <- function(object, kt, jumpchoice, y, LL_adjustment = 0){
   
   C  <- coef(object)
   OV <- object$observed.values
@@ -157,13 +157,14 @@ get_mx_values <- function(object, kt, jumpchoice, y){
   if (is.data.frame(kt)) {
     pred <- list()
     for (i in 1:ncol(kt)) {
-      pred[[i]] <- get_mx_values(object, kt = kt[, i], jumpchoice, y)
+      pred[[i]] <- get_mx_values(object, kt = kt[, i], jumpchoice, y, 
+                                 LL_adjustment)
     }
     names(pred) <- colnames(kt)
     return(pred)
     
   } else {
-    pv  <- matrix(kt, ncol = 1) %*% C$bx
+    pv  <- matrix(kt, ncol = 1) %*% C$bx + LL_adjustment
     pv  <- sweep(pv, 2, C$ax, FUN = "+")
     fmx <- t(exp(pv))
     

@@ -253,29 +253,31 @@ predict.Oeppen <- function(object,
   eop <- bop + h - 1
   fcy <- bop:eop
   jc  <- jumpchoice[1]
-  cf  <- coef(object)
-  kt  <- cf$kt
+  
+  # Identify the k[t] ARIMA order
+  C <- coef(object)
+  A <- find_arima(C$kt)
   
   # forecast kt; ax and bx are time independent.
-  ts_auto = auto.arima(kt)
+  kt.arima <- forecast::Arima(y = C$kt, 
+                              order = order %||% A$order, 
+                              include.drift = include.drift %||% A$drift,
+                              method = method)
   
-  AO  <- order %||% arimaorder(ts_auto)
-  ID  <- include.drift %||% any(names(coef(ts_auto)) %in% "drift")
-  tsm <- forecast::Arima(y = kt, order = AO, include.drift = ID, method = method, ...)
-  tsf <- forecast(tsm, h = h, level = level)  # time series forecast
-  
+  # Forecast k[t] using the time-series model
+  tsf <- forecast(kt.arima, h = h, level = level)  # time series forecast
   fkt <- data.frame(tsf$mean, tsf$lower, tsf$upper) # forecast kt
   Cnames <- c('mean', paste0('L', level), paste0('U', level))
   colnames(fkt) <- Cnames
   
-  fdx <- compute_dx(dx = dx, kt = fkt, ax = cf$ax, bx = cf$bx, # forecast dx
+  fdx <- compute_dx(dx = dx, kt = fkt, ax = C$ax, bx = C$bx, # forecast dx
                     fit = t(fitted(object)), y = fcy, jumpchoice = jc)
   pv <- fdx[[1]]
   CI <- fdx[-1]
   names(CI) <- Cnames[-1]
   
   out <- list(call = match.call(), predicted.values = pv,
-              kt.arima = tsm, kt = fkt, 
+              kt.arima = kt.arima, kt = fkt, 
               conf.intervals = CI, x = object$x, y = fcy, info = object$info)
   out <- structure(class = 'predict.Oeppen', out)
   return(out)

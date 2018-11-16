@@ -7,7 +7,7 @@ In this function we compute the m[x] values based on the extrapolation of
 the k[t] time-series. If necesary an adjustment for the jump-off is 
 provided.}
 \usage{
-get_mx_values(object, kt, jumpchoice, y)
+get_mx_values(object, kt, jumpchoice, y, LL_adjustment = 0)
 }
 \arguments{
 \item{object}{An object of class \code{LeeCarter2}.}
@@ -20,6 +20,8 @@ and \code{"fit"} (use fitted rates).}
 
 \item{y}{Numerical vector indicating the years in input \code{data}. Optional.
 Default: \code{NULL}.}
+
+\item{LL_adjustment}{Adjustment to be used in the Li-Lee model.}
 }
 \description{
 Get m[x] values based on k[t] forecast
