@@ -35,8 +35,8 @@ fit_LiLee <- function(data, benchmark, x = NULL, y = NULL, verbose = TRUE, ...){
   A.cmx <- sweep(log(data), 1, ax, FUN = "-")
   cmx <- A.cmx - B.cmx
   S   <- svd(cmx)
-  kt  <- S$v[,1] * sum(S$u[, 1]) * S$d[1]
-  bx  <- S$u[,1] / sum(S$u[, 1])
+  kt  <- S$v[, 1] * sum(S$u[, 1]) * S$d[1]
+  bx  <- S$u[, 1] / sum(S$u[, 1])
   cf  <- list(ax = as.numeric(ax), bx = as.numeric(bx), kt = as.numeric(kt))
   
   # Variability
@@ -108,14 +108,14 @@ predict.LiLee <- function(object,
   # Estimate/fit k[t] time-series model
   kt.arima <- forecast::Arima(y = C$kt, 
                               order = order %||% A$order, 
-                              include.drift = include.drift %||% A$drift, 
+                              include.drift = include.drift %||% A$drift,
                               method = method)
   
   # Forecast k[t] using the time-series model
-  tsf <- forecast(kt.arima, h = h, level = level)  # time series forecast
+  tsf <- forecast(kt.arima, h = h + 1, level = level)  # time series forecast
   fkt <- data.frame(tsf$mean, tsf$lower, tsf$upper) # forecast kt
   Cnames <- c('mean', paste0('L', level), paste0('U', level))
-  dimnames(fkt) <- list(fcy, Cnames)
+  dimnames(fkt) <- list(c(0, fcy), Cnames)
   
   # Get forecast m[x] based on k[t] extrapolation 
   # Here we are also adjusting for the jump-off

@@ -12,4 +12,4 @@ find_arima(a)
 \description{
 Find ARIMA order of a time series
 }
-\keyword{intermal}
+\keyword{internal}

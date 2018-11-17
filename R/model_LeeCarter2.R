@@ -110,16 +110,20 @@ predict.LeeCarter2 <- function(object,
   A <- find_arima(C$kt)
   
   # Estimate/fit k[t] time-series model
-  tsm <- forecast::Arima(y = C$kt, 
-                         order = order %||% A$order, 
-                         include.drift = include.drift %||% A$drift,
-                         method = method)
+  kt.arima <- forecast::Arima(y = C$kt, 
+                              order = order %||% A$order, 
+                              include.drift = include.drift %||% A$drift,
+                              method = method)
   
   # Forecast k[t] using the time-series model
-  tsf <- forecast(tsm, h = h, level = level)  # time series forecast
+  tsf <- forecast(kt.arima, h = h + 1, level = level)  # time series forecast
+  # Note: we have used h + 1 in order to extrapolate 1 more year and use it in 
+  # the jump-off adjustment if needed. By rebasing the 1st forecast value to the 
+  # last observed values. See the behaviour in get_mx_values(). 
+  # The same is done in LL model.
   fkt <- data.frame(tsf$mean, tsf$lower, tsf$upper) # forecast kt
   Cnames <- c('mean', paste0('L', level), paste0('U', level))
-  dimnames(fkt) <- list(fcy, Cnames)
+  dimnames(fkt) <- list(c(0, fcy), Cnames)
   
   # Get forecast m[x] based on k[t] extrapolation 
   # Here we are also adjusting for the jump-off
@@ -132,7 +136,7 @@ predict.LeeCarter2 <- function(object,
   
   # Exit
   out <- list(call = match.call(), predicted.values = pv, 
-              kt.arima = tsm, kt = fkt, 
+              kt.arima = kt.arima, kt = fkt, 
               conf.intervals = CI, x = object$x, y = fcy, info = object$info)
   out <- structure(class = 'predict.LeeCarter2', out)
   return(out)
@@ -152,7 +156,7 @@ get_mx_values <- function(object, kt, jumpchoice, y, LL_adjustment = 0){
   
   C  <- coef(object)
   OV <- object$observed.values
-  FV <- object$fitted.values
+  # FV <- object$fitted.values
   
   if (is.data.frame(kt)) {
     pred <- list()
@@ -166,17 +170,18 @@ get_mx_values <- function(object, kt, jumpchoice, y, LL_adjustment = 0){
   } else {
     pv  <- matrix(kt, ncol = 1) %*% C$bx + LL_adjustment
     pv  <- sweep(pv, 2, C$ax, FUN = "+")
-    fmx <- t(exp(pv))
+    pv <- t(exp(pv))
     
     if (jumpchoice == 'actual') {
       N   <- ncol(OV)
-      J   <- as.numeric(OV[, N]/FV[, N]) # jump_off (%)
-      fmx <- sweep(fmx, 1, J, FUN = "*")
+      J   <- as.numeric(OV[, N]/pv[, 1]) # jump_off (%)
+      pv <- sweep(pv, 1, J, FUN = "*")
     }
     
-    dimnames(fmx) <- list(rownames(OV), y)
+    out <- pv[, -1]
+    dimnames(out) <- list(rownames(OV), y)
     
-    return(fmx)
+    return(out)
   }
 }
 

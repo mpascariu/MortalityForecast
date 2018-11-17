@@ -17,15 +17,14 @@ If there are death rates are equal to zero they will be replaced
 using the multiplicative replacement strategy.
 }
 \examples{
-# x  <- 0:25
-# y  <- 2005:2016
-# mx <- HMD_male$mx$DNK[paste(x), paste(y)]
-# mx == 0
-# 
-# new.mx <- replace_value_zero(mx)
-# new.mx == 0
-# 
-# sum(mx) == sum(new.mx)
-# (mx - new.mx)/mx * 100
+x  <- 0:25
+y  <- 2005:2016
+mx <- HMD_male$mx$DNK[paste(x), paste(y)]
+mx == 0
+
+new.mx <- replace_value_zero(mx)
+new.mx == 0
+
+sum(mx) == sum(new.mx)
+(mx - new.mx)/mx * 100
 }
-\keyword{internal}

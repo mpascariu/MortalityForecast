@@ -128,7 +128,7 @@ whatsYourName <- function(x) {
 
 #' Find ARIMA order of a time series
 #' @param a A numerical vector.
-#' @keywords intermal
+#' @keywords internal
 find_arima <- function(a) {
   W <- auto.arima(a)
   O <- arimaorder(W)
@@ -142,28 +142,28 @@ find_arima <- function(a) {
 #' @param mx Matrix of death rates
 #' @param radix radix. Default: 1e5.
 #' @examples 
-#' # x  <- 0:25
-#' # y  <- 2005:2016
-#' # mx <- HMD_male$mx$DNK[paste(x), paste(y)]
-#' # mx == 0
-#' # 
-#' # new.mx <- replace_value_zero(mx)
-#' # new.mx == 0
-#' # 
-#' # sum(mx) == sum(new.mx)
-#' # (mx - new.mx)/mx * 100
-#' @keywords internal
+#' x  <- 0:25
+#' y  <- 2005:2016
+#' mx <- HMD_male$mx$DNK[paste(x), paste(y)]
+#' mx == 0
+#' 
+#' new.mx <- replace_value_zero(mx)
+#' new.mx == 0
+#' 
+#' sum(mx) == sum(new.mx)
+#' (mx - new.mx)/mx * 100
+#' @export
 replace_value_zero <- function(mx, radix = 1e5) {
   Dx <- mx * radix
   
   p <- sweep(Dx, 2, colSums(Dx), FUN = "/")
   
-  for(i in 1:ncol(p)){
-    sdx <- 0.5 / sum(Dx[, i], na.rm = TRUE)
-    L <- as.numeric(p[, i] == 0) * sdx
-    p[, i] <- p[, i] + L
+  for(i in 1:nrow(p)){
+    sdx <- 0.5 / sum(Dx[i, ], na.rm = TRUE)
+    L <- as.numeric(p[i, ] == 0) * sdx
+    p[i, ] <- p[i, ] + L
   }
-  
+
   z <- sweep(p, 2, colSums(p), FUN = "/")
   out <- sweep(z, 2, colSums(Dx), FUN = "*") / radix
   
