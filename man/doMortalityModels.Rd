@@ -5,7 +5,7 @@
 \title{Fit Multiple Stochastic Mortality Models}
 \usage{
 doMortalityModels(data, x = NULL, y = NULL, data.in = c("qx", "mx",
-  "dx", "lx"), models = c("MRWD", "LeeCarter"), verbose = TRUE, ...)
+  "dx", "lx"), models = c("MRWD"), verbose = TRUE, ...)
 }
 \arguments{
 \item{data}{A data.frame or a matrix containing mortality data 
@@ -34,7 +34,7 @@ Fit Multiple Stochastic Mortality Models
 x  <- 0:100
 y  <- 2005:2016
 D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-MM <- c("MRWD", "LeeCarter", "HyndmanUllah", "CoDa")
+MM <- c("MRWD", "HyndmanUllah", "CoDa")
 
 M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 

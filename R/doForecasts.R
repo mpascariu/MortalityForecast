@@ -1,3 +1,8 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Mon Nov 19 13:55:16 2018
+# --------------------------------------------------- #
 
 
 #' Perform Multiple Forecast of Mortality Using Various Models
@@ -15,7 +20,7 @@
 #' y  <- 1985:1999
 #' h  <- 17
 #' D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' MM <- c("MRWD", "LeeCarter", "HyndmanUllah", "CoDa", "MEM6")
+#' MM <- c("MRWD", "HyndmanUllah", "CoDa", "MEM6")
 #' 
 #' M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 #' P <- doForecasts(M, h, level = 95, jumpchoice = "actual")
@@ -36,7 +41,7 @@ doForecasts <- function(object, h, level = 95,
     cat(Mn[i], " ")
     M <- with(object, get(Mn[i]))
     
-    if (Mn[i] %in% c("LC", "PLAT", "LeeCarter")) {
+    if (Mn[i] %in% c("LC", "PLAT")) {
       P <- forecast(M, h = h, jumpchoice = jumpchoice, level = level)
       
     } else {

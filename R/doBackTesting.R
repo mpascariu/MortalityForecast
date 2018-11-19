@@ -23,7 +23,7 @@
 #' D <- HMD_male$dx$GBRTENW[paste(x), paste(y)] # DATA
 #' 
 #' # Select various mortality models
-#' MM <- c("MRWD", "LeeCarter", "CoDa", "MEM6")
+#' MM <- c("MRWD", "CoDa", "MEM6")
 #' # Fit & Forecast the models 
 #' B <- doBackTesting(data = D, x = x,
 #'                    y.fit = y1, y.for = y2,

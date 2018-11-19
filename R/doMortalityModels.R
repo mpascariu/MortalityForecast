@@ -1,3 +1,8 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Mon Nov 19 13:54:55 2018
+# --------------------------------------------------- #
 
 
 #' Fit Multiple Stochastic Mortality Models
@@ -18,7 +23,7 @@
 #' x  <- 0:100
 #' y  <- 2005:2016
 #' D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' MM <- c("MRWD", "LeeCarter", "HyndmanUllah", "CoDa")
+#' MM <- c("MRWD", "HyndmanUllah", "CoDa")
 #' 
 #' M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 #' 
@@ -28,7 +33,7 @@
 #' @export
 doMortalityModels <- function(data, x = NULL, y = NULL, 
                               data.in = c("qx", "mx", "dx", "lx"),
-                              models = c("MRWD","LeeCarter"),
+                              models = c("MRWD"),
                               verbose = TRUE, ...) {
   
   data.in <- match.arg(data.in)
@@ -44,37 +49,34 @@ doMortalityModels <- function(data, x = NULL, y = NULL,
 
   # The Naive model - Multivariate Random-Walk
   if ("MRW" %in% models) {
-    MRW <- fit_MRW(data = log(mx.data), x, y, include.drift = FALSE)
+    MRW <- model_MRW(data = log(mx.data), x, y, include.drift = FALSE)
   }
   # Random Walk with drift
   if ("MRWD" %in% models) {
-    MRWD <- fit_MRW(data = log(mx.data), x, y, include.drift = TRUE)
+    MRWD <- model_MRW(data = log(mx.data), x, y, include.drift = TRUE)
   }
   # Lee-Carter (1992)
   if ("LC" %in% models) {
     LC <- LC(data = mx.data, x, y, link = "log")
   }
-  if ("LeeCarter" %in% models) {
-    LeeCarter <- fit_LeeCarter(data = mx.data, x, y)
-  }
   if ("LeeCarter2" %in% models) {
-    LeeCarter2 <- fit_LeeCarter2(data = mx.data, x, y)
+    LeeCarter2 <- model_LeeCarter(data = mx.data, x, y)
   }
   # Hyndman-Ullah (1992)
   if ("HyndmanUllah" %in% models) {
-    HyndmanUllah <- fit_HyndmanUllah(data = mx.data, x, y)
+    HyndmanUllah <- model_HyndmanUllah(data = mx.data, x, y)
   }
   # Plat (2009)
   if ("PLAT" %in% models) PLAT <- PLAT(data = mx.data, x, y)
   # Oeppen (2008)
-  if ("CoDa" %in% models) CoDa <- fit_Oeppen(data = dx.data, x, y)
+  if ("CoDa" %in% models) CoDa <- model_Oeppen(data = dx.data, x, y)
   # Maximum Entropy Mortality Models - PLC (2018)
-  if ("MEM2" %in% models)  MEM2 <- fit_MEM(data = dx.data, x, y, n = 2)
-  if ("MEM3" %in% models)  MEM3 <- fit_MEM(data = dx.data, x, y, n = 3)
-  if ("MEM4" %in% models)  MEM4 <- fit_MEM(data = dx.data, x, y, n = 4)
-  if ("MEM5" %in% models)  MEM5 <- fit_MEM(data = dx.data, x, y, n = 5)
-  if ("MEM6" %in% models)  MEM6 <- fit_MEM(data = dx.data, x, y, n = 6)
-  if ("MEM7" %in% models)  MEM7 <- fit_MEM(data = dx.data, x, y, n = 7)
+  if ("MEM2" %in% models)  MEM2 <- model_MEM(data = dx.data, x, y, n = 2)
+  if ("MEM3" %in% models)  MEM3 <- model_MEM(data = dx.data, x, y, n = 3)
+  if ("MEM4" %in% models)  MEM4 <- model_MEM(data = dx.data, x, y, n = 4)
+  if ("MEM5" %in% models)  MEM5 <- model_MEM(data = dx.data, x, y, n = 5)
+  if ("MEM6" %in% models)  MEM6 <- model_MEM(data = dx.data, x, y, n = 6)
+  if ("MEM7" %in% models)  MEM7 <- model_MEM(data = dx.data, x, y, n = 7)
 
   remove(data, data.in, models, dx.data, mx.data)
   out <- as.list(environment())

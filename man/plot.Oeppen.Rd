@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_Oeppen.R
 \name{plot.Oeppen}
 \alias{plot.Oeppen}
-\title{ggplot the observed and fitted values of a CoDa-LC mortality model}
+\title{ggplot the observed and fitted values of an Oeppen model}
 \usage{
 \method{plot}{Oeppen}(x, plotType = c("fitted", "observed"), ny = 7,
   level = 80, ...)
@@ -22,12 +22,12 @@ Default: 80.}
 functions. This can be used to control the appearance of the plots.}
 }
 \description{
-ggplot the observed and fitted values of a CoDa-LC mortality model
+ggplot the observed and fitted values of an Oeppen model
 }
 \details{
 Note: the output is a ggplot2 object. Therefore, one can add or 
 modify the components of the figure.
 }
 \examples{
-# For examples go to ?fit_Oeppen
+# For examples go to ?model_Oeppen
 }

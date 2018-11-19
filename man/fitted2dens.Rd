@@ -26,7 +26,7 @@ Prepare data for ggplots in plot.MEM function
 x  <- 0:110
 y  <- 1965:2014
 dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-M  <- fit_MEM(dx, x, y, n = 5)
+M  <- model_MEM(dx, x, y, n = 5)
 fitted2dens(fitted(M), x, y[-1])
 }
 \keyword{internal}

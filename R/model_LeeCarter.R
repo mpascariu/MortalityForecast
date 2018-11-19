@@ -1,35 +1,258 @@
-# Marius D. Pascariu --- Mon Nov 12 14:00:33 2018 ------------------------------
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Mon Nov 19 13:43:17 2018
+# --------------------------------------------------- #
 
 #' The Lee-Carter Mortality Model
-#' @param data A data.frame or a matrix containing mortality data 
-#' with ages \code{x} as row and time \code{y} as column.
+#' 
+#' Fit the Lee-Carter mortality model
 #' @inheritParams doMortalityModels
-#' @inheritParams demography::lca
-#' @inherit demography::lca details return
 #' @seealso 
-#' \code{\link{fit_HyndmanUllah}}
-#' \code{\link{fit_Oeppen}}
+#' \code{\link{predict.LeeCarter}}
 #' @details \insertNoCite{lee1992}{MortalityForecast}
 #' @references \insertAllCited{}
+#' @examples 
+#' # Data
+#' x  <- 0:89
+#' y  <- 1985:2014
+#' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
+#' 
+#' # Fit the model
+#' M <- model_LeeCarter(data = mx, x = x, y = y)
+#' M
+#' summary(M)
+#' 
+#' # Check residuals
+#' R <- residuals(M)
+#' 
+#' plot(R, plotType = "scatter")
+#' plot(R, plotType = "colourmap")
+#' plot(R, plotType = "signplot")
+#' 
+#' # Forecast 
+#' P <- predict(M, h = 20)
+#' P
 #' @export
-fit_LeeCarter <- function(data, x, y, adjust = "none", ...) {
-  demo_data <- demogdata(data = data, ages = x, years = y, 
-                         pop = data * 0, label = "demography", 
-                         name = "mean", lambda = 0, type = "mortality")
-  LCfit <- lca(demo_data, restype = "rates", adjust = adjust, ...)
+model_LeeCarter <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
+  input <- c(as.list(environment()))
+  if (any(data == 0)) {
+    stop("The input data contains death rates equal to zero at various ages.")
+  }
+  x <- x %||% 1:nrow(data)
+  y <- y %||% 1:ncol(data)
   
-  dimnames(LCfit$fitted$y) <- list(x, y)
+  # Info
+  modelLN <- "Lee-Carter Mortality Model"   # long name
+  modelSN <- "LC"                           # short name
+  modelF  <- "log m[x,t] = a[x] + b[x]k[t] + e[x,t]" # formula
+  info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
-  return(LCfit)
+  # Estimate model parameters: a[x], b[x], k[t]
+  ax   <- apply(log(data), 1, mean)
+  cmx  <- sweep(log(data), 1, ax, FUN = "-")
+  S    <- svd(cmx)
+  kt   <- S$v[,1] * sum(S$u[, 1]) * S$d[1]
+  bx   <- S$u[,1] / sum(S$u[, 1])
+  cf   <- list(ax = as.numeric(ax), bx = as.numeric(bx), kt = as.numeric(kt))
+  
+  # Variability
+  var <- cumsum(S$d^2 / sum(S$d^2))[1]
+  
+  # Compute fitted values and devinace residuals based on the estimated model
+  fv <- sweep(c(bx) %*% t(kt), 1, ax, FUN = "+") # Fitted values
+  fv <- exp(fv) # fitted mx
+  dimnames(fv) <- list(x, y)
+  
+  resid <- data - fv # residuals
+  
+  # Exit
+  out <- list(input = input, info = info, call = match.call(), 
+              fitted.values = fv, observed.values = data,
+              coefficients = cf, residuals = resid, x = x, y = y)
+  out <- structure(class = 'LeeCarter', out)
+  return(out)
 }
 
 
-#' Residuals of the Lee-Carter Mortality Model
-#' @param object An object of class \code{"lca"}
-#' @param ... Further arguments passed to or from other methods.
+#' Forecast age-specific death rates using the Lee-Carter model.
+#' 
+#' @param object An object of class \code{LeeCarter}.
+#' @inheritParams predict.Oeppen
+#' @inherit predict.Oeppen return
+#' @seealso 
+#' \code{\link{model_LeeCarter}}
+#' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
+#' @examples 
+#' # Data
+#' x  <- 0:89
+#' y  <- 1985:2014
+#' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
+#' 
+#' M <- model_LeeCarter(data = mx, x = x, y = y) # fit
+#' P <- predict(M, h = 20)  # forecast
+#' P
 #' @export
-residuals.lca <- function(object, ...){
-  r <- object$residuals$y
-  colnames(r) <- object$year
-  structure(class = "residMF", as.matrix(r))
+predict.LeeCarter <- function(object, 
+                               h, 
+                               order = c(0, 1, 0), 
+                               include.drift = TRUE,
+                               level = c(80, 95),
+                               jumpchoice = c("actual", "fit"),
+                               method = "ML",
+                               verbose = TRUE, ...){
+  # Data
+  mx <- t(object$input$data)
+  
+  # Timeline
+  bop <- max(object$y) + 1
+  eop <- bop + h - 1
+  fcy <- bop:eop
+  
+  # Identify the k[t] ARIMA order
+  C <- coef(object)
+  A <- find_arima(C$kt)
+  
+  # Estimate/fit k[t] time-series model
+  kt.arima <- forecast::Arima(y = C$kt, 
+                              order = order %||% A$order, 
+                              include.drift = include.drift %||% A$drift,
+                              method = method)
+  
+  # Forecast k[t] using the time-series model
+  tsf <- forecast(kt.arima, h = h + 1, level = level)  # time series forecast
+  # Note: we have used h + 1 in order to extrapolate 1 more year and use it in 
+  # the jump-off adjustment if needed. By rebasing the 1st forecast value to the 
+  # last observed values. See the behaviour in get_mx_values(). 
+  # The same is done in LL model.
+  fkt <- data.frame(tsf$mean, tsf$lower, tsf$upper) # forecast kt
+  Cnames <- c('mean', paste0('L', level), paste0('U', level))
+  dimnames(fkt) <- list(c(0, fcy), Cnames)
+  
+  # Get forecast m[x] based on k[t] extrapolation 
+  # Here we are also adjusting for the jump-off
+  fmx <- get_mx_values(object = object, 
+                       kt = fkt, 
+                       jumpchoice = match.arg(jumpchoice), 
+                       y = fcy)
+  pv <- fmx[[1]]
+  CI <- fmx[-1]
+  
+  # Exit
+  out <- list(call = match.call(), predicted.values = pv, 
+              kt.arima = kt.arima, kt = fkt, 
+              conf.intervals = CI, x = object$x, y = fcy, info = object$info)
+  out <- structure(class = 'predict.LeeCarter', out)
+  return(out)
+}
+
+
+#' Get m[x] values based on k[t] forecast
+#' In this function we compute the m[x] values based on the extrapolation of
+#' the k[t] time-series. If necesary an adjustment for the jump-off is 
+#' provided.
+#' @inheritParams predict.LeeCarter 
+#' @inheritParams model_LeeCarter
+#' @param kt Estimated kt vector of parameters in the Lee-Carter model;
+#' @param LL_adjustment Adjustment to be used in the Li-Lee model.
+#' @keywords internal
+get_mx_values <- function(object, kt, jumpchoice, y, LL_adjustment = 0){
+  
+  C  <- coef(object)
+  OV <- object$observed.values
+  # FV <- object$fitted.values
+  
+  if (is.data.frame(kt)) {
+    pred <- list()
+    for (i in 1:ncol(kt)) {
+      pred[[i]] <- get_mx_values(object, kt = kt[, i], jumpchoice, y, 
+                                 LL_adjustment)
+    }
+    names(pred) <- colnames(kt)
+    return(pred)
+    
+  } else {
+    pv  <- matrix(kt, ncol = 1) %*% C$bx + LL_adjustment
+    pv  <- sweep(pv, 2, C$ax, FUN = "+")
+    pv <- t(exp(pv))
+    
+    if (jumpchoice == 'actual') {
+      N   <- ncol(OV)
+      J   <- as.numeric(OV[, N]/pv[, 1]) # jump_off (%)
+      pv <- sweep(pv, 1, J, FUN = "*")
+    }
+    
+    out <- pv[, -1]
+    dimnames(out) <- list(rownames(OV), y)
+    
+    return(out)
+  }
+}
+
+
+# S3 ----------------------------------------------
+
+
+#' Residuals of the Lee-Carter Mortality Model
+#' @param object An object of class \code{"LeeCarter"}
+#' @inheritParams residuals_default
+#' @export
+residuals.LeeCarter <- function(object, ...){
+  residuals_default(object, ...)
+}
+
+
+#' Print Lee-Carter model
+#' @param x An object of class \code{"LeeCarter"}
+#' @inheritParams print_default
+#' @keywords internal
+#' @export
+print.LeeCarter <- function(x, ...) {
+  print_default(x, ...)
+}
+
+
+#' Summary LeeCarter
+#' @param object An object of class \code{"LeeCarter"}.
+#' @inheritParams print.LeeCarter
+#' @keywords internal
+#' @export
+summary.LeeCarter <- function(object, ...) {
+  axbx <- data.frame(ax = object$coefficients$ax, 
+                     bx = object$coefficients$bx,
+                     row.names = object$x)
+  kt <- data.frame(kt = object$coefficients$kt)
+  out = structure(class = 'summary.LeeCarter', 
+                  list(A = axbx, K = kt, call = object$call, info = object$info,
+                       y = object$y, x_ = object$x))
+  return(out)
+}
+
+
+#' Print summary.LeeCarter
+#' @param x An object of class \code{"summary.LeeCarter"}.
+#' @inheritParams print.LeeCarter
+#' @keywords internal
+#' @export
+print.summary.LeeCarter <- function(x, ...){
+  cat('\nFit  :', x$info$name)
+  cat('\nModel:', x$info$formula)
+  cat('\n\nCoefficients:\n')
+  A <- head_tail(x$A, digits = 5, hlength = 6, tlength = 6)
+  K <- head_tail(data.frame(. = '|', y = as.integer(x$y), kt = x$K),
+                 digits = 5, hlength = 6, tlength = 6)
+  print(data.frame(A, K))
+  cat('\n')
+}
+
+
+#' Print function
+#' @param x An object of class \code{"predict.LeeCarter"};
+#' @inheritParams print_predict_default
+#' @keywords internal
+#' @export
+print.predict.LeeCarter <- function(x, ...) {
+  print_predict_default(x, ...)
+  cat('k[t]-ARIMA method:', arima.string1(x$kt.arima, padding = TRUE))
+  cat('\n')
 }

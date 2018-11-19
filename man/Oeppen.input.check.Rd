@@ -7,7 +7,7 @@
 Oeppen.input.check(X)
 }
 \arguments{
-\item{X}{A list with input arguments provided in \code{\link{fit_Oeppen}} function}
+\item{X}{A list with input arguments provided in \code{\link{model_Oeppen}} function}
 }
 \description{
 Validate input values

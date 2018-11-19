@@ -1,6 +1,7 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
-# Last update: Wed Nov 14 15:40:18 2018
+# License: GNU General Public License v3.0
+# Last update: Mon Nov 19 14:21:47 2018
 # --------------------------------------------------- #
 remove(list = ls())
 library(MortalityForecast)
@@ -9,8 +10,8 @@ library(MortalityForecast)
 x = 0:110
 y = 1960:2016
 D <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-M1 <- fit_Oeppen(D, x = x, y = y)
-M2 <- fit_Oeppen(D)
+M1 <- model_Oeppen(D, x = x, y = y)
+M2 <- model_Oeppen(D)
 vsn <- 1e-200
 
 testCodaFit <- function(M){
@@ -75,15 +76,15 @@ test_that("Test that plots are produced",{
 
 # Validate input tests
 
-expect_error(fit_Oeppen(D, x = c(NA,1:109), y = 1960:2016))
-expect_error(fit_Oeppen(D, x = 0:110, y = c(NA,1961:2016)))
-expect_error(fit_Oeppen(D, y = 1960:20160))
-expect_error(fit_Oeppen(D, x = 0:1000))
+expect_error(model_Oeppen(D, x = c(NA,1:109), y = 1960:2016))
+expect_error(model_Oeppen(D, x = 0:110, y = c(NA,1961:2016)))
+expect_error(model_Oeppen(D, y = 1960:20160))
+expect_error(model_Oeppen(D, x = 0:1000))
 
 dNA <- D
 dNA[1,1] <- NA
-expect_error(fit_Oeppen(dNA))
+expect_error(model_Oeppen(dNA))
 
 dNeg <- dNA
 dNeg[1,1] <- -1
-expect_error(fit_Oeppen(dNeg))
+expect_error(model_Oeppen(dNeg))

@@ -9,7 +9,7 @@ correct_jump_off(X, object, jumpchoice, h)
 \arguments{
 \item{X}{matrix of fitted values}
 
-\item{object}{An object of class \code{\link{fit_MEM}}.}
+\item{object}{An object of class \code{MEM};}
 
 \item{jumpchoice}{Method used for computation of jumpchoice. 
 Possibilities: \code{"actual"} (use actual rates from final year) 

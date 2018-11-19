@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_Oeppen.R
 \name{residuals.Oeppen}
 \alias{residuals.Oeppen}
-\title{Residuals of the CoDa-LC Mortality Model}
+\title{Residuals of the Oeppen Mortality Model}
 \usage{
 \method{residuals}{Oeppen}(object, ...)
 }
@@ -12,5 +12,5 @@
 \item{...}{Further arguments passed to or from other methods.}
 }
 \description{
-Residuals of the CoDa-LC Mortality Model
+Residuals of the Oeppen Mortality Model
 }

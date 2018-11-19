@@ -2,14 +2,14 @@
 % Please edit documentation in R/model_LiLee.R
 \name{predict.LiLee}
 \alias{predict.LiLee}
-\title{Forecast age-specific death rates using the Lee-Carter model.}
+\title{Forecast age-specific death rates using the Li-Lee model}
 \usage{
 \method{predict}{LiLee}(object, h, order = c(0, 1, 0),
   include.drift = TRUE, level = c(80, 95), jumpchoice = c("actual",
   "fit"), method = "ML", verbose = TRUE, ...)
 }
 \arguments{
-\item{object}{An object of class \code{LeeCarter2}.}
+\item{object}{An object of class \code{LiLee}.}
 
 \item{h}{Number of years to be forecast in the future.}
 
@@ -53,7 +53,7 @@ The output is an object of class \code{"predict.Oeppen"} with the components:
  \item{info}{Short details about the model.}
 }
 \description{
-Forecast age-specific death rates using the Lee-Carter model.
+Forecast age-specific death rates using the Li-Lee model
 }
 \examples{
 # Data
@@ -62,12 +62,12 @@ y  <- 1985:2014
 B.mx <- HMD_male$mx$USA[paste(x), paste(y)]
 mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
 
-M <- fit_LiLee(data = mx, x = x, y = y, benchmark = B.mx) # fit
+M <- model_LiLee(data = mx, x = x, y = y, benchmark = B.mx) # fit
 P <- predict(M, h = 20)  # forecast
 P
 }
 \seealso{
-\code{\link{fit_LeeCarter2}}
+\code{\link{model_LiLee}}
 }
 \author{
 Marius D. Pascariu and Marie-Pier Bergeron-Boucher

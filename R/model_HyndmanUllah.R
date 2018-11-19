@@ -1,21 +1,27 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Mon Nov 19 13:58:45 2018
+# --------------------------------------------------- #
+
 
 #' The Functional Demographic Model
 #' @inheritParams doMortalityModels
 #' @inheritParams demography::fdm
 #' @inherit demography::fdm details return
 #' @seealso 
-#' \code{\link{fit_LeeCarter}}
-#' \code{\link{fit_Oeppen}}
+#' \code{\link{model_LeeCarter}}
+#' \code{\link{model_Oeppen}}
 #' @details \insertNoCite{hyndman2007}{MortalityForecast}
 #' @references \insertAllCited{}
 #' @export
-fit_HyndmanUllah <- function(data, x, y, order = 1, transform = TRUE, ...) {
+model_HyndmanUllah <- function(data, x, y, order = 1, transform = TRUE, ...) {
   input <- c(as.list(environment()))
   x <- x %||% 1:nrow(data)
   y <- y %||% 1:ncol(data)
   
   # Info
-  modelLN <- "Functional Demographic Model"   # long name
+  modelLN <- "Functional Demographic Model -- Hyndman-Ullah"   # long name
   modelSN <- "HyndmanUllah"                   # short name
   modelF  <- "log m[x,t] = a[x] + SUM b[x,k]phi[t,k] + e[x,t] + r[t,x]eps[x,t]" # formula
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
@@ -45,7 +51,7 @@ fit_HyndmanUllah <- function(data, x, y, order = 1, transform = TRUE, ...) {
 #' @inheritParams predict.Oeppen
 #' @inherit predict.Oeppen return
 #' @seealso 
-#' \code{\link{fit_HyndmanUllah}}
+#' \code{\link{model_HyndmanUllah}}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
 #' @examples 
 #' # Data
@@ -53,7 +59,7 @@ fit_HyndmanUllah <- function(data, x, y, order = 1, transform = TRUE, ...) {
 #' y  <- 1985:2014
 #' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
 #' 
-#' M <- fit_HyndmanUllah(data = mx, x = x, y = y) # fit
+#' M <- model_HyndmanUllah(data = mx, x = x, y = y) # fit
 #' P <- predict(M, h = 20)  # forecast
 #' P
 #' @export
@@ -81,6 +87,7 @@ predict.HyndmanUllah <- function(object, h, level = 95,
   out <- structure(class = 'predict.HyndmanUllah', out)
   return(out)
 }
+
 
 #' Residuals HyndmanUllah
 #' @param object An object of class \code{"HyndmanUllah"}

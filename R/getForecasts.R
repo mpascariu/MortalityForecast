@@ -22,10 +22,6 @@ getForecasts <- function(object,
     if (Mn[i] %in% c("LC", "PLAT")) {
       mx <- M$rates
       
-    } else if (Mn[i] %in% c("LeeCarter")) {
-      mx <- M$rate$mean
-      dimnames(mx) <- list(x, y)
-      
     } else if (Mn[i] %in% c("MRW", "MRWD")) {
       mx <- exp(M$predicted.values)
       

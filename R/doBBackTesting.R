@@ -17,7 +17,7 @@
 #' 
 #' BB <- doBBackTesting(data = dx, x, y,
 #'                      data.in = "dx", 
-#'                      models = c("MRWD", "LeeCarter", "HyndmanUllah"),
+#'                      models = c("MRWD", "HyndmanUllah"),
 #'                      strategy = c(20, 20, 3))
 #' 
 #' A <- evalAccuracy(BB, data.out = "ex")
@@ -98,7 +98,9 @@ doBBackTesting <- function(data, x, y,
 buildScenarios <- function(y, strategy = c(f = 20, h = 20, s = 2)) {
   # Build scenarios -  method 1
   S <- strategy
-  bop_fit <- rev(seq(from = max(y) - S[1] - S[2] + 1, to = min(y), by = -1 * S[3]))
+  bop_fit <- rev(seq(from = max(y) - S[1] - S[2] + 1, 
+                     to = min(y), 
+                     by = -1 * S[3]))
   eop_fit <- bop_fit + S[1] - 1
   bop_fc  <- eop_fit + 1
   eop_fc  <- bop_fc + S[2] - 1

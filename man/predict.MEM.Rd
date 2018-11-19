@@ -8,12 +8,12 @@
   jumpchoice = c("actual", "fit"), verbose = FALSE, ...)
 }
 \arguments{
-\item{object}{An object of class \code{\link{fit_MEM}}.}
+\item{object}{An object of class \code{MEM};}
 
 \item{h}{Number of years to be forecast in the future.}
 
 \item{x.h}{Numerical vector indicating the ages to be considered in 
-reconstruction of the density over the forecast horizon. 
+reconstruction of the density over the forecast horizon.
 If \code{NULL}, the number of estimated data points is equal to the number 
 of fitted data points. This argument can be used for example to estimate a 
 density between 0 and 130 given the fact that the model was fitted on a 
@@ -37,7 +37,7 @@ Predict Maximum-Entropy Mortality Model
 x  <- 0:110
 y  <- 1985:2016
 dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-M  <- fit_MEM(dx, x, y, n = 5)
+M  <- model_MEM(dx, x, y, n = 5)
 P  <- predict(M, h = 16, x.h = 0:120)
 
 plot(P, plotType = "mean")
@@ -48,5 +48,5 @@ plot(P, M, plotType = "raw_moments")
 plot(P, M, plotType = "normalised_moments")
 }
 \seealso{
-\code{\link{fit_MEM}}
+\code{\link{model_MEM}}
 }

@@ -1,6 +1,7 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
-# Last update: Fri Nov 16 14:20:20 2018
+# License: GNU General Public License v3.0
+# Last update: Mon Nov 19 13:58:32 2018
 # --------------------------------------------------- #
 
 #' The Li-Lee Mortality Model
@@ -11,12 +12,15 @@
 #' to be used as benchmark. Format: ages \code{x} as row and time \code{y} as column.
 #' @seealso 
 #' \code{\link{predict.LiLee}}
+#' \code{\link{model_LeeCarter}}
 #' @details \insertNoCite{li2005}{MortalityForecast}
 #' @references \insertAllCited{}
 #' @export
-fit_LiLee <- function(data, benchmark, x = NULL, y = NULL, verbose = TRUE, ...){
+model_LiLee <- function(data, benchmark, x = NULL, y = NULL, verbose = TRUE, ...){
   input <- c(as.list(environment()))
-  if (any(data == 0)) data <- replace_value_zero(data)
+  if (any(data == 0)) {
+    stop("The input data contains death rates equal to zero at various ages.")
+  }
   x <- x %||% 1:nrow(data)
   y <- y %||% 1:ncol(data)
 
@@ -27,7 +31,7 @@ fit_LiLee <- function(data, benchmark, x = NULL, y = NULL, verbose = TRUE, ...){
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Fit benchmark model
-  B <- fit_LeeCarter2(data = benchmark, x = x, y = y)
+  B <- model_LeeCarter(data = benchmark, x = x, y = y)
   B.cmx <- with(B$coefficients, c(bx) %*% t(kt))
   
   # Estimate model parameters: a[x], b[x], k[t]
@@ -59,13 +63,12 @@ fit_LiLee <- function(data, benchmark, x = NULL, y = NULL, verbose = TRUE, ...){
 }
 
 
-#' Forecast age-specific death rates using the Lee-Carter model.
-#' 
-#' @param object An object of class \code{LeeCarter2}.
+#' Forecast age-specific death rates using the Li-Lee model
+#' @param object An object of class \code{LiLee}.
 #' @inheritParams predict.Oeppen
 #' @inherit predict.Oeppen return
 #' @seealso 
-#' \code{\link{fit_LeeCarter2}}
+#' \code{\link{model_LiLee}}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
 #' @examples 
 #' # Data
@@ -74,7 +77,7 @@ fit_LiLee <- function(data, benchmark, x = NULL, y = NULL, verbose = TRUE, ...){
 #' B.mx <- HMD_male$mx$USA[paste(x), paste(y)]
 #' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
 #' 
-#' M <- fit_LiLee(data = mx, x = x, y = y, benchmark = B.mx) # fit
+#' M <- model_LiLee(data = mx, x = x, y = y, benchmark = B.mx) # fit
 #' P <- predict(M, h = 20)  # forecast
 #' P
 #' @export

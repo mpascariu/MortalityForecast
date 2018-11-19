@@ -1,5 +1,10 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Mon Nov 19 14:00:04 2018
+# --------------------------------------------------- #
 
-#' Multivariate Random Walk Model
+#' The Multivariate Random Walk Model
 #' 
 #' Fit a Multivariate Random Walk Model to the input \code{data}, a
 #' multivariate time series.
@@ -34,7 +39,7 @@
 #' y  <- 1980:2000
 #' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
 #' 
-#' M <- fit_MRW(data = log(mx), x = x, y = y, include.drift = TRUE)
+#' M <- model_MRW(data = log(mx), x = x, y = y, include.drift = TRUE)
 #' P <- predict(M, h = 16)
 #' R <- residuals(M)
 #' 
@@ -42,7 +47,7 @@
 #' matplot(pv, type = "l", log = "y")
 #' matplot(t(pv), type = "l", log = "y")
 #' @export
-fit_MRW <- function(data, x = NULL, y = NULL, include.drift = TRUE, ...) {
+model_MRW <- function(data, x = NULL, y = NULL, include.drift = TRUE, ...) {
   # Save the input
   input <- as.list(environment())
   call  <- match.call()

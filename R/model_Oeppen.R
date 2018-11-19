@@ -1,10 +1,16 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Mon Nov 19 14:16:15 2018
+# --------------------------------------------------- #
 
-#' The Compositional-Data Lee-Carter Mortality Model (CoDa-LC)
+#' The Oeppen Mortality Model (Oeppen -- CoDa)
 #' 
-#' Fit Compositional Data model for forecasting the life table 
-#' distribution of deaths. CoDa is a Lee-Carter type model. A key difference 
+#' Fit the Oeppen model for forecasting the life table 
+#' distribution of deaths. This is a Lee-Carter type model adapted to a 
+#' compositional-data framework (CoDa). A key difference 
 #' between the \insertCite{lee1992;textual}{MortalityForecast}
-#' method and the Compositional Data model (CoDa-LC) is that the former fits and 
+#' method and the Oeppen model is that the former fits and 
 #' forecasts the death rates (mx) while the latter is based on the life table 
 #' death distribution (dx). 
 #' \insertCite{@See @oeppen2008 and @bergeron2017;textual}{MortalityForecast} 
@@ -31,8 +37,8 @@
 #' y  <- 1980:2014
 #' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' 
-#' # Fit CoDa-LC model
-#' M <- fit_Oeppen(dx, x, y)
+#' # Fit model
+#' M <- model_Oeppen(dx, x, y)
 #' M
 #' R <- residuals(M)
 #' 
@@ -46,7 +52,7 @@
 #' plot(R, plotType = "colourmap")
 #' plot(R, plotType = "signplot")
 #' @export
-fit_Oeppen <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
+model_Oeppen <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   input <- c(as.list(environment()))
   Oeppen.input.check(input)
   x <- x %||% 1:nrow(data)
@@ -81,8 +87,8 @@ fit_Oeppen <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   resid <- oD - fD
   dimnames(fD) = dimnames(resid) = dimnames(data) <- list(x, y)
   
-  modelLN <- "Compositional-Data Lee-Carter Mortality Model"
-  modelSN <- "CoDa-LC"
+  modelLN <- "Compositional-Data Lee-Carter Mortality Model -- Oeppen"
+  modelSN <- "Oeppen"
   modelF <- "clr d[x,t] = a[x] + b[x]k[t]"
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
@@ -95,7 +101,7 @@ fit_Oeppen <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
 
 
 #' Validate input values
-#' @param X A list with input arguments provided in \code{\link{fit_Oeppen}} function
+#' @param X A list with input arguments provided in \code{\link{model_Oeppen}} function
 #' @keywords internal
 Oeppen.input.check <- function(X) {
   # Validate the other arguments
@@ -130,7 +136,7 @@ Oeppen.input.check <- function(X) {
 
 
 # S3 ----------------------------------------------
-#' Residuals of the CoDa-LC Mortality Model
+#' Residuals of the Oeppen Mortality Model
 #' @param object An object of class \code{"Oeppen"}
 #' @inheritParams residuals_default
 #' @export
@@ -185,7 +191,7 @@ print.summary.Oeppen <- function(x, ...){
 
 
 
-#' Forecast the Age at Death Distribution using CoDa-LC model.
+#' Forecast the Age at Death Distribution using the Oeppen model.
 #' 
 #' @param object An object of class \code{Oeppen}.
 #' @param order A specification of the non-seasonal part of the ARIMA model: 
@@ -219,7 +225,7 @@ print.summary.Oeppen <- function(x, ...){
 #' x  <- 0:100
 #' y  <- 1980:2014
 #' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' M  <- fit_Oeppen(dx, x, y)
+#' M  <- model_Oeppen(dx, x, y)
 #' P  <- predict(M, h = 16)
 #' 
 #' plot(P, plotType = "mean")
@@ -285,7 +291,7 @@ predict.Oeppen <- function(object,
 
 
 #' Internal function
-#' @inheritParams fit_Oeppen
+#' @inheritParams model_Oeppen
 #' @inheritParams predict.Oeppen
 #' @param kt Estimated kt vector of parameters
 #' @param ax Estimated ax vector of parameters
@@ -362,12 +368,12 @@ arima.string1 <- function(object, padding = FALSE) {
 }
 
 
-#' ggplot the observed and fitted values of a CoDa-LC mortality model
+#' ggplot the observed and fitted values of an Oeppen model
 #' 
 #' @inherit plot.MEM details
 #' @inheritParams plot.MEM
 #' @examples 
-#' # For examples go to ?fit_Oeppen
+#' # For examples go to ?model_Oeppen
 #' @export
 plot.Oeppen <- function(x, plotType = c("fitted", "observed"), 
                            ny = 7, level = 80, ...){

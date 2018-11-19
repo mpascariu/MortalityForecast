@@ -1,3 +1,8 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Mon Nov 19 13:59:24 2018
+# --------------------------------------------------- #
 
 #' The Maximum-Entropy Mortality Model 
 #' 
@@ -31,7 +36,7 @@
 #' # Fit model the Maximum-Entropy Mortality of order 5,
 #' # that is using the first 6 statistical moments (moment 0 to 5).
 #' 
-#' M <- fit_MEM(data = dx, x = x, y = y, n = 5)
+#' M <- model_MEM(data = dx, x = x, y = y, n = 5)
 #' M
 #' R <- residuals(M)
 #' 
@@ -42,7 +47,7 @@
 #' plot(R, plotType = "colourmap")
 #' plot(R, plotType = "signplot")
 #' @export
-fit_MEM <- function(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...) {
+model_MEM <- function(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...) {
   input <- c(as.list(environment()))
 
   # Info
@@ -60,7 +65,7 @@ fit_MEM <- function(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...) {
   nMT <- log(abs(nM))
   sg  <- sign(nM)
   
-  V   <- fit_MRW(t(nMT), x = NULL, y, include.drift = TRUE)
+  V   <- model_MRW(t(nMT), x = NULL, y, include.drift = TRUE)
   fnM <- fnM <- t(exp(fitted(V)) * as.numeric(sg[1,]))       # fitted normalized moments
   frM <- convertMoments(fnM, from = "normalized", to = "raw") # fitted raw moments
   
@@ -81,7 +86,7 @@ fit_MEM <- function(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...) {
 
 
 #' Find age and year vectors
-#' @inheritParams fit_MEM
+#' @inheritParams model_MEM
 #' @keywords internal
 #' @export
 find_ages_and_years <- function(data, x, y) {
@@ -116,8 +121,8 @@ find_ages_and_years <- function(data, x, y) {
   return(out)
 }
 
-# S3 ----------------------------------------------
 
+# S3 ----------------------------------------------
 #' Residuals of the Maximum-Entropy Mortality Model 
 #' 
 #' Computed deviance residuals for a fitted Maximum-Entropy Mortality Model.
@@ -127,7 +132,7 @@ find_ages_and_years <- function(data, x, y) {
 #' x  <- 0:110
 #' y  <- 1965:2014
 #' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' M  <- fit_MEM(dx, x, y, n = 5)
+#' M  <- model_MEM(dx, x, y, n = 5)
 #' residuals(M)
 #' @export
 residuals.MEM <- function(object, ...) {
@@ -150,20 +155,20 @@ print.MEM <- function(x, ...) {
 
 #' Predict Maximum-Entropy Mortality Model
 #' 
-#' @param object An object of class \code{\link{fit_MEM}}.
+#' @param object An object of class \code{MEM};
 #' @param x.h Numerical vector indicating the ages to be considered in 
-#' reconstruction of the density over the forecast horizon. 
+#' reconstruction of the density over the forecast horizon.
 #' If \code{NULL}, the number of estimated data points is equal to the number 
 #' of fitted data points. This argument can be used for example to estimate a 
 #' density between 0 and 130 given the fact that the model was fitted on a 
 #' dataset containing values for 0-100 only.
 #' @inheritParams doForecasts
-#' @seealso \code{\link{fit_MEM}}
+#' @seealso \code{\link{model_MEM}}
 #' @examples
 #' x  <- 0:110
 #' y  <- 1985:2016
 #' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' M  <- fit_MEM(dx, x, y, n = 5)
+#' M  <- model_MEM(dx, x, y, n = 5)
 #' P  <- predict(M, h = 16, x.h = 0:120)
 #' 
 #' plot(P, plotType = "mean")

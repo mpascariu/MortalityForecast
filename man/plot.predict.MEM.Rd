@@ -11,7 +11,7 @@
 \arguments{
 \item{x}{An object of the class \code{\link{predict.MEM}}.}
 
-\item{y}{An object of the class \code{\link{fit_MEM}}. 
+\item{y}{An object of the class \code{\link{model_MEM}}. 
 Needed only for ploting moments. See \code{plotType}.}
 
 \item{plotType}{The type of the plot. The alternatives are 

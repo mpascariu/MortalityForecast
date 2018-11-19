@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_Oeppen.R
 \name{predict.Oeppen}
 \alias{predict.Oeppen}
-\title{Forecast the Age at Death Distribution using CoDa-LC model.}
+\title{Forecast the Age at Death Distribution using the Oeppen model.}
 \usage{
 \method{predict}{Oeppen}(object, h, order = NULL, include.drift = NULL,
   level = c(80, 95), jumpchoice = c("actual", "fit"), method = "ML",
@@ -53,14 +53,14 @@ The output is an object of class \code{"predict.Oeppen"} with the components:
  \item{info}{Short details about the model.}
 }
 \description{
-Forecast the Age at Death Distribution using CoDa-LC model.
+Forecast the Age at Death Distribution using the Oeppen model.
 }
 \examples{
 # Example 1 ----------------------
 x  <- 0:100
 y  <- 1980:2014
 dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-M  <- fit_Oeppen(dx, x, y)
+M  <- model_Oeppen(dx, x, y)
 P  <- predict(M, h = 16)
 
 plot(P, plotType = "mean")

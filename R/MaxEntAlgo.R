@@ -12,7 +12,7 @@
 #' on the right-hand side. In the case of age-at-death distribution, \code{omega} 
 #' should be an old age; otherwise the MaxEnt might fail to converge. 
 #' Numeric scalar.
-#' @inheritParams fit_MEM
+#' @inheritParams model_MEM
 #' @return An object with the estimated densities.
 #' @author Adam Lenart and Marius D. Pascariu.
 #' @references \insertAllCited{}

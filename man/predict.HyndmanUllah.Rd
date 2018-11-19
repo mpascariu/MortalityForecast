@@ -48,12 +48,12 @@ x  <- 0:89
 y  <- 1985:2014
 mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
 
-M <- fit_HyndmanUllah(data = mx, x = x, y = y) # fit
+M <- model_HyndmanUllah(data = mx, x = x, y = y) # fit
 P <- predict(M, h = 20)  # forecast
 P
 }
 \seealso{
-\code{\link{fit_HyndmanUllah}}
+\code{\link{model_HyndmanUllah}}
 }
 \author{
 Marius D. Pascariu and Marie-Pier Bergeron-Boucher

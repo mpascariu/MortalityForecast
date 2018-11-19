@@ -1,4 +1,8 @@
-# Fri Aug 24 12:35:23 2018 --------- Marius D. Pascariu ---
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Mon Nov 19 14:14:07 2018
+# --------------------------------------------------- #
 
 
 #' ggplot the observed and fitted values of a Maximum-Entropy Mortality Model 
@@ -11,9 +15,9 @@
 #' Default: 80.
 #' @details Note: the output is a ggplot2 object. Therefore, one can add or 
 #' modify the components of the figure.
-#' @seealso \code{\link{fit_MEM}}
+#' @seealso \code{\link{model_MEM}}
 #' @examples 
-#' # For examples go to ?fit_MEM
+#' # For examples go to ?model_MEM
 #' @export   
 plot.MEM <- function(x, plotType = c("fitted", "observed"), 
                                     ny = 7, level = 80, ...) 
@@ -36,7 +40,7 @@ plot.MEM <- function(x, plotType = c("fitted", "observed"),
 #' Plot Convergence in Age at Death Distribution
 #' 
 #' @inheritParams fitted2dens
-#' @inheritParams fit_MEM
+#' @inheritParams model_MEM
 #' @keywords internal
 ggplotDistribConvergence <- function(mat, x, y, ny, level) {
   dx = ..quantile.. <- NULL # hack CRAN note
@@ -73,7 +77,7 @@ ggplotDistribConvergence <- function(mat, x, y, ny, level) {
 #' x  <- 0:110
 #' y  <- 1965:2014
 #' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' M  <- fit_MEM(dx, x, y, n = 5)
+#' M  <- model_MEM(dx, x, y, n = 5)
 #' fitted2dens(fitted(M), x, y[-1])
 #' @keywords internal
 #' @export
@@ -106,7 +110,7 @@ fitted2dens <- function(mat, x, y, ny = 7, lx0 = 300) {
 #' ggplot the predicted values of a Maximum-Entropy Mortality Model
 #' 
 #' @param x An object of the class \code{\link{predict.MEM}}.
-#' @param y An object of the class \code{\link{fit_MEM}}. 
+#' @param y An object of the class \code{\link{model_MEM}}. 
 #' Needed only for ploting moments. See \code{plotType}.
 #' @param plotType The type of the plot. The alternatives are 
 #' \code{"mean", "lower", "upper", "raw_moments", "normalised_moments", "scaled_moments"}. 

@@ -29,8 +29,8 @@ Note: the output is a ggplot2 object. Therefore, one can add or
 modify the components of the figure.
 }
 \examples{
-# For examples go to ?fit_MEM
+# For examples go to ?model_MEM
 }
 \seealso{
-\code{\link{fit_MEM}}
+\code{\link{model_MEM}}
 }

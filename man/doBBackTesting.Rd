@@ -49,7 +49,7 @@ dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 
 BB <- doBBackTesting(data = dx, x, y,
                      data.in = "dx", 
-                     models = c("MRWD", "LeeCarter", "HyndmanUllah"),
+                     models = c("MRWD", "HyndmanUllah"),
                      strategy = c(20, 20, 3))
 
 A <- evalAccuracy(BB, data.out = "ex")
