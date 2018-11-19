@@ -19,7 +19,7 @@
 #'  \item{fitted.raw.moments}{Fitted raw moments;}
 #'  \item{observed.raw.moments}{Observed raw moments of the input data;}
 #'  \item{residuals}{Deviance residuals;} 
-#'  \item{VAR}{Object containing the components of the fitted time 
+#'  \item{random.walk.model}{Object containing the components of the fitted time 
 #'  series model to the extrapolate moments;}
 #'  \item{x}{Vector of ages used in the fitting;} 
 #'  \item{y}{Vector of years used in the fitting.} 
@@ -79,7 +79,7 @@ model_MEM <- function(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...) {
   out <- list(input = input, info = info, call = match.call(),
               fitted.values = fD, observed.values = oD, coefficients = coef(V),
               residuals = res, fitted.raw.moments = frM, observed.raw.moments = orM, 
-              VAR = V, x = x, y = y)
+              random.walk.model = V, x = x, y = y)
   out <- structure(class = 'MEM', out)
   return(out)
 }
@@ -186,7 +186,7 @@ predict.MEM <- function(object, h, x.h = NULL, level = 95,
   x.h <- x.h %||% object$x
   
   # Predict ts model
-  W <- predict(object$VAR, h, level)
+  W <- predict(object$random.walk.model, h, level)
   L <- W$conf.intervals
   L$mean <- W$predicted.values
   frM <- object$fitted.raw.moments
@@ -212,7 +212,7 @@ predict.MEM <- function(object, h, x.h = NULL, level = 95,
   out <- list(call = match.call(),
               predicted.values = px[[N]], 
               predicted.raw.moments = rM[[N]], 
-              conf.intervals = CI, VAR = W, x = x.h, y = y.h, 
+              conf.intervals = CI, random.walk.model = W, x = x.h, y = y.h, 
               info = object$info)
   out <- structure(class = 'predict.MEM', out)
   return(out)

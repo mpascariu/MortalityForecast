@@ -62,6 +62,13 @@ model_Oeppen <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   data[data == 0] <- vsn              # replace zero's with a vsn
   data <- convertFx(x, data, from = "dx", to = "dx", lx0 = 1)
   
+  # Info
+  modelLN <- "Compositional-Data Lee-Carter Mortality Model -- Oeppen"
+  modelSN <- "Oeppen"
+  modelF <- "clr d[x,t] = a[x] + b[x]k[t]"
+  info <- list(name = modelLN, name.short = modelSN, formula = modelF)
+  
+  # Estimate model parameters: a[x], b[x], k[t]
   close.dx  <- unclass(acomp(t(data)))      # data close
   ax        <- geometricmeanCol(close.dx) # geometric mean
   close.ax  <- ax/sum(ax)
@@ -69,16 +76,20 @@ model_Oeppen <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   close.dxc <- dxc/rowSums(dxc)
   clr_dxc   <- clr(close.dxc) # clr
   
-  # SVD: bx and kt
   par <- svd(clr_dxc, nu = 1, nv = 1)
   U   <- par$u
   V   <- par$v
   S   <- diag(par$d)
   bx  <- V[, 1]
   kt  <- S[1, 1] * U[, 1]
+  cf  <- list(ax = as.numeric(close.ax), 
+              bx = as.numeric(bx), 
+              kt = as.numeric(kt))
   
-  var <- cumsum((par$d)^2/sum((par$d)^2)) # variability
-  cf  <- list(ax = as.numeric(close.ax), bx = as.numeric(bx), kt = as.numeric(kt))
+  # Variability
+  var <- cumsum((par$d)^2/sum((par$d)^2))
+  
+  # Compute fitted values and devinace residuals based on the estimated model
   clr.proj.fit <- matrix(kt, ncol = 1) %*% bx # projections
   BK.proj.fit  <- unclass(clrInv(clr.proj.fit)) # Inv clr
   proj.fit     <- sweep(BK.proj.fit, 2, close.ax, FUN = "*") # add geometric mean
@@ -87,11 +98,7 @@ model_Oeppen <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   resid <- oD - fD
   dimnames(fD) = dimnames(resid) = dimnames(data) <- list(x, y)
   
-  modelLN <- "Compositional-Data Lee-Carter Mortality Model -- Oeppen"
-  modelSN <- "Oeppen"
-  modelF <- "clr d[x,t] = a[x] + b[x]k[t]"
-  info <- list(name = modelLN, name.short = modelSN, formula = modelF)
-  
+  # Exit
   out <- list(input = input, info = info, call = match.call(), 
               fitted.values = fD, observed.values = oD,
               coefficients = cf, residuals = resid, x = x, y = y)

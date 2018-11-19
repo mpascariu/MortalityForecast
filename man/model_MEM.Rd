@@ -35,7 +35,7 @@ the components:
  \item{fitted.raw.moments}{Fitted raw moments;}
  \item{observed.raw.moments}{Observed raw moments of the input data;}
  \item{residuals}{Deviance residuals;} 
- \item{VAR}{Object containing the components of the fitted time 
+ \item{random.walk.model}{Object containing the components of the fitted time 
  series model to the extrapolate moments;}
  \item{x}{Vector of ages used in the fitting;} 
  \item{y}{Vector of years used in the fitting.}
