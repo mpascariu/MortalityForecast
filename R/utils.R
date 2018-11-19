@@ -145,6 +145,37 @@ replace_value_zero <- function(mx, radix = 1e5) {
   return(out)
 }
 
+
+#' Identify ARIMA model - internal function
+#' @param object An object generate by Arima function
+#' @param padding Logical.
+#' @keywords internal
+arima.string1 <- function(object, padding = FALSE) {
+  order  <- object$arma[c(1, 6, 2, 3, 7, 4, 5)]
+  nc     <- names(coef(object))
+  result <- paste0("ARIMA(", order[1], ",", order[2], ",", order[3], ")")
+  
+  if (order[7] > 1 & sum(order[4:6]) > 0) 
+    result <- paste0(result, "(", order[4], ",", order[5], 
+                     ",", order[6], ")[", order[7], "]")
+  if (!is.null(object$xreg)) {
+    if (NCOL(object$xreg) == 1 & is.element("drift", nc)) 
+      result <- paste(result, "with drift        ")
+    else result <- paste("Regression with", result, "errors")
+  }
+  else {
+    if (is.element("constant", nc) | is.element("intercept", nc)) 
+      result <- paste(result, "with non-zero mean")
+    else if (order[2] == 0 & order[5] == 0) 
+      result <- paste(result, "with zero mean    ")
+    else result <- paste(result, "                  ")
+  }
+  if (!padding) 
+    result <- gsub("[ ]*$", "", result)
+  return(result)
+}
+
+
 # S3 - default ---------------------------------
 
 #' Print function for mortality models

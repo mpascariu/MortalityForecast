@@ -101,9 +101,7 @@ predict.LeeCarter <- function(object,
                                jumpchoice = c("actual", "fit"),
                                method = "ML",
                                verbose = TRUE, ...){
-  # Data
-  mx <- t(object$input$data)
-  
+
   # Timeline
   bop <- max(object$y) + 1
   eop <- bop + h - 1
@@ -160,7 +158,6 @@ get_mx_values <- function(object, kt, jumpchoice, y, LL_adjustment = 0){
   
   C  <- coef(object)
   OV <- object$observed.values
-  # FV <- object$fitted.values
   
   if (is.data.frame(kt)) {
     pred <- list()

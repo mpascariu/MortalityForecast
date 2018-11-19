@@ -69,28 +69,26 @@ model_Oeppen <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Estimate model parameters: a[x], b[x], k[t]
-  close.dx  <- unclass(acomp(t(data)))      # data close
+  close.dx  <- unclass(acomp(t(data)))    # data close
   ax        <- geometricmeanCol(close.dx) # geometric mean
   close.ax  <- ax/sum(ax)
-  dxc       <- sweep(close.dx, 2, close.ax, "/") # centering
-  close.dxc <- dxc/rowSums(dxc)
-  clr_dxc   <- clr(close.dxc) # clr
   
-  par <- svd(clr_dxc, nu = 1, nv = 1)
-  U   <- par$u
-  V   <- par$v
-  S   <- diag(par$d)
-  bx  <- V[, 1]
-  kt  <- S[1, 1] * U[, 1]
-  cf  <- list(ax = as.numeric(close.ax), 
-              bx = as.numeric(bx), 
-              kt = as.numeric(kt))
+  cdx       <- sweep(close.dx, 2, close.ax, "/") # centering
+  close.cdx <- cdx/rowSums(cdx)
+  ccdx      <- clr(close.cdx) # clr
+  
+  S  <- svd(ccdx, nu = 1, nv = 1)
+  bx <- S$v[, 1]
+  kt <- diag(S$d)[1, 1] * S$u[, 1]
+  cf <- list(ax = as.numeric(close.ax), 
+             bx = as.numeric(bx), 
+             kt = as.numeric(kt))
   
   # Variability
-  var <- cumsum((par$d)^2/sum((par$d)^2))
+  var <- cumsum((S$d)^2/sum((S$d)^2))
   
   # Compute fitted values and devinace residuals based on the estimated model
-  clr.proj.fit <- matrix(kt, ncol = 1) %*% bx # projections
+  clr.proj.fit <- matrix(kt, ncol = 1) %*% bx   # projections
   BK.proj.fit  <- unclass(clrInv(clr.proj.fit)) # Inv clr
   proj.fit     <- sweep(BK.proj.fit, 2, close.ax, FUN = "*") # add geometric mean
   fD    <- t(proj.fit/rowSums(proj.fit))
@@ -248,7 +246,7 @@ print.summary.Oeppen <- function(x, ...){
 #' # Example 3 ----------------------
 #' # Compute life tables using forecast values using the MortalityLaws R package
 #' library(MortalityLaws)
-#' dx <- P$predicted.values$mean
+#' dx <- P$predicted.values
 #' lt <- LifeTable(x = P$x, dx = dx)
 #' }
 #' @export
@@ -260,12 +258,10 @@ predict.Oeppen <- function(object,
                            jumpchoice = c("actual", "fit"), 
                            method = "ML", 
                            verbose = TRUE, ...){
-  
-  dx  <- t(object$input$data)
+  # Timeline
   bop <- max(object$y) + 1
   eop <- bop + h - 1
   fcy <- bop:eop
-  jc  <- jumpchoice[1]
   
   # Identify the k[t] ARIMA order
   C <- coef(object)
@@ -283,12 +279,18 @@ predict.Oeppen <- function(object,
   Cnames <- c('mean', paste0('L', level), paste0('U', level))
   colnames(fkt) <- Cnames
   
-  fdx <- compute_dx(dx = dx, kt = fkt, ax = C$ax, bx = C$bx, # forecast dx
-                    fit = t(fitted(object)), y = fcy, jumpchoice = jc)
+  # Get forecast d[x] based on k[t] extrapolation 
+  # Here we are also adjusting for the jump-off
+  fdx <- get_dx_values(object = object, 
+                       kt = fkt, 
+                       y = fcy, 
+                       jumpchoice = match.arg(jumpchoice))
+  
   pv <- fdx[[1]]
   CI <- fdx[-1]
   names(CI) <- Cnames[-1]
   
+  # Exit
   out <- list(call = match.call(), predicted.values = pv,
               kt.arima = kt.arima, kt = fkt, 
               conf.intervals = CI, x = object$x, y = fcy, info = object$info)
@@ -301,30 +303,35 @@ predict.Oeppen <- function(object,
 #' @inheritParams model_Oeppen
 #' @inheritParams predict.Oeppen
 #' @param kt Estimated kt vector of parameters
-#' @param ax Estimated ax vector of parameters
-#' @param bx Estimated bx vector of parameters
-#' @param fit Fitted values
 #' @keywords internal
-compute_dx <- function(dx, kt, ax, bx, fit, y, jumpchoice) {
+get_dx_values <- function(object, kt, jumpchoice, y) {
+  
+  C  <- coef(object)
+  OV <- t(object$observed.values)
+  FV <- t(fitted(object))
   
   if (is.data.frame(kt)) {
     pred <- list()
     for (i in 1:ncol(kt)) {
-      pred[[i]] <- compute_dx(dx, kt = kt[, i], ax, bx, fit, y, jumpchoice)
-      colnames(pred[[i]]) <- y
+      pred[[i]] <- get_dx_values(object, kt = kt[, i], jumpchoice, y)
     }
+    names(pred) <- colnames(kt)
     return(pred)
     
   } else {
-    dx_nrow  <- nrow(dx)
-    close.dx <- acomp(dx)
-    jump_off <- as.numeric(close.dx[dx_nrow, ]/fit[dx_nrow, ])
-    clr_proj <- matrix(kt, ncol = 1) %*% bx
+    clr_proj <- matrix(kt, ncol = 1) %*% C$bx
     bk_      <- unclass(clrInv(clr_proj))
-    dx_      <- sweep(bk_, 2, ax, FUN = "*")
-    if (jumpchoice == 'actual') dx_ <- sweep(dx_, 2, jump_off, FUN = "*")
+    dx_      <- sweep(bk_, 2, C$ax, FUN = "*")
+    
+    if (jumpchoice == 'actual') {
+      close.dx <- acomp(OV)
+      N  <- nrow(OV)
+      jump_off <- as.numeric(close.dx[N, ]/FV[N, ])
+      dx_ <- sweep(dx_, 2, jump_off, FUN = "*")
+    }
+    
     out <- t(dx_/rowSums(dx_))
-    rownames(out) <- colnames(dx)
+    dimnames(out) <- list(colnames(OV), y)
     return(out)
   }
 } 
@@ -342,36 +349,6 @@ print.predict.Oeppen <- function(x, ...) {
   print_predict_default(x, ...)
   cat('k[t]-ARIMA method:', arima.string1(x$kt.arima, padding = TRUE))
   cat('\n')
-}
-
-
-#' Identify ARIMA model - internal function
-#' @param object An object generate by Arima function
-#' @param padding Logical.
-#' @keywords internal
-arima.string1 <- function(object, padding = FALSE) {
-  order  <- object$arma[c(1, 6, 2, 3, 7, 4, 5)]
-  nc     <- names(coef(object))
-  result <- paste0("ARIMA(", order[1], ",", order[2], ",", order[3], ")")
-  
-  if (order[7] > 1 & sum(order[4:6]) > 0) 
-    result <- paste0(result, "(", order[4], ",", order[5], 
-                     ",", order[6], ")[", order[7], "]")
-  if (!is.null(object$xreg)) {
-    if (NCOL(object$xreg) == 1 & is.element("drift", nc)) 
-      result <- paste(result, "with drift        ")
-    else result <- paste("Regression with", result, "errors")
-  }
-  else {
-    if (is.element("constant", nc) | is.element("intercept", nc)) 
-      result <- paste(result, "with non-zero mean")
-    else if (order[2] == 0 & order[5] == 0) 
-      result <- paste(result, "with zero mean    ")
-    else result <- paste(result, "                  ")
-  }
-  if (!padding) 
-    result <- gsub("[ ]*$", "", result)
-  return(result)
 }
 
 

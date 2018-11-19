@@ -76,7 +76,7 @@ P2 <- predict(M, h = 20, order = c(0,1,0), include.drift = TRUE, jumpchoice = "f
 # Example 3 ----------------------
 # Compute life tables using forecast values using the MortalityLaws R package
 library(MortalityLaws)
-dx <- P$predicted.values$mean
+dx <- P$predicted.values
 lt <- LifeTable(x = P$x, dx = dx)
 }
 }
