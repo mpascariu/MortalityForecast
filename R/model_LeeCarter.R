@@ -151,10 +151,10 @@ predict.LeeCarter <- function(object,
 #' provided.
 #' @inheritParams predict.LeeCarter 
 #' @inheritParams model_LeeCarter
-#' @param kt Estimated kt vector of parameters in the Lee-Carter model;
-#' @param LL_adjustment Adjustment to be used in the Li-Lee model.
+#' @param kt Estimated kt vector of parameters in the model;
+#' @param adj Adjustment to be used in the Li-Lee model only.
 #' @keywords internal
-get_mx_values <- function(object, kt, jumpchoice, y, LL_adjustment = 0){
+get_mx_values <- function(object, kt, jumpchoice, y, adj = 0){
   
   C  <- coef(object)
   OV <- object$observed.values
@@ -162,20 +162,19 @@ get_mx_values <- function(object, kt, jumpchoice, y, LL_adjustment = 0){
   if (is.data.frame(kt)) {
     pred <- list()
     for (i in 1:ncol(kt)) {
-      pred[[i]] <- get_mx_values(object, kt = kt[, i], jumpchoice, y, 
-                                 LL_adjustment)
+      pred[[i]] <- get_mx_values(object, kt = kt[, i], jumpchoice, y, adj)
     }
     names(pred) <- colnames(kt)
     return(pred)
     
   } else {
-    pv  <- matrix(kt, ncol = 1) %*% C$bx + LL_adjustment
-    pv  <- sweep(pv, 2, C$ax, FUN = "+")
+    pv <- matrix(kt, ncol = 1) %*% C$bx + adj
+    pv <- sweep(pv, 2, C$ax, FUN = "+")
     pv <- t(exp(pv))
     
     if (jumpchoice == 'actual') {
-      N   <- ncol(OV)
-      J   <- as.numeric(OV[, N]/pv[, 1]) # jump_off (%)
+      N  <- ncol(OV)
+      J  <- as.numeric(OV[, N]/pv[, 1]) # jump_off (%)
       pv <- sweep(pv, 1, J, FUN = "*")
     }
     

@@ -125,7 +125,8 @@ predict.LiLee <- function(object,
   fmx <- get_mx_values(object = object,
                        kt = fkt, 
                        jumpchoice = match.arg(jumpchoice), 
-                       y = fcy, LL_adjustment = t(B.cmx))
+                       y = fcy, 
+                       adj = t(B.cmx))
   pv <- fmx[[1]]
   CI <- fmx[-1]
   

@@ -2,14 +2,14 @@
 % Please edit documentation in R/model_Oeppen.R
 \name{get_dx_values}
 \alias{get_dx_values}
-\title{Internal function}
+\title{#' Get d[x] values based on k[t] forecast}
 \usage{
-get_dx_values(object, kt, jumpchoice, y)
+get_dx_values(object, kt, jumpchoice, y, adj = 1)
 }
 \arguments{
-\item{object}{An object of class \code{Oeppen}.}
+\item{object}{An object of class \code{LeeCarter}.}
 
-\item{kt}{Estimated kt vector of parameters}
+\item{kt}{Estimated kt vector of parameters in the model;}
 
 \item{jumpchoice}{Method used for computation of jumpchoice. 
 Possibilities: \code{"actual"} (use actual rates from final year) 
@@ -18,13 +18,9 @@ and \code{"fit"} (use fitted rates).}
 \item{y}{Numerical vector indicating the years in input \code{data}. Optional.
 Default: \code{NULL}.}
 
-\item{ax}{Estimated ax vector of parameters}
-
-\item{bx}{Estimated bx vector of parameters}
-
-\item{fit}{Fitted values}
+\item{adj}{Adjustment to be used in the Li-Lee model only.}
 }
 \description{
-Internal function
+#' Get d[x] values based on k[t] forecast
 }
 \keyword{internal}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_Oeppen.R
 \name{model_Oeppen}
 \alias{model_Oeppen}
-\title{The Oeppen Mortality Model (Oeppen -- CoDa)}
+\title{The Oeppen Mortality Model (Oeppen -- Codxa)}
 \usage{
 model_Oeppen(data, x = NULL, y = NULL, verbose = TRUE, ...)
 }

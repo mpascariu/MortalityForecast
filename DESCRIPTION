@@ -1,7 +1,7 @@
 Package: MortalityForecast
 Type: Package
 Title: Standard Tools to Compare and Evaluate Mortality Forecasting Methods
-Version: 0.6.4
+Version: 0.6.5
 Authors@R: c(
   person("Marius D.", "Pascariu", role = c("aut", "cre", "cph"), email = "rpascariu@outlook.com"),
   person("Marie-Pier", "Bergeron-Boucher", role = "ctb"),

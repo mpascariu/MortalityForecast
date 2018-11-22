@@ -4,7 +4,7 @@
 # Last update: Mon Nov 19 14:16:15 2018
 # --------------------------------------------------- #
 
-#' The Oeppen Mortality Model (Oeppen -- CoDa)
+#' The Oeppen Mortality Model (Oeppen -- Codxa)
 #' 
 #' Fit the Oeppen model for forecasting the life table 
 #' distribution of deaths. This is a Lee-Carter type model adapted to a 
@@ -65,40 +65,35 @@ model_Oeppen <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   # Info
   modelLN <- "Compositional-Data Lee-Carter Mortality Model -- Oeppen"
   modelSN <- "Oeppen"
-  modelF <- "clr d[x,t] = a[x] + b[x]k[t]"
+  modelF  <- "clr d[x,t] = a[x] + b[x]k[t]"
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Estimate model parameters: a[x], b[x], k[t]
-  close.dx  <- unclass(acomp(t(data)))    # data close
-  ax        <- geometricmeanCol(close.dx) # geometric mean
-  close.ax  <- ax/sum(ax)
+  dx  <- t(data)
+  ax  <- apply(dx, 2, mean) # general dx pattern
+  ax  <- ax/sum(ax)
+  cdx <- sweep(acomp(dx), 2, ax, FUN = "-") # remove ax
+  ccdx <- clr(acomp(cdx)) # Centered log ratio transform
   
-  cdx       <- sweep(close.dx, 2, close.ax, "/") # centering
-  close.cdx <- cdx/rowSums(cdx)
-  ccdx      <- clr(close.cdx) # clr
-  
-  S  <- svd(ccdx, nu = 1, nv = 1)
-  bx <- S$v[, 1]
-  kt <- diag(S$d)[1, 1] * S$u[, 1]
-  cf <- list(ax = as.numeric(close.ax), 
-             bx = as.numeric(bx), 
-             kt = as.numeric(kt))
+  S  <- svd(ccdx) # Singular Value Decomposition of a Matrix
+  kt <- S$d[1] * S$u[, 1]
+  bx <- S$v[,1]
+  cf <- list(ax = as.numeric(ax), bx = as.numeric(bx), kt = as.numeric(kt))
   
   # Variability
   var <- cumsum((S$d)^2/sum((S$d)^2))
   
   # Compute fitted values and devinace residuals based on the estimated model
-  clr.proj.fit <- matrix(kt, ncol = 1) %*% bx   # projections
-  BK.proj.fit  <- unclass(clrInv(clr.proj.fit)) # Inv clr
-  proj.fit     <- sweep(BK.proj.fit, 2, close.ax, FUN = "*") # add geometric mean
-  fD    <- t(proj.fit/rowSums(proj.fit))
-  oD    <- apply(data, 2, FUN = function(x) x/sum(x)) # observed dx - same scale as fitted dx
-  resid <- oD - fD
-  dimnames(fD) = dimnames(resid) = dimnames(data) <- list(x, y)
+  fv  <- clrInv(c(kt) %*% t(bx)) # Inverse clr
+  fv  <- sweep(fv, 2, ax, FUN = "+")
+  fdx <- unclass(t(fv/rowSums(fv)))
+  odx <- apply(data, 2, FUN = function(x) x/sum(x)) # observed dx - same scale as fitted dx
+  resid <- odx - fdx
+  dimnames(fdx) = dimnames(resid) = dimnames(data) <- list(x, y)
   
   # Exit
   out <- list(input = input, info = info, call = match.call(), 
-              fitted.values = fD, observed.values = oD,
+              fitted.values = fdx, observed.values = odx,
               coefficients = cf, residuals = resid, x = x, y = y)
   out <- structure(class = 'Oeppen', out)
   return(out)
@@ -122,77 +117,24 @@ Oeppen.input.check <- function(X) {
            call. = F)
     }
     if (any(is.na(data))) {
-      stop("'data' contains NA values", call. = F)
+      stop("'data' contains NA values", call. = FALSE)
     }
     if (any(is.na(y))) {
-      stop("'y' contains NA values", call. = F)
+      stop("'y' contains NA values", call. = FALSE)
     }
     if (any(is.na(x))) {
-      stop("'x' contains NA values", call. = F)
+      stop("'x' contains NA values", call. = FALSE)
     }
     if ((!is.null(x)) & dim(data)[1] != length(x)) {
-      stop("The length of 'x' is not equal to the number or rows in 'data'.", call. = F)
+      stop("The length of 'x' is not equal to the number or rows in 'data'.", 
+           call. = FALSE)
     }
     if ((!is.null(y)) & dim(data)[2] != length(y)) {
-      stop("The length of 'y' is not equal to the number or columns in 'data'.", call. = F)
+      stop("The length of 'y' is not equal to the number or columns in 'data'.", 
+           call. = FALSE)
     }
   })
 }
-
-
-# S3 ----------------------------------------------
-#' Residuals of the Oeppen Mortality Model
-#' @param object An object of class \code{"Oeppen"}
-#' @inheritParams residuals_default
-#' @export
-residuals.Oeppen <- function(object, ...){
-  residuals_default(object, ...)
-}
-
-
-#' Print Oeppen
-#' @param x An object of class \code{"Oeppen"}
-#' @inheritParams print_default
-#' @keywords internal
-#' @export
-print.Oeppen <- function(x, ...) {
-  print_default(x, ...)
-}
-
-
-#' Summary Oeppen
-#' @param object An object of class \code{"Oeppen"}.
-#' @inheritParams print.Oeppen
-#' @keywords internal
-#' @export
-summary.Oeppen <- function(object, ...) {
-  axbx <- data.frame(ax = object$coefficients$ax, 
-                     bx = object$coefficients$bx,
-                     row.names = object$x)
-  kt <- data.frame(kt = object$coefficients$kt)
-  out = structure(class = 'summary.Oeppen', 
-                  list(A = axbx, K = kt, call = object$call, info = object$info,
-                       y = object$y, x_ = object$x))
-  return(out)
-}
-
-
-#' Print summary.Oeppen
-#' @param x An object of class \code{"summary.Oeppen"}.
-#' @inheritParams print.Oeppen
-#' @keywords internal
-#' @export
-print.summary.Oeppen <- function(x, ...){
-  cat('\nFit  :', x$info$name)
-  cat('\nModel:', x$info$formula)
-  cat('\n\nCoefficients:\n')
-  A <- head_tail(x$A, digits = 5, hlength = 6, tlength = 6)
-  K <- head_tail(data.frame(. = '|', y = as.integer(x$y), kt = x$K),
-                 digits = 5, hlength = 6, tlength = 6)
-  print(data.frame(A, K))
-  cat('\n')
-}
-
 
 
 
@@ -258,6 +200,8 @@ predict.Oeppen <- function(object,
                            jumpchoice = c("actual", "fit"), 
                            method = "ML", 
                            verbose = TRUE, ...){
+  jumpchoice <- match.arg(jumpchoice)
+  
   # Timeline
   bop <- max(object$y) + 1
   eop <- bop + h - 1
@@ -284,7 +228,8 @@ predict.Oeppen <- function(object,
   fdx <- get_dx_values(object = object, 
                        kt = fkt, 
                        y = fcy, 
-                       jumpchoice = match.arg(jumpchoice))
+                       jumpchoice = jumpchoice,
+                       adj = 1)
   
   pv <- fdx[[1]]
   CI <- fdx[-1]
@@ -299,12 +244,10 @@ predict.Oeppen <- function(object,
 }
 
 
-#' Internal function
-#' @inheritParams model_Oeppen
-#' @inheritParams predict.Oeppen
-#' @param kt Estimated kt vector of parameters
+#' #' Get d[x] values based on k[t] forecast
+#' @inheritParams get_mx_values
 #' @keywords internal
-get_dx_values <- function(object, kt, jumpchoice, y) {
+get_dx_values <- function(object, kt, jumpchoice, y, adj = 1) {
   
   C  <- coef(object)
   OV <- t(object$observed.values)
@@ -319,18 +262,17 @@ get_dx_values <- function(object, kt, jumpchoice, y) {
     return(pred)
     
   } else {
-    clr_proj <- matrix(kt, ncol = 1) %*% C$bx
-    bk_      <- unclass(clrInv(clr_proj))
-    dx_      <- sweep(bk_, 2, C$ax, FUN = "*")
+    pv  <- clrInv(c(kt) %*% t(C$bx)) + adj
+    pdx <- sweep(pv, 2, C$ax, FUN = "+") # predicted dx values
+    pdx <- unclass(pdx/rowSums(pdx))
     
     if (jumpchoice == 'actual') {
-      close.dx <- acomp(OV)
       N  <- nrow(OV)
-      jump_off <- as.numeric(close.dx[N, ]/FV[N, ])
-      dx_ <- sweep(dx_, 2, jump_off, FUN = "*")
+      jump_off <- as.numeric(OV[N, ]/FV[N, ])
+      pdx <- sweep(pdx, 2, jump_off, FUN = "*")
     }
     
-    out <- t(dx_/rowSums(dx_))
+    out <- unclass(t(pdx/rowSums(pdx)))
     dimnames(out) <- list(colnames(OV), y)
     return(out)
   }
@@ -338,6 +280,58 @@ get_dx_values <- function(object, kt, jumpchoice, y) {
 
 
 # S3 ----------------------------------------------
+
+#' Residuals of the Oeppen Mortality Model
+#' @param object An object of class \code{"Oeppen"}
+#' @inheritParams residuals_default
+#' @export
+residuals.Oeppen <- function(object, ...){
+  residuals_default(object, ...)
+}
+
+
+#' Print Oeppen
+#' @param x An object of class \code{"Oeppen"}
+#' @inheritParams print_default
+#' @keywords internal
+#' @export
+print.Oeppen <- function(x, ...) {
+  print_default(x, ...)
+}
+
+
+#' Summary Oeppen
+#' @param object An object of class \code{"Oeppen"}.
+#' @inheritParams print.Oeppen
+#' @keywords internal
+#' @export
+summary.Oeppen <- function(object, ...) {
+  axbx <- data.frame(ax = object$coefficients$ax, 
+                     bx = object$coefficients$bx,
+                     row.names = object$x)
+  kt <- data.frame(kt = object$coefficients$kt)
+  out = structure(class = 'summary.Oeppen', 
+                  list(A = axbx, K = kt, call = object$call, info = object$info,
+                       y = object$y, x_ = object$x))
+  return(out)
+}
+
+
+#' Print summary.Oeppen
+#' @param x An object of class \code{"summary.Oeppen"}.
+#' @inheritParams print.Oeppen
+#' @keywords internal
+#' @export
+print.summary.Oeppen <- function(x, ...){
+  cat('\nFit  :', x$info$name)
+  cat('\nModel:', x$info$formula)
+  cat('\n\nCoefficients:\n')
+  A <- head_tail(x$A, digits = 5, hlength = 6, tlength = 6)
+  K <- head_tail(data.frame(. = '|', y = as.integer(x$y), kt = x$K),
+                 digits = 5, hlength = 6, tlength = 6)
+  print(data.frame(A, K))
+  cat('\n')
+}
 
 
 #' Print predict.Oeppen
