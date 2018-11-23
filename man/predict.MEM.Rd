@@ -30,6 +30,22 @@ the process that take place inside the function and avoid progress messages.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }
+\value{
+The output is a list with the components:
+ \item{call}{An unevaluated function call, that is, an unevaluated 
+ expression which consists of the named function applied to the given 
+ arguments;}
+ \item{info}{Short details about the model;}
+ \item{predicted.values}{A list containing the predicted d[x] values given 
+ by the estimated model over the forecast horizon \code{h};}
+ \item{conf.intervals}{Confidence intervals for the predcted values;}
+ \item{predicted.raw.moments}{Predicted raw moments over the forecast horizon 
+ \code{h};}
+ \item{random.walk.model}{The estimated multivariate Random Walk model used 
+ in the extrapolation of the moments;} 
+ \item{x}{Vector of ages used in prediction;} 
+ \item{y}{Vector of years used in prediction.}
+}
 \description{
 Predict Maximum-Entropy Mortality Model
 }

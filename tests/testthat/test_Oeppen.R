@@ -54,7 +54,7 @@ testCodaPred <- function(P){
     expect_true(all(round(colSums(P$conf.intervals$U80), vsn) == 1))
     expect_true(all(round(colSums(P$conf.intervals$U95), vsn) == 1))
     expect_equal(length(P$y), ncol(P$predicted.values))
-    expect_equal(nrow(P$kt), ncol(P$predicted.values))
+    expect_equal(nrow(P$kt) - 1, ncol(P$predicted.values))
   })
 }
 

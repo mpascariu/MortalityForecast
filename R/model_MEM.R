@@ -10,9 +10,11 @@
 #' @inheritParams doMortalityModels
 #' @return The output is an object of class \code{MEM} with 
 #' the components:
-#'  \item{input}{List with arguments provided in input. Saved for convenience.}
+#'  \item{input}{List with arguments provided in input. Saved for convenience;}
+#'  \item{info}{Short details about the model;}
 #'  \item{call}{An unevaluated function call, that is, an unevaluated 
-#'  expression which consists of the named function applied to the given arguments;}
+#'  expression which consists of the named function applied to the given 
+#'  arguments;}
 #'  \item{coefficients}{Estimated coefficients;}
 #'  \item{fitted.values}{Fitted values of the estimated model;}
 #'  \item{observed.values}{Observed values used in fitting;}
@@ -76,10 +78,18 @@ model_MEM <- function(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...) {
   dimnames(oD) = dimnames(fD) = dimnames(res) = list(x = x, y = y)
   
   # Exit
-  out <- list(input = input, info = info, call = match.call(),
-              fitted.values = fD, observed.values = oD, coefficients = coef(V),
-              residuals = res, fitted.raw.moments = frM, observed.raw.moments = orM, 
-              random.walk.model = V, x = x, y = y)
+  out <- list(input = input, 
+              info = info, 
+              call = match.call(),
+              coefficients = coef(V),
+              fitted.values = fD, 
+              observed.values = oD, 
+              residuals = res, 
+              fitted.raw.moments = frM, 
+              observed.raw.moments = orM, 
+              random.walk.model = V, 
+              x = x, 
+              y = y)
   out <- structure(class = 'MEM', out)
   return(out)
 }
@@ -163,6 +173,20 @@ print.MEM <- function(x, ...) {
 #' density between 0 and 130 given the fact that the model was fitted on a 
 #' dataset containing values for 0-100 only.
 #' @inheritParams doForecasts
+#' @return The output is a list with the components:
+#'  \item{call}{An unevaluated function call, that is, an unevaluated 
+#'  expression which consists of the named function applied to the given 
+#'  arguments;}
+#'  \item{info}{Short details about the model;}
+#'  \item{predicted.values}{A list containing the predicted d[x] values given 
+#'  by the estimated model over the forecast horizon \code{h};}
+#'  \item{conf.intervals}{Confidence intervals for the predcted values;}
+#'  \item{predicted.raw.moments}{Predicted raw moments over the forecast horizon 
+#'  \code{h};}
+#'  \item{random.walk.model}{The estimated multivariate Random Walk model used 
+#'  in the extrapolation of the moments;} 
+#'  \item{x}{Vector of ages used in prediction;} 
+#'  \item{y}{Vector of years used in prediction.}
 #' @seealso \code{\link{model_MEM}}
 #' @examples
 #' x  <- 0:110
@@ -210,10 +234,13 @@ predict.MEM <- function(object, h, x.h = NULL, level = 95,
   N <- length(px)
   CI  <- list(predicted.values = px[-N], predicted.raw.moments = rM[-N])
   out <- list(call = match.call(),
+              info = object$info,
               predicted.values = px[[N]], 
+              conf.intervals = CI, 
               predicted.raw.moments = rM[[N]], 
-              conf.intervals = CI, random.walk.model = W, x = x.h, y = y.h, 
-              info = object$info)
+              random.walk.model = W, 
+              x = x.h, 
+              y = y.h)
   out <- structure(class = 'predict.MEM', out)
   return(out)
 }

@@ -1,10 +1,11 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Mon Nov 19 14:16:15 2018
+# Last update: Fri Nov 23 16:47:29 2018
 # --------------------------------------------------- #
 
-#' The Oeppen Mortality Model (Oeppen -- Codxa)
+
+#' The Oeppen Mortality Model (Oeppen -- CoDa)
 #' 
 #' Fit the Oeppen model for forecasting the life table 
 #' distribution of deaths. This is a Lee-Carter type model adapted to a 
@@ -17,20 +18,24 @@
 #' for a detail description and mathematical formulation.
 #' 
 #' @inheritParams doMortalityModels 
-#' @return The output is an object of class \code{Oeppen} with the components:
-#'  \item{input}{List with arguments provided in input. Saved for convenience.}
+#' @return The output is a list with the components:
+#'  \item{input}{List with arguments provided in input. Saved for convenience;}
+#'  \item{info}{Short details about the model;}
 #'  \item{call}{An unevaluated function call, that is, an unevaluated 
-#'  expression which consists of the named function applied to the given arguments.}
-#'  \item{coefficients}{Estimated coefficients.}
-#'  \item{fitted.values}{Fitted values of the estimated CoDa model.}
-#'  \item{residuals}{Deviance residuals.} 
-#'  \item{x}{Vector of ages used in the fitting.} 
+#'  expression which consists of the named function applied to the given 
+#'  arguments;}
+#'  \item{coefficients}{Estimated coefficients;}
+#'  \item{fitted.values}{Fitted values of the estimated model;}
+#'  \item{observed.values}{The observed values used in fitting arranged in the 
+#'  same format as the fitted.values;}
+#'  \item{residuals}{Deviance residuals;} 
+#'  \item{x}{Vector of ages used in the fitting;} 
 #'  \item{y}{Vector of years used in the fitting.} 
 #' @seealso 
 #' \code{\link{predict.Oeppen}}
 #' \code{\link{plot.Oeppen}}
 #' @references \insertAllCited{}
-#' @author Marius D. Pascariu, Marie-Pier Bergeron-Boucher and Jim Oeppen 
+#' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
 #' @examples
 #' # Data
 #' x  <- 0:100
@@ -92,9 +97,15 @@ model_Oeppen <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   dimnames(fdx) = dimnames(resid) = dimnames(data) <- list(x, y)
   
   # Exit
-  out <- list(input = input, info = info, call = match.call(), 
-              fitted.values = fdx, observed.values = odx,
-              coefficients = cf, residuals = resid, x = x, y = y)
+  out <- list(input = input, 
+              info = info, 
+              call = match.call(), 
+              coefficients = cf, 
+              fitted.values = fdx, 
+              observed.values = odx,
+              residuals = resid, 
+              x = x, 
+              y = y)
   out <- structure(class = 'Oeppen', out)
   return(out)
 }
@@ -145,28 +156,28 @@ Oeppen.input.check <- function(X) {
 #'  the three components (p, d, q) are the AR order, the degree of differencing, 
 #'  and the MA order. If \code{order = NULL}, the ARIMA order will be estimated 
 #'  automatically using the KPPS algorithm.
-#' @param include.drift Logical. Should the ARIMA model include a linear drift term?
-#'  If \code{include.drift = NULL}, the model will be estimated automatically.
-#' @param method ARIMA fitting method: maximum likelihood or minimize conditional 
-#'  sum-of-squares. Options to use: conditional-sum-of-squares (\code{"CSS-ML"}), 
-#'  maximum likelihood (\code{"ML"}) and \code{"CSS"}.
+#' @param include.drift Logical. Should the ARIMA model include a linear drift 
+#' term? If \code{include.drift = NULL}, the model will be estimated 
+#' automatically.
+#' @param method ARIMA fitting method: maximum likelihood or minimize 
+#' conditional sum-of-squares. Options to use: conditional-sum-of-squares 
+#' (\code{"CSS-ML"}), maximum likelihood (\code{"ML"}) and \code{"CSS"}.
 #' @param ... Additional arguments to be passed to \code{\link[forecast]{Arima}}
 #' @inheritParams doForecasts
-#' @return The output is an object of class \code{"predict.Oeppen"} with the components:
+#' @return The output is a list with the components:
 #'  \item{call}{An unevaluated function call, that is, an unevaluated 
-#'  expression which consists of the named function applied to the given arguments;}
-#'  \item{predicted.values}{A list containing the predicted values together
-#'  with the associated prediction intervals given by the estimated 
-#'  model over the forecast horizon \code{h};}
+#'  expression which consists of the named function applied to the given 
+#'  arguments;}
+#'  \item{info}{Short details about the model;}
+#'  \item{kt}{The extrapolated values of the \code{kt} parameters;}
 #'  \item{kt.arima}{An object of class \code{ARIMA} that contains all the
 #'  components of the fitted time series model used in \code{kt} prediction;} 
-#'  \item{kt}{The extrapolated \code{kt} parameters;}
-#'  \item{conf.intervals}{Confidence intervals for the extrapolated \code{kt} 
-#'  parameters;}
+#'  \item{predicted.values}{A list containing the predicted values given by 
+#'  the estimated model over the forecast horizon \code{h};}
+#'  \item{conf.intervals}{Confidence intervals for the predicted values;}
 #'  \item{x}{Vector of ages used in prediction;} 
-#'  \item{y}{Vector of years used in prediction;}
-#'  \item{info}{Short details about the model.}
-#' @author Marius D. Pascariu, Marie-Pier Bergeron-Boucher and Jim Oeppen 
+#'  \item{y}{Vector of years used in prediction.}
+#' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
 #' @examples 
 #' # Example 1 ----------------------
 #' x  <- 0:100
@@ -182,7 +193,10 @@ Oeppen.input.check <- function(X) {
 #' #' # Example 2 ----------------------
 #' # One can specify manually the ARIMA order, a drift to be included or not 
 #' # and the jump choice of the first forecast year.
-#' P2 <- predict(M, h = 20, order = c(0,1,0), include.drift = TRUE, jumpchoice = "fit")
+#' P2 <- predict(M, h = 20, 
+#'               order = c(0,1,0), 
+#'               include.drift = TRUE, 
+#'               jumpchoice = "fit")
 #' 
 #' \dontrun{
 #' # Example 3 ----------------------
@@ -200,7 +214,6 @@ predict.Oeppen <- function(object,
                            jumpchoice = c("actual", "fit"), 
                            method = "ML", 
                            verbose = TRUE, ...){
-  jumpchoice <- match.arg(jumpchoice)
   
   # Timeline
   bop <- max(object$y) + 1
@@ -218,65 +231,77 @@ predict.Oeppen <- function(object,
                               method = method)
   
   # Forecast k[t] using the time-series model
-  tsf <- forecast(kt.arima, h = h, level = level)  # time series forecast
+  tsf <- forecast(kt.arima, h = h + 1, level = level)  # time series forecast
   fkt <- data.frame(tsf$mean, tsf$lower, tsf$upper) # forecast kt
   Cnames <- c('mean', paste0('L', level), paste0('U', level))
-  colnames(fkt) <- Cnames
+  dimnames(fkt) <- list(c(0, fcy), Cnames)
   
   # Get forecast d[x] based on k[t] extrapolation 
   # Here we are also adjusting for the jump-off
-  fdx <- get_dx_values(object = object, 
-                       kt = fkt, 
-                       y = fcy, 
-                       jumpchoice = jumpchoice,
-                       adj = 1)
-  
-  pv <- fdx[[1]]
-  CI <- fdx[-1]
-  names(CI) <- Cnames[-1]
+  J <- match.arg(jumpchoice)
+  d <- get_dx_values(object = object, 
+                     jumpchoice = J,
+                     y = fcy, 
+                     kt = fkt, 
+                     B.kt = NULL)
   
   # Exit
-  out <- list(call = match.call(), predicted.values = pv,
-              kt.arima = kt.arima, kt = fkt, 
-              conf.intervals = CI, x = object$x, y = fcy, info = object$info)
+  out <- list(call = match.call(), 
+              info = object$info,
+              kt = fkt, 
+              kt.arima = kt.arima, 
+              predicted.values = d[[1]],
+              conf.intervals = d[-1], 
+              x = object$x, 
+              y = fcy)
   out <- structure(class = 'predict.Oeppen', out)
   return(out)
 }
 
 
-#' #' Get d[x] values based on k[t] forecast
+#' #' Get d[x] values and confidence intervals based on k[t] forecast
 #' @inheritParams get_mx_values
+#' @param B.kt The forecast k[t] values of the benchmark model.
 #' @keywords internal
-get_dx_values <- function(object, kt, jumpchoice, y, adj = 1) {
+get_dx_values <- function(object, jumpchoice, y, kt, B.kt = NULL) {
   
   C  <- coef(object)
   OV <- t(object$observed.values)
-  FV <- t(fitted(object))
+  N  <- nrow(OV)
+  P  <- NULL
   
-  if (is.data.frame(kt)) {
-    pred <- list()
-    for (i in 1:ncol(kt)) {
-      pred[[i]] <- get_dx_values(object, kt = kt[, i], jumpchoice, y)
+  for (i in 1:ncol(kt)) {
+    
+    # This is used only in OeppenC model, and it is basically the trend 
+    # given by the benchmark population
+    if (is.null(B.kt)) { 
+      B.cdx <- 1
+    } else {
+      B.bx <- coef(object$B.model)$bx
+      B.cdx <- clrInv(c(B.kt[, i]) %*% t(B.bx))
     }
-    names(pred) <- colnames(kt)
-    return(pred)
     
-  } else {
-    pv  <- clrInv(c(kt) %*% t(C$bx)) + adj
-    pdx <- sweep(pv, 2, C$ax, FUN = "+") # predicted dx values
-    pdx <- unclass(pdx/rowSums(pdx))
+    # Compute predicted d[x] values
+    p <- clrInv(c(kt[, i]) %*% t(C$bx)) + B.cdx
+    p <- sweep(p, 2, C$ax, FUN = "+") # predicted dx values
+    p <- unclass(p/rowSums(p))
     
+    # Adjust d[x] for jump-off if needed
     if (jumpchoice == 'actual') {
-      N  <- nrow(OV)
-      jump_off <- as.numeric(OV[N, ]/FV[N, ])
-      pdx <- sweep(pdx, 2, jump_off, FUN = "*")
+      J <- as.numeric(OV[N, ]/p[1, ])
+      p <- sweep(p, 2, J, FUN = "*")
+      p <- unclass(p/rowSums(p))
     }
     
-    out <- unclass(t(pdx/rowSums(pdx)))
-    dimnames(out) <- list(colnames(OV), y)
-    return(out)
+    p <- p[-1, ]
+    dimnames(p) <- list(y, colnames(OV))
+    P[[i]] <- t(p)
+    remove(p)
   }
-} 
+  
+  names(P) <- colnames(kt)
+  return(P)
+}
 
 
 # S3 ----------------------------------------------

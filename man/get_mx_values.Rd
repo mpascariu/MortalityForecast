@@ -2,17 +2,15 @@
 % Please edit documentation in R/model_LeeCarter.R
 \name{get_mx_values}
 \alias{get_mx_values}
-\title{Get m[x] values based on k[t] forecast
+\title{Get m[x] values and confidence intervals based on k[t] forecast
 In this function we compute the m[x] values based on the extrapolation of
 the k[t] time-series. If necesary an adjustment for the jump-off is 
 provided.}
 \usage{
-get_mx_values(object, kt, jumpchoice, y, adj = 0)
+get_mx_values(object, jumpchoice, y, kt, B.kt = NULL)
 }
 \arguments{
 \item{object}{An object of class \code{LeeCarter}.}
-
-\item{kt}{Estimated kt vector of parameters in the model;}
 
 \item{jumpchoice}{Method used for computation of jumpchoice. 
 Possibilities: \code{"actual"} (use actual rates from final year) 
@@ -21,10 +19,12 @@ and \code{"fit"} (use fitted rates).}
 \item{y}{Numerical vector indicating the years in input \code{data}. Optional.
 Default: \code{NULL}.}
 
-\item{adj}{Adjustment to be used in the Li-Lee model only.}
+\item{kt}{Predicted k[t] values in the model;}
+
+\item{B.kt}{Predicted k[t] values of the benchmark model, used in the Li-Lee model only.}
 }
 \description{
-Get m[x] values based on k[t] forecast
+Get m[x] values and confidence intervals based on k[t] forecast
 In this function we compute the m[x] values based on the extrapolation of
 the k[t] time-series. If necesary an adjustment for the jump-off is 
 provided.

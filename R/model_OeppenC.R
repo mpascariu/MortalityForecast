@@ -1,16 +1,33 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Thu Nov 22 13:31:36 2018
+# Last update: Fri Nov 23 16:47:19 2018
 # --------------------------------------------------- #
 
 
 #' The Coherent Oeppen Mortality Model (Oeppen-C)
 #' 
 #' @inheritParams model_Oeppen
-#' @param B.data A list containing multiple matrices with mortality data 
-#' to be used as benchmark. Format: ages \code{x} as row and time \code{y} 
-#' as column.
+#' @param B.data A data.frame or a matrix containing mortality data for the 
+#' benchmark population with ages. Must be the same format as in \code{data}; 
+#' @return The output is a list with the components:
+#'  \item{input}{List with arguments provided in input. Saved for convenience;}
+#'  \item{info}{Short details about the model;}
+#'  \item{call}{An unevaluated function call, that is, an unevaluated 
+#'  expression which consists of the named function applied to the given 
+#'  arguments;}
+#'  \item{coefficients}{Estimated coefficients;}
+#'  \item{fitted.values}{Fitted values of the estimated model;}
+#'  \item{observed.values}{The observed values used in fitting arranged in the 
+#'  same format as the fitted.values;}
+#'  \item{residuals}{Deviance residuals;} 
+#'  \item{x}{Vector of ages used in the fitting;} 
+#'  \item{y}{Vector of years used in the fitting;} 
+#'  \item{benchmark}{An object of class \code{LeeCarter} containing the fitted
+#'  model for the benchmark population.} 
+#' @seealso 
+#' \code{\link{predict.Oeppen}}
+#' \code{\link{plot.Oeppen}}
 #' @export
 model_OeppenC <- function(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...){
   input <- c(as.list(environment()))
@@ -49,19 +66,24 @@ model_OeppenC <- function(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...)
   var <- cumsum((S$d)^2/sum((S$d)^2))
   
   # Compute fitted values and devinace residuals based on the estimated model
-  fv  <- clrInv(c(kt) %*% t(bx)) # Inverse clr
-  fv  <- fv + B.cdx 
+  fv  <- clrInv(c(kt) %*% t(bx)) + B.cdx # Inverse clr
   fv  <- sweep(fv, 2, ax, FUN = "+")
   fdx <- unclass(t(fv/rowSums(fv)))
-  odx <- apply(data, 2, FUN = function(x) x/sum(x)) # observed dx - same scale as fitted dx
+  odx <- apply(data, 2, FUN = function(x) x/sum(x)) # observed dx - same scale
   resid <- odx - fdx
   dimnames(fdx) = dimnames(resid) = dimnames(data) <- list(x, y)
   
   # Exit
-  out <- list(input = input, info = info, call = match.call(), 
-              fitted.values = fdx, observed.values = odx,
-              coefficients = cf, residuals = resid, x = x, y = y,
-              B.model = B)
+  out <- list(input = input, 
+              info = info, 
+              call = match.call(), 
+              coefficients = cf, 
+              fitted.values = fdx, 
+              observed.values = odx,
+              residuals = resid, 
+              x = x, 
+              y = y,
+              benchmark = B)
   out <- structure(class = 'OeppenC', out)
   return(out)
 }
@@ -71,7 +93,23 @@ model_OeppenC <- function(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...)
 #' #' Forecast the Age at Death Distribution using the Coherent Oeppen model
 #' @param object An object of class \code{Oeppen}.
 #' @inheritParams predict.Oeppen
-#' @inherit predict.Oeppen return
+#' @return The output is a list with the components:
+#'  \item{call}{An unevaluated function call, that is, an unevaluated 
+#'  expression which consists of the named function applied to the given 
+#'  arguments;}
+#'  \item{predicted.values}{A list containing the predicted values together
+#'  with the associated prediction intervals given by the estimated 
+#'  model over the forecast horizon \code{h};}
+#'  \item{conf.intervals}{Confidence intervals for the extrapolated \code{kt} 
+#'  parameters;}
+#'  \item{kt.arima}{An object of class \code{ARIMA} that contains all the
+#'  components of the fitted time series model used in \code{kt} prediction;} 
+#'  \item{kt}{The extrapolated \code{kt} parameters;}
+#'  \item{x}{Vector of ages used in prediction;} 
+#'  \item{y}{Vector of years used in prediction;}
+#'  \item{info}{Short details about the model;}
+#'  \item{benchmark}{An object containing the predicted results for the 
+#'  benchmark population.}
 #' @export
 predict.OeppenC <- function(object,
                             h,
@@ -81,13 +119,11 @@ predict.OeppenC <- function(object,
                             jumpchoice = c("actual", "fit"),
                             method = "ML",
                             verbose = TRUE, ...){
-  jumpchoice <- match.arg(jumpchoice)
   
   # Benchmark Oeppen forecast
-  B <- object$B.model
+  B <- object$benchmark
   B.pred <- predict(object = B, h, order, include.drift, level, 
                     jumpchoice, method, verbose = FALSE)
-  B.cdx <- clrInv(c(B.pred$kt$mean) %*% t(coef(B)$bx))
   
   # Timeline
   bop <- max(object$y) + 1
@@ -105,28 +141,29 @@ predict.OeppenC <- function(object,
                               method = method)
   
   # Forecast k[t] using the time-series model
-  tsf <- forecast(kt.arima, h = h, level = level)  # time series forecast
+  tsf <- forecast(kt.arima, h = h + 1, level = level)  # time series forecast
   fkt <- data.frame(tsf$mean, tsf$lower, tsf$upper) # forecast kt
   Cnames <- c('mean', paste0('L', level), paste0('U', level))
-  colnames(fkt) <- Cnames
+  dimnames(fkt) <- list(c(0, fcy), Cnames)
   
   # Get forecast d[x] based on k[t] extrapolation 
   # Here we are also adjusting for the jump-off
-  fdx <- get_dx_values(object = object, 
-                       kt = fkt, 
-                       y = fcy, 
-                       jumpchoice = jumpchoice,
-                       adj = B.cdx)
-  
-  pv <- fdx
-  # pv <- fdx[[1]]
-  # CI <- fdx[-1]
-  # names(CI) <- Cnames[-1]
+  J <- match.arg(jumpchoice)
+  d <- get_dx_values(object = object, 
+                     jumpchoice = J,
+                     y = fcy, 
+                     kt = fkt, 
+                     B.kt = B.pred$kt)
   
   # Exit
-  out <- list(call = match.call(), predicted.values = pv,
-              kt.arima = kt.arima, kt = fkt, 
-              conf.intervals = NULL, x = object$x, y = fcy, info = object$info,
+  out <- list(call = match.call(), 
+              info = object$info,
+              kt = fkt, 
+              kt.arima = kt.arima, 
+              predicted.values = d[[1]],
+              conf.intervals = d[-1], 
+              x = object$x, 
+              y = fcy, 
               benchmark = B.pred)
   out <- structure(class = 'predict.OeppenC', out)
   return(out)

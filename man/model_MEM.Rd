@@ -26,9 +26,11 @@ the process that take place inside the function and avoid progress messages.}
 \value{
 The output is an object of class \code{MEM} with 
 the components:
- \item{input}{List with arguments provided in input. Saved for convenience.}
+ \item{input}{List with arguments provided in input. Saved for convenience;}
+ \item{info}{Short details about the model;}
  \item{call}{An unevaluated function call, that is, an unevaluated 
- expression which consists of the named function applied to the given arguments;}
+ expression which consists of the named function applied to the given 
+ arguments;}
  \item{coefficients}{Estimated coefficients;}
  \item{fitted.values}{Fitted values of the estimated model;}
  \item{observed.values}{Observed values used in fitting;}

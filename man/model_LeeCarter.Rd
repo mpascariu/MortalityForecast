@@ -21,6 +21,21 @@ the process that take place inside the function and avoid progress messages.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }
+\value{
+The output is a list with the components:
+ \item{input}{List with arguments provided in input. Saved for convenience;}
+ \item{info}{Short details about the model;}
+ \item{call}{An unevaluated function call, that is, an unevaluated 
+ expression which consists of the named function applied to the given 
+ arguments;}
+ \item{coefficients}{Estimated coefficients;}
+ \item{fitted.values}{Fitted values of the estimated model;}
+ \item{observed.values}{The observed values used in fitting arranged in the 
+ same format as the fitted.values;}
+ \item{residuals}{Deviance residuals;} 
+ \item{x}{Vector of ages used in the fitting;} 
+ \item{y}{Vector of years used in the fitting.}
+}
 \description{
 Fit the Lee-Carter mortality model
 }

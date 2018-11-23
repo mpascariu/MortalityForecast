@@ -18,8 +18,9 @@ the three components (p, d, q) are the AR order, the degree of differencing,
 and the MA order. If \code{order = NULL}, the ARIMA order will be estimated 
 automatically using the KPPS algorithm.}
 
-\item{include.drift}{Logical. Should the ARIMA model include a linear drift term?
-If \code{include.drift = NULL}, the model will be estimated automatically.}
+\item{include.drift}{Logical. Should the ARIMA model include a linear drift 
+term? If \code{include.drift = NULL}, the model will be estimated 
+automatically.}
 
 \item{level}{Significance level of the confidence interval.}
 
@@ -27,9 +28,9 @@ If \code{include.drift = NULL}, the model will be estimated automatically.}
 Possibilities: \code{"actual"} (use actual rates from final year) 
 and \code{"fit"} (use fitted rates).}
 
-\item{method}{ARIMA fitting method: maximum likelihood or minimize conditional 
-sum-of-squares. Options to use: conditional-sum-of-squares (\code{"CSS-ML"}), 
-maximum likelihood (\code{"ML"}) and \code{"CSS"}.}
+\item{method}{ARIMA fitting method: maximum likelihood or minimize 
+conditional sum-of-squares. Options to use: conditional-sum-of-squares 
+(\code{"CSS-ML"}), maximum likelihood (\code{"ML"}) and \code{"CSS"}.}
 
 \item{verbose}{A logical value. Set \code{verbose = FALSE} to silent 
 the process that take place inside the function and avoid progress messages.}
@@ -37,20 +38,23 @@ the process that take place inside the function and avoid progress messages.}
 \item{...}{Additional arguments to be passed to \code{\link[forecast]{Arima}}}
 }
 \value{
-The output is an object of class \code{"predict.Oeppen"} with the components:
+The output is a list with the components:
  \item{call}{An unevaluated function call, that is, an unevaluated 
- expression which consists of the named function applied to the given arguments;}
+ expression which consists of the named function applied to the given 
+ arguments;}
  \item{predicted.values}{A list containing the predicted values together
  with the associated prediction intervals given by the estimated 
  model over the forecast horizon \code{h};}
+ \item{conf.intervals}{Confidence intervals for the extrapolated \code{kt} 
+ parameters;}
  \item{kt.arima}{An object of class \code{ARIMA} that contains all the
  components of the fitted time series model used in \code{kt} prediction;} 
  \item{kt}{The extrapolated \code{kt} parameters;}
- \item{conf.intervals}{Confidence intervals for the extrapolated \code{kt} 
- parameters;}
  \item{x}{Vector of ages used in prediction;} 
  \item{y}{Vector of years used in prediction;}
- \item{info}{Short details about the model.}
+ \item{info}{Short details about the model;}
+ \item{benchmark}{An object containing the predicted results for the 
+ benchmark population.}
 }
 \description{
 #' Forecast the Age at Death Distribution using the Coherent Oeppen model

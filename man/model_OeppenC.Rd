@@ -10,9 +10,8 @@ model_OeppenC(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...)
 \item{data}{A data.frame or a matrix containing mortality data 
 with ages \code{x} as row and time \code{y} as column.}
 
-\item{B.data}{A list containing multiple matrices with mortality data 
-to be used as benchmark. Format: ages \code{x} as row and time \code{y} 
-as column.}
+\item{B.data}{A data.frame or a matrix containing mortality data for the 
+benchmark population with ages. Must be the same format as in \code{data};}
 
 \item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
 Default: \code{NULL}.}
@@ -25,6 +24,27 @@ the process that take place inside the function and avoid progress messages.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }
+\value{
+The output is a list with the components:
+ \item{input}{List with arguments provided in input. Saved for convenience;}
+ \item{info}{Short details about the model;}
+ \item{call}{An unevaluated function call, that is, an unevaluated 
+ expression which consists of the named function applied to the given 
+ arguments;}
+ \item{coefficients}{Estimated coefficients;}
+ \item{fitted.values}{Fitted values of the estimated model;}
+ \item{observed.values}{The observed values used in fitting arranged in the 
+ same format as the fitted.values;}
+ \item{residuals}{Deviance residuals;} 
+ \item{x}{Vector of ages used in the fitting;} 
+ \item{y}{Vector of years used in the fitting;} 
+ \item{benchmark}{An object of class \code{LeeCarter} containing the fitted
+ model for the benchmark population.}
+}
 \description{
 The Coherent Oeppen Mortality Model (Oeppen-C)
+}
+\seealso{
+\code{\link{predict.Oeppen}}
+\code{\link{plot.Oeppen}}
 }

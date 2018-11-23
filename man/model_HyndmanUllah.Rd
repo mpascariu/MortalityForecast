@@ -22,21 +22,19 @@ Default: \code{NULL}.}
 \item{...}{Extra arguments passed to \code{\link[ftsa]{ftsm}}.}
 }
 \value{
-Object of class \dQuote{fdm} with the following components:
-\item{label}{Name of country}
-\item{age}{Ages from \code{data} object.}
-\item{year}{Years from \code{data} object.}
-\item{<series>}{Matrix of demographic data as contained in \code{data}. It takes the name given by the series argument.}
-\item{fitted}{Matrix of fitted values.}
-\item{residuals}{Residuals (difference between observed and fitted).}
-\item{basis}{Matrix of basis functions evaluated at each age level (one column for each basis function). The first column is the fitted mean.}
-\item{coeffs}{Matrix of coefficients (one column for each coefficient series). The first column are all ones.}
-\item{mean.se}{Standard errors for the estimated mean function.}
-\item{varprop}{Proportion of variation explained by each basis function.}
-\item{weights}{Weight associated with each time period.}
-\item{v}{Measure of variation for each time period.}
-\item{type}{Data type (mortality, fertility, etc.)}
-\item{y}{The data stored as a functional time series object.}
+The output is a list with the components:
+ \item{input}{List with arguments provided in input. Saved for convenience;}
+ \item{info}{Short details about the model;}
+ \item{call}{An unevaluated function call, that is, an unevaluated 
+ expression which consists of the named function applied to the given 
+ arguments;}
+ \item{coefficients}{Estimated coefficients;}
+ \item{fitted.values}{Fitted values of the estimated model;}
+ \item{observed.values}{The observed values used in fitting arranged in the 
+ same format as the fitted.values;}
+ \item{residuals}{Deviance residuals;} 
+ \item{x}{Vector of ages used in the fitting;} 
+ \item{y}{Vector of years used in the fitting.}
 }
 \description{
 The Functional Demographic Model

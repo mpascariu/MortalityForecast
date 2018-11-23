@@ -8,15 +8,14 @@
 #' 
 #' Fit the Li-Lee mortality model
 #' @inheritParams doMortalityModels
-#' @param benchmark A list containing multiple matrices with mortality data 
-#' to be used as benchmark. Format: ages \code{x} as row and time \code{y} as column.
+#' @inheritParams model_OeppenC
+#' @inherit model_OeppenC return
 #' @seealso 
 #' \code{\link{predict.LiLee}}
-#' \code{\link{model_LeeCarter}}
 #' @details \insertNoCite{li2005}{MortalityForecast}
 #' @references \insertAllCited{}
 #' @export
-model_LiLee <- function(data, benchmark, x = NULL, y = NULL, verbose = TRUE, ...){
+model_LiLee <- function(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...){
   input <- c(as.list(environment()))
   if (any(data == 0)) {
     stop("The input data contains death rates equal to zero at various ages.")
@@ -31,7 +30,7 @@ model_LiLee <- function(data, benchmark, x = NULL, y = NULL, verbose = TRUE, ...
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Fit benchmark model
-  B <- model_LeeCarter(data = benchmark, x = x, y = y)
+  B <- model_LeeCarter(data = B.data, x = x, y = y)
   B.cmx <- with(B$coefficients, c(bx) %*% t(kt))
   
   # Estimate model parameters: a[x], b[x], k[t]
@@ -54,10 +53,16 @@ model_LiLee <- function(data, benchmark, x = NULL, y = NULL, verbose = TRUE, ...
   resid <- data - fv # residuals
   
   # Exit
-  out <- list(input = input, info = info, call = match.call(), 
-              fitted.values = fv, observed.values = data,
-              coefficients = cf, residuals = resid, x = x, y = y,
-              benchmark.LeeCarter = B)
+  out <- list(input = input, 
+              info = info, 
+              call = match.call(), 
+              coefficients = cf, 
+              fitted.values = fv, 
+              observed.values = data,
+              residuals = resid, 
+              x = x, 
+              y = y,
+              benchmark = B)
   out <- structure(class = 'LiLee', out)
   return(out)
 }
@@ -66,18 +71,18 @@ model_LiLee <- function(data, benchmark, x = NULL, y = NULL, verbose = TRUE, ...
 #' Forecast age-specific death rates using the Li-Lee model
 #' @param object An object of class \code{LiLee}.
 #' @inheritParams predict.Oeppen
-#' @inherit predict.Oeppen return
+#' @inherit predict.OeppenC return
 #' @seealso 
 #' \code{\link{model_LiLee}}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
 #' @examples 
 #' # Data
-#' x  <- 0:89
-#' y  <- 1985:2014
+#' x <- 0:89
+#' y <- 1985:2014
 #' B.mx <- HMD_male$mx$USA[paste(x), paste(y)]
 #' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
 #' 
-#' M <- model_LiLee(data = mx, x = x, y = y, benchmark = B.mx) # fit
+#' M <- model_LiLee(data = mx, B.data = B.mx, x = x, y = y) # fit
 #' P <- predict(M, h = 20)  # forecast
 #' P
 #' @export
@@ -91,13 +96,9 @@ predict.LiLee <- function(object,
                           verbose = TRUE, ...){
   
   # Benchmark Lee-Carter forecast
-  B <- object$benchmark.LeeCarter
+  B <- object$benchmark
   B.pred <- predict(object = B, h, order, include.drift, level, 
                     jumpchoice, method, verbose = FALSE)
-  B.cmx <- coef(B)$bx %*% t(B.pred$kt$mean)
-  
-  # Data
-  mx <- t(object$input$data)
   
   # Timeline
   bop <- max(object$y) + 1
@@ -122,19 +123,23 @@ predict.LiLee <- function(object,
   
   # Get forecast m[x] based on k[t] extrapolation 
   # Here we are also adjusting for the jump-off
-  fmx <- get_mx_values(object = object,
-                       kt = fkt, 
-                       jumpchoice = match.arg(jumpchoice), 
-                       y = fcy, 
-                       adj = t(B.cmx))
-  pv <- fmx[[1]]
-  CI <- fmx[-1]
+  J <- match.arg(jumpchoice)
+  m <- get_mx_values(object = object,
+                     jumpchoice = J, 
+                     y = fcy, 
+                     kt = fkt, 
+                     B.kt = B.pred$kt)
   
   # Exit
-  out <- list(call = match.call(), predicted.values = pv, 
-              kt.arima = kt.arima, kt = fkt, 
-              conf.intervals = CI, x = object$x, y = fcy, info = object$info,
-              benchmark_LeeCarter = B.pred)
+  out <- list(call = match.call(), 
+              info = object$info,
+              kt = fkt, 
+              kt.arima = kt.arima, 
+              predicted.values = m[[1]], 
+              conf.intervals = m[-1], 
+              x = object$x, 
+              y = fcy, 
+              benchmark = B.pred)
   out <- structure(class = "predict.LiLee", out)
   return(out)
 }

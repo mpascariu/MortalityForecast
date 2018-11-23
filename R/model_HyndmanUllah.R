@@ -1,14 +1,15 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Mon Nov 19 13:58:45 2018
+# Last update: Fri Nov 23 17:43:11 2018
 # --------------------------------------------------- #
 
 
 #' The Functional Demographic Model
 #' @inheritParams doMortalityModels
 #' @inheritParams demography::fdm
-#' @inherit demography::fdm details return
+#' @inherit demography::fdm details
+#' @inherit model_Oeppen return
 #' @seealso 
 #' \code{\link{model_LeeCarter}}
 #' \code{\link{model_Oeppen}}
@@ -75,15 +76,13 @@ predict.HyndmanUllah <- function(object, h, level = 95,
   
   J <- match.arg(jumpchoice)
   P <- forecast(object$demography, h = h, jumpchoice = J, level = level)$rate
-  fmx <- P[c("mean", "lower", "upper")] # forecast mx
+  m <- P[c("mean", "lower", "upper")] # forecast mx
   Cnames <- c('mean', paste0('L', level), paste0('U', level))
-  names(fmx) <- Cnames
-  pv <- fmx[[1]]
-  CI <- fmx[-1]
+  names(m) <- Cnames
   
   # Exit
-  out <- list(call = match.call(), predicted.values = pv,
-              conf.intervals = CI, x = x, y = fcy, info = object$info)
+  out <- list(call = match.call(), predicted.values = m[[1]],
+              conf.intervals = m[-1], x = x, y = fcy, info = object$info)
   out <- structure(class = 'predict.HyndmanUllah', out)
   return(out)
 }

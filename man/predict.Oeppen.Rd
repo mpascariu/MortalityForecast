@@ -18,8 +18,9 @@ the three components (p, d, q) are the AR order, the degree of differencing,
 and the MA order. If \code{order = NULL}, the ARIMA order will be estimated 
 automatically using the KPPS algorithm.}
 
-\item{include.drift}{Logical. Should the ARIMA model include a linear drift term?
-If \code{include.drift = NULL}, the model will be estimated automatically.}
+\item{include.drift}{Logical. Should the ARIMA model include a linear drift 
+term? If \code{include.drift = NULL}, the model will be estimated 
+automatically.}
 
 \item{level}{Significance level of the confidence interval.}
 
@@ -27,9 +28,9 @@ If \code{include.drift = NULL}, the model will be estimated automatically.}
 Possibilities: \code{"actual"} (use actual rates from final year) 
 and \code{"fit"} (use fitted rates).}
 
-\item{method}{ARIMA fitting method: maximum likelihood or minimize conditional 
-sum-of-squares. Options to use: conditional-sum-of-squares (\code{"CSS-ML"}), 
-maximum likelihood (\code{"ML"}) and \code{"CSS"}.}
+\item{method}{ARIMA fitting method: maximum likelihood or minimize 
+conditional sum-of-squares. Options to use: conditional-sum-of-squares 
+(\code{"CSS-ML"}), maximum likelihood (\code{"ML"}) and \code{"CSS"}.}
 
 \item{verbose}{A logical value. Set \code{verbose = FALSE} to silent 
 the process that take place inside the function and avoid progress messages.}
@@ -37,20 +38,19 @@ the process that take place inside the function and avoid progress messages.}
 \item{...}{Additional arguments to be passed to \code{\link[forecast]{Arima}}}
 }
 \value{
-The output is an object of class \code{"predict.Oeppen"} with the components:
+The output is a list with the components:
  \item{call}{An unevaluated function call, that is, an unevaluated 
- expression which consists of the named function applied to the given arguments;}
- \item{predicted.values}{A list containing the predicted values together
- with the associated prediction intervals given by the estimated 
- model over the forecast horizon \code{h};}
+ expression which consists of the named function applied to the given 
+ arguments;}
+ \item{info}{Short details about the model;}
+ \item{kt}{The extrapolated values of the \code{kt} parameters;}
  \item{kt.arima}{An object of class \code{ARIMA} that contains all the
  components of the fitted time series model used in \code{kt} prediction;} 
- \item{kt}{The extrapolated \code{kt} parameters;}
- \item{conf.intervals}{Confidence intervals for the extrapolated \code{kt} 
- parameters;}
+ \item{predicted.values}{A list containing the predicted values given by 
+ the estimated model over the forecast horizon \code{h};}
+ \item{conf.intervals}{Confidence intervals for the predicted values;}
  \item{x}{Vector of ages used in prediction;} 
- \item{y}{Vector of years used in prediction;}
- \item{info}{Short details about the model.}
+ \item{y}{Vector of years used in prediction.}
 }
 \description{
 Forecast the Age at Death Distribution using the Oeppen model.
@@ -70,7 +70,10 @@ plot(P, plotType = "upper")
 #' # Example 2 ----------------------
 # One can specify manually the ARIMA order, a drift to be included or not 
 # and the jump choice of the first forecast year.
-P2 <- predict(M, h = 20, order = c(0,1,0), include.drift = TRUE, jumpchoice = "fit")
+P2 <- predict(M, h = 20, 
+              order = c(0,1,0), 
+              include.drift = TRUE, 
+              jumpchoice = "fit")
 
 \dontrun{
 # Example 3 ----------------------
@@ -81,5 +84,5 @@ lt <- LifeTable(x = P$x, dx = dx)
 }
 }
 \author{
-Marius D. Pascariu, Marie-Pier Bergeron-Boucher and Jim Oeppen
+Marius D. Pascariu and Marie-Pier Bergeron-Boucher
 }

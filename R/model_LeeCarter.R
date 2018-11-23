@@ -8,6 +8,7 @@
 #' 
 #' Fit the Lee-Carter mortality model
 #' @inheritParams doMortalityModels
+#' @inherit model_Oeppen return
 #' @seealso 
 #' \code{\link{predict.LeeCarter}}
 #' @details \insertNoCite{lee1992}{MortalityForecast}
@@ -67,9 +68,15 @@ model_LeeCarter <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   resid <- data - fv # residuals
   
   # Exit
-  out <- list(input = input, info = info, call = match.call(), 
-              fitted.values = fv, observed.values = data,
-              coefficients = cf, residuals = resid, x = x, y = y)
+  out <- list(input = input, 
+              info = info, 
+              call = match.call(), 
+              coefficients = cf, 
+              fitted.values = fv, 
+              observed.values = data,
+              residuals = resid, 
+              x = x, 
+              y = y)
   out <- structure(class = 'LeeCarter', out)
   return(out)
 }
@@ -129,60 +136,72 @@ predict.LeeCarter <- function(object,
   
   # Get forecast m[x] based on k[t] extrapolation 
   # Here we are also adjusting for the jump-off
-  fmx <- get_mx_values(object = object, 
-                       kt = fkt, 
-                       jumpchoice = match.arg(jumpchoice), 
-                       y = fcy)
-  pv <- fmx[[1]]
-  CI <- fmx[-1]
+  J <- match.arg(jumpchoice)
+  m <- get_mx_values(object = object, 
+                     kt = fkt, 
+                     jumpchoice = J, 
+                     y = fcy)
   
   # Exit
-  out <- list(call = match.call(), predicted.values = pv, 
-              kt.arima = kt.arima, kt = fkt, 
-              conf.intervals = CI, x = object$x, y = fcy, info = object$info)
+  out <- list(call = match.call(), 
+              info = object$info,
+              kt = fkt, 
+              kt.arima = kt.arima, 
+              predicted.values = m[[1]], 
+              conf.intervals = m[-1], 
+              x = object$x, 
+              y = fcy)
   out <- structure(class = 'predict.LeeCarter', out)
   return(out)
 }
 
 
-#' Get m[x] values based on k[t] forecast
+#' Get m[x] values and confidence intervals based on k[t] forecast
 #' In this function we compute the m[x] values based on the extrapolation of
 #' the k[t] time-series. If necesary an adjustment for the jump-off is 
 #' provided.
 #' @inheritParams predict.LeeCarter 
 #' @inheritParams model_LeeCarter
-#' @param kt Estimated kt vector of parameters in the model;
-#' @param adj Adjustment to be used in the Li-Lee model only.
+#' @param kt Predicted k[t] values in the model;
+#' @param B.kt Predicted k[t] values of the benchmark model, used in the Li-Lee model only.
 #' @keywords internal
-get_mx_values <- function(object, kt, jumpchoice, y, adj = 0){
+get_mx_values <- function(object, jumpchoice, y, kt, B.kt = NULL){
   
   C  <- coef(object)
   OV <- object$observed.values
-  
-  if (is.data.frame(kt)) {
-    pred <- list()
-    for (i in 1:ncol(kt)) {
-      pred[[i]] <- get_mx_values(object, kt = kt[, i], jumpchoice, y, adj)
+  N  <- ncol(OV)
+  P  <- NULL
+    
+  for (i in 1:ncol(kt)) {
+    
+    # This is used only in LiLee model, and it is basically the trend 
+    # given by the benchmark population
+    if (is.null(B.kt)) { 
+      B.cmx <- 0
+    } else {
+      B.bx <- coef(object$benchmark)$bx
+      B.cmx <- c(B.kt[, i]) %*% t(B.bx)
     }
-    names(pred) <- colnames(kt)
-    return(pred)
     
-  } else {
-    pv <- matrix(kt, ncol = 1) %*% C$bx + adj
-    pv <- sweep(pv, 2, C$ax, FUN = "+")
-    pv <- t(exp(pv))
+    # Compute predicted m[x] values
+    p <- c(kt[, i]) %*% t(C$bx) + B.cmx
+    p <- sweep(p, 2, C$ax, FUN = "+")
+    p <- t(exp(p))
     
+    # Here we adjust m[x] for jump-off if needed
     if (jumpchoice == 'actual') {
-      N  <- ncol(OV)
-      J  <- as.numeric(OV[, N]/pv[, 1]) # jump_off (%)
-      pv <- sweep(pv, 1, J, FUN = "*")
+      J <- as.numeric(OV[, N]/p[, 1]) # jump_off (%)
+      p <- sweep(p, 1, J, FUN = "*")
     }
     
-    out <- pv[, -1]
-    dimnames(out) <- list(rownames(OV), y)
-    
-    return(out)
+    p <- p[, -1]
+    dimnames(p) <- list(rownames(OV), y)
+    P[[i]] <- p
+    remove(p)
   }
+  
+  names(P) <- colnames(kt)
+  return(P)
 }
 
 

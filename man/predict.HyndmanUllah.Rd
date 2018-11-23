@@ -24,20 +24,19 @@ the process that take place inside the function and avoid progress messages.}
 \item{...}{Additional arguments to be passed to \code{\link[forecast]{Arima}}}
 }
 \value{
-The output is an object of class \code{"predict.Oeppen"} with the components:
+The output is a list with the components:
  \item{call}{An unevaluated function call, that is, an unevaluated 
- expression which consists of the named function applied to the given arguments;}
- \item{predicted.values}{A list containing the predicted values together
- with the associated prediction intervals given by the estimated 
- model over the forecast horizon \code{h};}
+ expression which consists of the named function applied to the given 
+ arguments;}
+ \item{info}{Short details about the model;}
+ \item{kt}{The extrapolated values of the \code{kt} parameters;}
  \item{kt.arima}{An object of class \code{ARIMA} that contains all the
  components of the fitted time series model used in \code{kt} prediction;} 
- \item{kt}{The extrapolated \code{kt} parameters;}
- \item{conf.intervals}{Confidence intervals for the extrapolated \code{kt} 
- parameters;}
+ \item{predicted.values}{A list containing the predicted values given by 
+ the estimated model over the forecast horizon \code{h};}
+ \item{conf.intervals}{Confidence intervals for the predicted values;}
  \item{x}{Vector of ages used in prediction;} 
- \item{y}{Vector of years used in prediction;}
- \item{info}{Short details about the model.}
+ \item{y}{Vector of years used in prediction.}
 }
 \description{
 Forecast age-specific death rates using the Hyndman-Ullah mortality model
