@@ -4,9 +4,17 @@
 \alias{predict.LiLee}
 \title{Forecast age-specific death rates using the Li-Lee model}
 \usage{
-\method{predict}{LiLee}(object, h, order = c(0, 1, 0),
-  include.drift = TRUE, level = c(80, 95), jumpchoice = c("actual",
-  "fit"), method = "ML", verbose = TRUE, ...)
+## S3 method for class 'LiLee'
+predict(object,
+        h,
+        order = c(1,0,0),
+        order.B = c(0,1,0),
+        include.drift = FALSE,
+        include.drift.B = TRUE,
+        level = c(80, 95),
+        jumpchoice = c("actual", "fit"),
+        method = "ML",
+        verbose = TRUE, ...)
 }
 \arguments{
 \item{object}{An object of class \code{LiLee}.}
@@ -18,9 +26,14 @@ the three components (p, d, q) are the AR order, the degree of differencing,
 and the MA order. If \code{order = NULL}, the ARIMA order will be estimated 
 automatically using the KPPS algorithm.}
 
+\item{order.B}{The ARIMA order for the benchmark population model;}
+
 \item{include.drift}{Logical. Should the ARIMA model include a linear drift 
 term? If \code{include.drift = NULL}, the model will be estimated 
 automatically.}
+
+\item{include.drift.B}{Logical. Should we include a linear drift 
+term in the ARIMA of benchmark population model?}
 
 \item{level}{Significance level of the confidence interval.}
 
@@ -66,7 +79,7 @@ y <- 1985:2014
 B.mx <- HMD_male$mx$USA[paste(x), paste(y)]
 mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
 
-M <- model_LiLee(data = mx, B.data = B.mx, x = x, y = y) # fit
+M <- model_LiLee(data = mx, data.B = B.mx, x = x, y = y) # fit
 P <- predict(M, h = 20)  # forecast
 P
 }

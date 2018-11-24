@@ -4,13 +4,13 @@
 \alias{model_OeppenC}
 \title{The Coherent Oeppen Mortality Model (Oeppen-C)}
 \usage{
-model_OeppenC(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...)
+model_OeppenC(data, data.B, x = NULL, y = NULL, verbose = TRUE, ...)
 }
 \arguments{
 \item{data}{A data.frame or a matrix containing mortality data 
 with ages \code{x} as row and time \code{y} as column.}
 
-\item{B.data}{A data.frame or a matrix containing mortality data for the 
+\item{data.B}{A data.frame or a matrix containing mortality data for the 
 benchmark population with ages. Must be the same format as in \code{data};}
 
 \item{x}{Numerical vector indicating the ages in input \code{data}. Optional.

@@ -1,8 +1,9 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Mon Nov 19 14:00:04 2018
+# Last update: Sat Nov 24 10:30:30 2018
 # --------------------------------------------------- #
+
 
 #' The Multivariate Random Walk Model
 #' 
@@ -19,16 +20,24 @@
 #' @param y Numerical vector indicating the years in input \code{data}.
 #' Optional. This is used to label the output tables and related plots.
 #' Default: \code{NULL}.
-#' @param include.drift Should the Random Walk model include a linear drift term? 
-#' Default: \code{TRUE}.
+#' @param include.drift Should the Random Walk model include a linear drift 
+#' term? Default: \code{TRUE}.
 #' @inheritParams doMortalityModels
 #' @return An object of class \code{MRW} with components:
-#'  \item{input}{A list with the input data.}
-#'  \item{drift}{A vector with the estimated drift.}
-#'  \item{sigma}{A matrix with the estimated variance covariance matrix.}
-#'  \item{fitted}{Fitted values.}
+#'  \item{input}{A list with the input data;}
+#'  \item{info}{Short details about the model;}
+#'  \item{call}{An unevaluated function call, that is, an unevaluated 
+#'  expression which consists of the named function applied to the given 
+#'  arguments;}
+#'  \item{coefficients}{A vector with the estimated drift parameters;}
+#'  \item{fitted.values}{Fitted values of the estimated model;}
+#'  \item{observed.values}{The observed values used in fitting arranged in the 
+#'  same format as the fitted.values;}
 #'  \item{residuals}{Residuals from the fitted model. That is 
-#'  observed minus fitted values.}
+#'  observed minus fitted values;}
+#'  \item{sigma}{A matrix with the estimated variance covariance matrix;}
+#'  \item{x}{Vector of ages used in fitting;} 
+#'  \item{y}{Vector of years used in fitting.} 
 #' @references \insertAllCited{}
 #' @source The original implementation of this function was taken from 
 #' \code{StMoMo} R package.
@@ -78,8 +87,16 @@ model_MRW <- function(data, x = NULL, y = NULL, include.drift = TRUE, ...) {
   dimnames(fit) <- dimnames(res) <- dimnames(data)
   
   # Exit
-  out <- list(input = input, info = info, call = call, drift = d, sigma = sigma, 
-              fitted = fit, residuals = res, x = x, y = y)
+  out <- list(input = input, 
+              info = info, 
+              call = call, 
+              coefficients = d, 
+              fitted.values = fit, 
+              observed.values = data, 
+              residuals = res, 
+              sigma = sigma, 
+              x = x, 
+              y = y)
   out <- structure(class = "MRW", out)  
   return(out)
 }
@@ -96,10 +113,15 @@ model_MRW <- function(data, x = NULL, y = NULL, include.drift = TRUE, ...) {
 #' @param object An object of class \code{MRW}.
 #' @inheritParams doForecasts
 #' @return An object of the class \code{predict.MRW} with components:
-#' \item{predicted.values}{data.frame with the central forecast.}
-#' \item{conf.intervals}{List with lower and upper limits for prediction intervals.}
-#' \item{x}{Numerical vector indicating the age classes in output.}
-#' \item{y}{Numerical vector indicating the years in output.}
+#'  \item{call}{An unevaluated function call, that is, an unevaluated 
+#'  expression which consists of the named function applied to the given 
+#'  arguments;}
+#'  \item{info}{Short details about the model;}
+#'  \item{predicted.values}{data.frame with the central forecast;}
+#'  \item{conf.intervals}{List with lower and upper limits for prediction 
+#'  intervals;}
+#'  \item{x}{Numerical vector indicating the age classes in output;}
+#'  \item{y}{Numerical vector indicating the years in output.}
 #' @source The original implementation of this function was taken from 
 #' \code{StMoMo} R package.
 #' @author Marius D. Pascariu
@@ -115,7 +137,7 @@ predict.MRW <- function(object, h = 10, level = c(80, 95), ...) {
   xf <- x
   yf <- max(y) + nn
   
-  mean <- data[, ny] + t(array(nn, c(h, nx))) * array(object$drift, c(nx, h))
+  mean <- data[, ny] + t(array(nn, c(h, nx))) * array(coef(object), c(nx, h))
   dimnames(mean) <- list(x = xf, y = yf)
   
   sigma <- object$sigma
@@ -132,8 +154,12 @@ predict.MRW <- function(object, h = 10, level = c(80, 95), ...) {
   dn <- apply(expand.grid(c("L", "U"), level), 1, paste, collapse = "")
   CI <- c(lower, upper)
   names(CI) <- dn
-  out <- list(call = match.call(), predicted.values = mean, conf.intervals = CI,
-              x = xf, y = yf, info = object$info)
+  out <- list(call = match.call(), 
+              info = object$info,
+              predicted.values = mean, 
+              conf.intervals = CI,
+              x = xf, 
+              y = yf)
   out <- structure(class = "predict.MRW", out)  
   return(out)
 }

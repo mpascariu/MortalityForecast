@@ -4,12 +4,13 @@
 \alias{predict.OeppenC}
 \title{#' Forecast the Age at Death Distribution using the Coherent Oeppen model}
 \usage{
-\method{predict}{OeppenC}(object, h, order = NULL,
-  include.drift = NULL, level = c(80, 95), jumpchoice = c("actual",
-  "fit"), method = "ML", verbose = TRUE, ...)
+\method{predict}{OeppenC}(object, h, order = c(1, 0, 0), order.B = c(0,
+  1, 0), include.drift = FALSE, include.drift.B = TRUE, level = c(80,
+  95), jumpchoice = c("actual", "fit"), method = "ML",
+  verbose = TRUE, ...)
 }
 \arguments{
-\item{object}{An object of class \code{Oeppen}.}
+\item{object}{An object of class \code{Oeppen};}
 
 \item{h}{Number of years to be forecast in the future.}
 
@@ -18,9 +19,14 @@ the three components (p, d, q) are the AR order, the degree of differencing,
 and the MA order. If \code{order = NULL}, the ARIMA order will be estimated 
 automatically using the KPPS algorithm.}
 
+\item{order.B}{The ARIMA order for the benchmark population model;}
+
 \item{include.drift}{Logical. Should the ARIMA model include a linear drift 
 term? If \code{include.drift = NULL}, the model will be estimated 
 automatically.}
+
+\item{include.drift.B}{Logical. Should we include a linear drift 
+term in the ARIMA of benchmark population model?}
 
 \item{level}{Significance level of the confidence interval.}
 

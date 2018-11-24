@@ -8,7 +8,7 @@
 #' The Coherent Oeppen Mortality Model (Oeppen-C)
 #' 
 #' @inheritParams model_Oeppen
-#' @param B.data A data.frame or a matrix containing mortality data for the 
+#' @param data.B A data.frame or a matrix containing mortality data for the 
 #' benchmark population with ages. Must be the same format as in \code{data}; 
 #' @return The output is a list with the components:
 #'  \item{input}{List with arguments provided in input. Saved for convenience;}
@@ -29,7 +29,7 @@
 #' \code{\link{predict.Oeppen}}
 #' \code{\link{plot.Oeppen}}
 #' @export
-model_OeppenC <- function(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...){
+model_OeppenC <- function(data, data.B, x = NULL, y = NULL, verbose = TRUE, ...){
   input <- c(as.list(environment()))
   Oeppen.input.check(input)
   x <- x %||% 1:nrow(data)
@@ -46,7 +46,7 @@ model_OeppenC <- function(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...)
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Fit benchmark model
-  B <- model_Oeppen(data = B.data, x = x, y = y, verbose = FALSE)
+  B <- model_Oeppen(data = data.B, x = x, y = y, verbose = FALSE)
   B.cdx <- with(coef(B), clrInv(c(kt) %*% t(bx)))
   
   # Estimate model parameters: a[x], b[x], k[t]
@@ -91,7 +91,10 @@ model_OeppenC <- function(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...)
 
 
 #' #' Forecast the Age at Death Distribution using the Coherent Oeppen model
-#' @param object An object of class \code{Oeppen}.
+#' @param object An object of class \code{Oeppen};
+#' @param order.B The ARIMA order for the benchmark population model;
+#' @param include.drift.B Logical. Should we include a linear drift 
+#' term in the ARIMA of benchmark population model?
 #' @inheritParams predict.Oeppen
 #' @return The output is a list with the components:
 #'  \item{call}{An unevaluated function call, that is, an unevaluated 
@@ -113,8 +116,10 @@ model_OeppenC <- function(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...)
 #' @export
 predict.OeppenC <- function(object,
                             h,
-                            order = NULL,
-                            include.drift = NULL,
+                            order = c(1,0,0),
+                            order.B = c(0,1,0),
+                            include.drift = FALSE,
+                            include.drift.B = TRUE,
                             level = c(80, 95),
                             jumpchoice = c("actual", "fit"),
                             method = "ML",
@@ -122,7 +127,7 @@ predict.OeppenC <- function(object,
   
   # Benchmark Oeppen forecast
   B <- object$benchmark
-  B.pred <- predict(object = B, h, order, include.drift, level, 
+  B.pred <- predict(object = B, h, order.B, include.drift.B, level, 
                     jumpchoice, method, verbose = FALSE)
   
   # Timeline

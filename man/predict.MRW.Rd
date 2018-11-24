@@ -21,10 +21,15 @@ The original implementation of this function was taken from
 }
 \value{
 An object of the class \code{predict.MRW} with components:
-\item{predicted.values}{data.frame with the central forecast.}
-\item{conf.intervals}{List with lower and upper limits for prediction intervals.}
-\item{x}{Numerical vector indicating the age classes in output.}
-\item{y}{Numerical vector indicating the years in output.}
+ \item{call}{An unevaluated function call, that is, an unevaluated 
+ expression which consists of the named function applied to the given 
+ arguments;}
+ \item{info}{Short details about the model;}
+ \item{predicted.values}{data.frame with the central forecast;}
+ \item{conf.intervals}{List with lower and upper limits for prediction 
+ intervals;}
+ \item{x}{Numerical vector indicating the age classes in output;}
+ \item{y}{Numerical vector indicating the years in output.}
 }
 \description{
 Returns forecasts and other information for a Multivariate 

@@ -15,7 +15,7 @@
 #' @details \insertNoCite{li2005}{MortalityForecast}
 #' @references \insertAllCited{}
 #' @export
-model_LiLee <- function(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...){
+model_LiLee <- function(data, data.B, x = NULL, y = NULL, verbose = TRUE, ...){
   input <- c(as.list(environment()))
   if (any(data == 0)) {
     stop("The input data contains death rates equal to zero at various ages.")
@@ -30,7 +30,7 @@ model_LiLee <- function(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...){
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Fit benchmark model
-  B <- model_LeeCarter(data = B.data, x = x, y = y)
+  B <- model_LeeCarter(data = data.B, x = x, y = y)
   B.cmx <- with(B$coefficients, c(bx) %*% t(kt))
   
   # Estimate model parameters: a[x], b[x], k[t]
@@ -70,8 +70,20 @@ model_LiLee <- function(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...){
 
 #' Forecast age-specific death rates using the Li-Lee model
 #' @param object An object of class \code{LiLee}.
-#' @inheritParams predict.Oeppen
+#' @inheritParams predict.OeppenC
 #' @inherit predict.OeppenC return
+#' @usage 
+#' ## S3 method for class 'LiLee'
+#' predict(object,
+#'         h,
+#'         order = c(1,0,0),
+#'         order.B = c(0,1,0),
+#'         include.drift = FALSE,
+#'         include.drift.B = TRUE,
+#'         level = c(80, 95),
+#'         jumpchoice = c("actual", "fit"),
+#'         method = "ML",
+#'         verbose = TRUE, ...)
 #' @seealso 
 #' \code{\link{model_LiLee}}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
@@ -82,14 +94,16 @@ model_LiLee <- function(data, B.data, x = NULL, y = NULL, verbose = TRUE, ...){
 #' B.mx <- HMD_male$mx$USA[paste(x), paste(y)]
 #' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
 #' 
-#' M <- model_LiLee(data = mx, B.data = B.mx, x = x, y = y) # fit
+#' M <- model_LiLee(data = mx, data.B = B.mx, x = x, y = y) # fit
 #' P <- predict(M, h = 20)  # forecast
 #' P
 #' @export
 predict.LiLee <- function(object,
                           h,
-                          order = c(0, 1, 0),
-                          include.drift = TRUE,
+                          order = c(1,0,0),
+                          order.B = c(0,1,0),
+                          include.drift = FALSE,
+                          include.drift.B = TRUE,
                           level = c(80, 95),
                           jumpchoice = c("actual", "fit"),
                           method = "ML",
@@ -97,7 +111,7 @@ predict.LiLee <- function(object,
   
   # Benchmark Lee-Carter forecast
   B <- object$benchmark
-  B.pred <- predict(object = B, h, order, include.drift, level, 
+  B.pred <- predict(object = B, h, order.B, include.drift.B, level, 
                     jumpchoice, method, verbose = FALSE)
   
   # Timeline

@@ -22,19 +22,27 @@ Default: \code{NULL}.}
 Optional. This is used to label the output tables and related plots.
 Default: \code{NULL}.}
 
-\item{include.drift}{Should the Random Walk model include a linear drift term? 
-Default: \code{TRUE}.}
+\item{include.drift}{Should the Random Walk model include a linear drift 
+term? Default: \code{TRUE}.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }
 \value{
 An object of class \code{MRW} with components:
- \item{input}{A list with the input data.}
- \item{drift}{A vector with the estimated drift.}
- \item{sigma}{A matrix with the estimated variance covariance matrix.}
- \item{fitted}{Fitted values.}
+ \item{input}{A list with the input data;}
+ \item{info}{Short details about the model;}
+ \item{call}{An unevaluated function call, that is, an unevaluated 
+ expression which consists of the named function applied to the given 
+ arguments;}
+ \item{coefficients}{A vector with the estimated drift parameters;}
+ \item{fitted.values}{Fitted values of the estimated model;}
+ \item{observed.values}{The observed values used in fitting arranged in the 
+ same format as the fitted.values;}
  \item{residuals}{Residuals from the fitted model. That is 
- observed minus fitted values.}
+ observed minus fitted values;}
+ \item{sigma}{A matrix with the estimated variance covariance matrix;}
+ \item{x}{Vector of ages used in fitting;} 
+ \item{y}{Vector of years used in fitting.}
 }
 \description{
 Fit a Multivariate Random Walk Model to the input \code{data}, a
