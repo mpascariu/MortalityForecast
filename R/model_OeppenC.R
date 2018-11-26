@@ -9,7 +9,7 @@
 #' 
 #' @inheritParams model_Oeppen
 #' @param data.B A data.frame or a matrix containing mortality data for the 
-#' benchmark population with ages. Must be the same format as in \code{data}; 
+#' benchmark population. Must be the same format as in \code{data}; 
 #' @return The output is a list with the components:
 #'  \item{input}{List with arguments provided in input. Saved for convenience;}
 #'  \item{info}{Short details about the model;}

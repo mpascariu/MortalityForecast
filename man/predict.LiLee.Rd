@@ -4,17 +4,10 @@
 \alias{predict.LiLee}
 \title{Forecast age-specific death rates using the Li-Lee model}
 \usage{
-## S3 method for class 'LiLee'
-predict(object,
-        h,
-        order = c(1,0,0),
-        order.B = c(0,1,0),
-        include.drift = FALSE,
-        include.drift.B = TRUE,
-        level = c(80, 95),
-        jumpchoice = c("actual", "fit"),
-        method = "ML",
-        verbose = TRUE, ...)
+\method{predict}{LiLee}(object, h, order = c(1, 0, 0), order.B = c(0,
+  1, 0), include.drift = FALSE, include.drift.B = TRUE, level = c(80,
+  95), jumpchoice = c("actual", "fit"), method = "ML",
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{object}{An object of class \code{LiLee}.}

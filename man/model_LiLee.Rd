@@ -11,7 +11,7 @@ model_LiLee(data, data.B, x = NULL, y = NULL, verbose = TRUE, ...)
 with ages \code{x} as row and time \code{y} as column.}
 
 \item{data.B}{A data.frame or a matrix containing mortality data for the 
-benchmark population with ages. Must be the same format as in \code{data};}
+benchmark population. Must be the same format as in \code{data};}
 
 \item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
 Default: \code{NULL}.}

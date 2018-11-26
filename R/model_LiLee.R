@@ -72,18 +72,6 @@ model_LiLee <- function(data, data.B, x = NULL, y = NULL, verbose = TRUE, ...){
 #' @param object An object of class \code{LiLee}.
 #' @inheritParams predict.OeppenC
 #' @inherit predict.OeppenC return
-#' @usage 
-#' ## S3 method for class 'LiLee'
-#' predict(object,
-#'         h,
-#'         order = c(1,0,0),
-#'         order.B = c(0,1,0),
-#'         include.drift = FALSE,
-#'         include.drift.B = TRUE,
-#'         level = c(80, 95),
-#'         jumpchoice = c("actual", "fit"),
-#'         method = "ML",
-#'         verbose = TRUE, ...)
 #' @seealso 
 #' \code{\link{model_LiLee}}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
@@ -111,8 +99,14 @@ predict.LiLee <- function(object,
   
   # Benchmark Lee-Carter forecast
   B <- object$benchmark
-  B.pred <- predict(object = B, h, order.B, include.drift.B, level, 
-                    jumpchoice, method, verbose = FALSE)
+  B.pred <- predict(object = B, 
+                    h = h, 
+                    order = order.B, 
+                    include.drift = include.drift.B, 
+                    level = level, 
+                    jumpchoice = jumpchoice, 
+                    method = method, 
+                    verbose = FALSE)
   
   # Timeline
   bop <- max(object$y) + 1
@@ -127,10 +121,13 @@ predict.LiLee <- function(object,
   kt.arima <- forecast::Arima(y = C$kt, 
                               order = order %||% A$order, 
                               include.drift = include.drift %||% A$drift,
+                              include.constant = FALSE,
                               method = method)
   
   # Forecast k[t] using the time-series model
-  tsf <- forecast(kt.arima, h = h + 1, level = level)  # time series forecast
+  tsf <- forecast(object = kt.arima, 
+                  h = h + 1, 
+                  level = level)  # time series forecast
   fkt <- data.frame(tsf$mean, tsf$lower, tsf$upper) # forecast kt
   Cnames <- c('mean', paste0('L', level), paste0('U', level))
   dimnames(fkt) <- list(c(0, fcy), Cnames)

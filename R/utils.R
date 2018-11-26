@@ -122,13 +122,13 @@ find_arima <- function(a) {
 #' mx <- HMD_male$mx$DNK[paste(x), paste(y)]
 #' mx == 0
 #' 
-#' new.mx <- replace_value_zero(mx)
+#' new.mx <- replace.zeros(mx)
 #' new.mx == 0
 #' 
 #' sum(mx) == sum(new.mx)
 #' (mx - new.mx)/mx * 100
 #' @export
-replace_value_zero <- function(mx, radix = 1e5) {
+replace.zeros <- function(mx, radix = 1e5) {
   Dx <- mx * radix
   
   p <- sweep(Dx, 2, colSums(Dx), FUN = "/")
