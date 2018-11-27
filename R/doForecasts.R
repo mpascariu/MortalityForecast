@@ -1,7 +1,7 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Mon Nov 19 13:55:16 2018
+# Last update: Tue Nov 27 15:03:45 2018
 # --------------------------------------------------- #
 
 
@@ -20,17 +20,21 @@
 #' y  <- 1985:1999
 #' h  <- 17
 #' D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' MM <- c("MRWD", "HyndmanUllah", "CoDa", "MEM6")
+#' MM <- c("MRWD", "HyndmanUllah", "Oeppen", "MEM6")
 #' 
 #' M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 #' P <- doForecasts(M, h, level = 95, jumpchoice = "actual")
 #' 
 #' pex <- getForecasts(P, data.out = "ex")
 #' @export
-doForecasts <- function(object, h, level = 95, 
+doForecasts <- function(object, 
+                        h, 
+                        level = 95, 
                         jumpchoice = c("actual", "fit"), 
-                        verbose = TRUE, ...) {
-  jumpchoice <- match.arg(jumpchoice)
+                        verbose = TRUE, 
+                        ...) {
+  
+  J <- match.arg(jumpchoice)
   input <- as.list(environment())
   call  <- match.call()
   x     <- object$x
@@ -42,15 +46,16 @@ doForecasts <- function(object, h, level = 95,
     M <- with(object, get(Mn[i]))
     
     if (Mn[i] %in% c("LC", "PLAT")) {
-      P <- forecast(M, h = h, jumpchoice = jumpchoice, level = level)
+      P <- forecast(M, h = h, jumpchoice = J, level = level)
       
     } else {
-      P <- predict(M, h = h, jumpchoice = jumpchoice, level = level, ...)
+      P <- predict(M, h = h, jumpchoice = J, level = level, ...)
     }
     assign(Mn[i], P)
   }
   
-  remove(object, h, level, jumpchoice, M, Mn, P, i)
+  # Save the environment and exit
+  remove(object, h, level, J, M, Mn, P, i)
   out <- as.list(environment())
   out <- structure(class = "doForecasts", out)
   return(out)

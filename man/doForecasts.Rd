@@ -32,7 +32,7 @@ x  <- 0:100
 y  <- 1985:1999
 h  <- 17
 D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-MM <- c("MRWD", "HyndmanUllah", "CoDa", "MEM6")
+MM <- c("MRWD", "HyndmanUllah", "Oeppen", "MEM6")
 
 M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 P <- doForecasts(M, h, level = 95, jumpchoice = "actual")

@@ -5,8 +5,7 @@
 \title{Get Accuracy Measures from \code{doBackTesting}}
 \usage{
 \method{evalAccuracy}{doBackTesting}(object, data.out = c("qx", "mx",
-  "dx", "lx", "Lx", "Tx", "ex"), measures = c("ME", "MAE", "MAPE",
-  "sMAPE", "sMRAE", "MASE"), ...)
+  "dx", "lx", "Lx", "Tx", "ex"), measures = NULL, ...)
 }
 \arguments{
 \item{object}{An object of class \code{doBackTesting}.}
@@ -20,7 +19,8 @@ available, \itemize{
  \item{Mean error measures: } \code{"ME", "MAE", "MAPE", "sMAPE", "sMRAE", "MASE"};
  \item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "sMdRAE", "MdASE"};
  \item{Squared error measures: } \code{"MSE", "RMSE", "RMSPE", "RMdSPE"};
- \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}}
+ \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}
+ If \code{measures = NULL} all the measures will be computed.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }

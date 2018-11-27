@@ -26,7 +26,9 @@
 #' R <- doRanking(A)
 #' R
 #' @export
-doBBackTesting <- function(data, x, y,
+doBBackTesting <- function(data, 
+                           x, 
+                           y,
                            data.in = c("qx", "mx", "dx", "lx"),
                            models,
                            strategy = c(f = 20, h = 20, s = 2),

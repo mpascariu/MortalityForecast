@@ -28,24 +28,32 @@ evalAccuracy = function(object, ...)
 #' @export
 evalAccuracy.doBackTesting <- function(object, 
                         data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                        measures = c("ME", "MAE", "MAPE", "sMAPE", "sMRAE", "MASE"),
+                        measures = NULL,
                         ...) {
-  
+  # Data
   x <- object$input$x
   data.in  <- object$input$data.in
   data.out <- match.arg(data.out)
   validation.set <- object$Datasets$validation.set
   
-  O  <- convertFx(x = x, data = validation.set, 
-                  from = data.in, to = data.out, lx0 = 1, ...) # observed data
-  H  <- getForecasts(object$Forecast, data.out)                # forecast data
-  B  <- H[[1]]              # Benchmark model
-  Mn <- object$input$models # Model names
+  # Get the observed data in the required format (e.g. e[x], q[x] etc)
+  O  <- convertFx(x = x, 
+                  data = validation.set, 
+                  from = data.in, 
+                  to = data.out, 
+                  lx0 = 1, ...)
+  # Get the forecast results in the same format
+  # H is a list of matrices, each matrix coresponding to 1 model
+  H  <- getForecasts(object$Forecast, data.out) # forecast data
+  B  <- H[[1]]                                  # Benchmark model
+  Mn <- object$input$models                     # Model names
   
+  # Compute the accuracy measures for all models/forecasts
   fn <- function(X) computeAccuracy(O, X, B, measures)
-  A  <- lapply(H, fn)
+  A  <- lapply(H, fn)  # this is a list too w accuracy measures
   z  <- NULL
   
+  # Create a tibble and exit
   for (i in 1:length(A)) {
     z <- rbind(z, A[[i]]) 
   }
@@ -66,18 +74,18 @@ evalAccuracy.doBackTesting <- function(object,
 #' @export
 evalAccuracy.doBBackTesting <- function(object,
                                        data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                                       measures = c("ME", "MAE", "MAPE", "sMAPE", "sMRAE", "MASE"),
+                                       measures = NULL,
                                        ...) {
   data.out <- match.arg(data.out)
-  N  <- -c(1:3)
   ns <- nrow(object$scenarios)  # no. of scenarios
   A  <- tibble()
   AA <- 0
+  N  <- -c(1:3)
   
   for (s in 1:ns) {
     As <- evalAccuracy(object = object$results[[s]], data.out, measures, ...)
     As$Scenario <- s
-    A <- rbind(A, As)
+    A  <- rbind(A, As)
     AA <- AA + As[, N]/ns  # compute mean values over all scenarios
   }
   
@@ -117,6 +125,7 @@ evalAccuracy.doBBackTesting <- function(object,
 #'  \item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "sMdRAE", "MdASE"};
 #'  \item{Squared error measures: } \code{"MSE", "RMSE", "RMSPE", "RMdSPE"};
 #'  \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}
+#'  If \code{measures = NULL} all the measures will be computed.
 #' @param xa Ages to be considered in model accuracy evaluation. It can be used 
 #' to calculate the measures on a subset of the results. If \code{xa = NULL} 
 #' (default) the entire age-range in input is considered.
@@ -128,7 +137,7 @@ evalAccuracy.doBBackTesting <- function(object,
 #' @references \insertAllCited{}
 #' @author Marius D. Pascariu
 #' @keywords internal
-computeAccuracy <- function(u, u.hat, b, measures, 
+computeAccuracy <- function(u, u.hat, b, measures = NULL, 
                             xa = NULL, ya = NULL, na.rm = TRUE){
   if (is.null(xa)) xa <- rownames(u)
   if (is.null(ya)) ya <- colnames(u)
@@ -219,8 +228,9 @@ computeAccuracy <- function(u, u.hat, b, measures,
   # MSE, RMSE, RMSPE and RMdSPE.
   out <- data.frame(ME,   MAE,  MAPE,  sMAPE,  sMRAE,  MASE, # means
                     MdE, MdAE, MdAPE, sMdAPE, sMdRAE, MdASE, # medians
-                    MSE, RMSE, RMSPE, RMdSPE)               # squared errors
-  out <- out[, measures]
+                    MSE, RMSE, RMSPE, RMdSPE)                # squared errors
+  
+  if(!is.null(measures)) out <- out[, measures]
   out <- as.matrix(out)
   return(out)
 }

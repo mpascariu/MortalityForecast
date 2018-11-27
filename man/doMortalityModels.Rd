@@ -34,7 +34,7 @@ Fit Multiple Stochastic Mortality Models
 x  <- 0:100
 y  <- 2005:2016
 D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-MM <- c("MRWD", "HyndmanUllah", "CoDa")
+MM <- c("MRWD", "HyndmanUllah", "Oeppen")
 
 M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 

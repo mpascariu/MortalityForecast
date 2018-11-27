@@ -4,7 +4,7 @@
 \alias{computeAccuracy}
 \title{Get Measures of Forecast Accuracy}
 \usage{
-computeAccuracy(u, u.hat, b, measures, xa = NULL, ya = NULL,
+computeAccuracy(u, u.hat, b, measures = NULL, xa = NULL, ya = NULL,
   na.rm = TRUE)
 }
 \arguments{
@@ -19,7 +19,8 @@ available, \itemize{
  \item{Mean error measures: } \code{"ME", "MAE", "MAPE", "sMAPE", "sMRAE", "MASE"};
  \item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "sMdRAE", "MdASE"};
  \item{Squared error measures: } \code{"MSE", "RMSE", "RMSPE", "RMdSPE"};
- \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}}
+ \item{Geometric mean measure for positive errors: } \code{"GMRAE"}.}
+ If \code{measures = NULL} all the measures will be computed.}
 
 \item{xa}{Ages to be considered in model accuracy evaluation. It can be used 
 to calculate the measures on a subset of the results. If \code{xa = NULL} 

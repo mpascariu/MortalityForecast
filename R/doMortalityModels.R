@@ -23,7 +23,7 @@
 #' x  <- 0:100
 #' y  <- 2005:2016
 #' D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' MM <- c("MRWD", "HyndmanUllah", "CoDa")
+#' MM <- c("MRWD", "HyndmanUllah", "Oeppen")
 #' 
 #' M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 #' 
@@ -31,7 +31,9 @@
 #' fex <- getFitted(M, data.out = "ex")
 #' rex <- getResiduals(M, data.out = "ex")
 #' @export
-doMortalityModels <- function(data, x = NULL, y = NULL, 
+doMortalityModels <- function(data, 
+                              x = NULL, 
+                              y = NULL, 
                               data.in = c("qx", "mx", "dx", "lx"),
                               models = c("MRWD"),
                               verbose = TRUE, ...) {
@@ -59,8 +61,8 @@ doMortalityModels <- function(data, x = NULL, y = NULL,
   if ("LC" %in% models) {
     LC <- LC(data = mx.data, x, y, link = "log")
   }
-  if ("LeeCarter2" %in% models) {
-    LeeCarter2 <- model_LeeCarter(data = mx.data, x, y)
+  if ("LeeCarter" %in% models) {
+    LeeCarter <- model_LeeCarter(data = mx.data, x, y)
   }
   # Hyndman-Ullah (1992)
   if ("HyndmanUllah" %in% models) {
@@ -69,7 +71,7 @@ doMortalityModels <- function(data, x = NULL, y = NULL,
   # Plat (2009)
   if ("PLAT" %in% models) PLAT <- PLAT(data = mx.data, x, y)
   # Oeppen (2008)
-  if ("CoDa" %in% models) CoDa <- model_Oeppen(data = dx.data, x, y)
+  if ("Oeppen" %in% models) Oeppen <- model_Oeppen(data = dx.data, x, y)
   # Maximum Entropy Mortality Models - PLC (2018)
   if ("MEM2" %in% models)  MEM2 <- model_MEM(data = dx.data, x, y, n = 2)
   if ("MEM3" %in% models)  MEM3 <- model_MEM(data = dx.data, x, y, n = 3)

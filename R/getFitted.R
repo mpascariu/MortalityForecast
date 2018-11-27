@@ -22,7 +22,7 @@ getFitted <- function(object,
     if (Mn[i] %in% c("MRW", "MRWD", "LC", "PLAT")) {
       mx <- exp(fitted(M))
       
-    } else if (Mn[i] %in% c("LeeCarter2", "HyndmanUllah")) {
+    } else if (Mn[i] %in% c("LeeCarter", "HyndmanUllah")) {
       mx <- fitted(M)
       
     } else {

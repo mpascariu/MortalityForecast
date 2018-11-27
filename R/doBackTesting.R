@@ -1,4 +1,8 @@
-
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Tue Nov 27 15:04:19 2018
+# --------------------------------------------------- #
 
 #' Perform In-Sample Testing of Mortality Forecasts Over One Time Period
 #' @param data A data.frame or a matrix containing mortality data 
@@ -23,7 +27,7 @@
 #' D <- HMD_male$dx$GBRTENW[paste(x), paste(y)] # DATA
 #' 
 #' # Select various mortality models
-#' MM <- c("MRWD", "CoDa", "MEM6")
+#' MM <- c("MRWD", "Oeppen", "MEM6")
 #' # Fit & Forecast the models 
 #' B <- doBackTesting(data = D, x = x,
 #'                    y.fit = y1, y.for = y2,
