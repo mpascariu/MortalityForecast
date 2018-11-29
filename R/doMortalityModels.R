@@ -36,7 +36,8 @@ doMortalityModels <- function(data,
                               y = NULL, 
                               data.in = c("qx", "mx", "dx", "lx"),
                               models = c("MRWD"),
-                              verbose = TRUE, ...) {
+                              verbose = TRUE, 
+                              ...) {
   
   data.in <- match.arg(data.in)
   input   <- as.list(environment())
@@ -90,7 +91,7 @@ doMortalityModels <- function(data,
 
 #' Print function for doMortalityModels
 #' @param x An object of class \code{"MortalityModels"}
-#' @param ... Further arguments passed to or from other methods.
+#' @inheritParams doMortalityModels
 #' @keywords internal
 #' @export
 print.MortalityModels <- function(x, ...) {

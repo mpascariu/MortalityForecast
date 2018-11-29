@@ -15,7 +15,13 @@
 #' @details \insertNoCite{li2005}{MortalityForecast}
 #' @references \insertAllCited{}
 #' @export
-model_LiLee <- function(data, data.B, x = NULL, y = NULL, verbose = TRUE, ...){
+model_LiLee <- function(data, 
+                        data.B, 
+                        x = NULL, 
+                        y = NULL, 
+                        verbose = TRUE, 
+                        ...){
+  
   input <- c(as.list(environment()))
   if (any(data == 0)) {
     stop("The input data contains death rates equal to zero at various ages.")
@@ -26,7 +32,7 @@ model_LiLee <- function(data, data.B, x = NULL, y = NULL, verbose = TRUE, ...){
   # Info
   modelLN <- "Li-Lee Mortality Model"       # long name
   modelSN <- "LL"                           # short name
-  modelF  <- "log m[x,t] = a[x] + b'[x]k'[t] + e[x,t]" # formula
+  modelF  <- "log m[x,t] = {a[x] + b[x]k[t]} + {A[x] + B[x]K[t]}" # formula
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Fit benchmark model
@@ -88,14 +94,15 @@ model_LiLee <- function(data, data.B, x = NULL, y = NULL, verbose = TRUE, ...){
 #' @export
 predict.LiLee <- function(object,
                           h,
-                          order = c(1,0,0),
+                          order = c(0,1,0),
                           order.B = c(0,1,0),
                           include.drift = FALSE,
                           include.drift.B = TRUE,
                           level = c(80, 95),
                           jumpchoice = c("actual", "fit"),
                           method = "ML",
-                          verbose = TRUE, ...){
+                          verbose = TRUE, 
+                          ...){
   
   # Benchmark Lee-Carter forecast
   B <- object$benchmark

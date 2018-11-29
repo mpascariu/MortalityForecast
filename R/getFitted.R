@@ -11,6 +11,7 @@
 getFitted <- function(object, 
                       data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                       ...) {
+  
   data.out <- match.arg(data.out)
   Mn   <- object$input$models # Model names
   x    <- object$x

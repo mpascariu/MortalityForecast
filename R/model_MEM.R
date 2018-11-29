@@ -49,13 +49,19 @@
 #' plot(R, plotType = "colourmap")
 #' plot(R, plotType = "signplot")
 #' @export
-model_MEM <- function(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...) {
+model_MEM <- function(data, 
+                      x = NULL, 
+                      y = NULL, 
+                      n = 5, 
+                      verbose = FALSE, 
+                      ...) {
+  
   input <- c(as.list(environment()))
 
   # Info
   modelLN <- "Maximum-Entropy Mortality Model "
   modelSN <- "MEM"
-  modelF  <- "d[x,t] = MaxEnt a[n] + M[n, t] + e[n,t]"
+  modelF  <- "d[x,t] = MaxEnt a[n] + M[n, t]"
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   AY  <- find_ages_and_years(data, x, y)
@@ -202,9 +208,14 @@ print.MEM <- function(x, ...) {
 #' plot(P, M, plotType = "raw_moments")
 #' plot(P, M, plotType = "normalised_moments")
 #' @export
-predict.MEM <- function(object, h, x.h = NULL, level = 95,
+predict.MEM <- function(object, 
+                        h, 
+                        x.h = NULL, 
+                        level = 95,
                         jumpchoice = c("actual", "fit"),
-                        verbose = FALSE, ...) {
+                        verbose = FALSE, 
+                        ...) {
+  
   jumpchoice <- match.arg(jumpchoice)
   y.h <- max(object$y) + (1:h)
   x.h <- x.h %||% object$x

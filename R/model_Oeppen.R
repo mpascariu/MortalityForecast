@@ -57,7 +57,12 @@
 #' plot(R, plotType = "colourmap")
 #' plot(R, plotType = "signplot")
 #' @export
-model_Oeppen <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
+model_Oeppen <- function(data, 
+                         x = NULL, 
+                         y = NULL, 
+                         verbose = TRUE, 
+                         ...){
+  
   input <- c(as.list(environment()))
   Oeppen.input.check(input)
   x <- x %||% 1:nrow(data)
@@ -213,7 +218,8 @@ predict.Oeppen <- function(object,
                            level = c(80, 95), 
                            jumpchoice = c("actual", "fit"), 
                            method = "ML", 
-                           verbose = TRUE, ...){
+                           verbose = TRUE, 
+                           ...){
   
   # Timeline
   bop <- max(object$y) + 1

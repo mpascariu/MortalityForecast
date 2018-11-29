@@ -30,9 +30,13 @@ getObserved <- function(object = NULL,
     
   } else {
     xx <- x
-    out <- convertFx(x = xx, data = data, 
-                     from = data.in, to = data.out, 
-                     lx0 = 1, ...)
+    out <- convertFx(x = xx, 
+                     data = data, 
+                     from = data.in, 
+                     to = data.out, 
+                     lx0 = 1, 
+                     ...)
+    
     out <- out[paste(x), ]
   }
   

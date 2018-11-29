@@ -4,7 +4,7 @@
 \alias{predict.OeppenC}
 \title{#' Forecast the Age at Death Distribution using the Coherent Oeppen model}
 \usage{
-\method{predict}{OeppenC}(object, h, order = c(1, 0, 0), order.B = c(0,
+\method{predict}{OeppenC}(object, h, order = c(0, 1, 0), order.B = c(0,
   1, 0), include.drift = FALSE, include.drift.B = TRUE, level = c(80,
   95), jumpchoice = c("actual", "fit"), method = "ML",
   verbose = TRUE, ...)

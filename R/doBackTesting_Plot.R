@@ -11,8 +11,11 @@
 #' @inheritParams evalAccuracy.doBackTesting
 #' @inheritParams wide2long
 #' @export
-plot.doBackTesting <- function(x, data.out, facet = c("x", "y"),
-                               which = NULL, ...) {
+plot.doBackTesting <- function(x, 
+                               data.out, 
+                               facet = c("x", "y"),
+                               which = NULL, 
+                               ...) {
   B  <- x
   x  <- B$input$x
   y1 <- B$input$y.fit

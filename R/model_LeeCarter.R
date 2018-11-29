@@ -46,7 +46,7 @@ model_LeeCarter <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
   # Info
   modelLN <- "Lee-Carter Mortality Model"   # long name
   modelSN <- "LC"                           # short name
-  modelF  <- "log m[x,t] = a[x] + b[x]k[t] + e[x,t]" # formula
+  modelF  <- "log m[x,t] = a[x] + b[x]k[t]" # formula
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Estimate model parameters: a[x], b[x], k[t]

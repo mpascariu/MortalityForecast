@@ -24,7 +24,7 @@ model_HyndmanUllah <- function(data, x, y, order = 1, transform = TRUE, ...) {
   # Info
   modelLN <- "Functional Demographic Model -- Hyndman-Ullah"   # long name
   modelSN <- "HyndmanUllah"                   # short name
-  modelF  <- "log m[x,t] = a[x] + SUM b[x,k]phi[t,k] + e[x,t] + r[t,x]eps[x,t]" # formula
+  modelF  <- "log m[x,t] = a[x] + SUM b[x,k]phi[t,k] + r[t,x]eps[x,t]" # formula
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   demo_data <- demogdata(data = data, ages = x, years = y, 

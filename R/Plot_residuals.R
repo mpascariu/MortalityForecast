@@ -1,3 +1,8 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Thu Nov 29 13:12:51 2018
+# --------------------------------------------------- #
 
 
 #' Plot the deviance residuals
@@ -51,9 +56,16 @@
 #' and Vladimir Kaishev.
 #' @keywords internal
 #' @export 
-plot.residMF <- function(x, plotType = c("scatter", "colourmap", "signplot"), 
-                                  reslim = NULL, plotAge = TRUE, plotYear = TRUE, 
-                                  plotCohort  = TRUE, pch = 20, col = NULL, ...) {
+plot.residMF <- function(x, 
+                         plotType = c("scatter", "colourmap", "signplot"), 
+                         reslim = NULL, 
+                         plotAge = TRUE, 
+                         plotYear = TRUE, 
+                         plotCohort = TRUE, 
+                         pch = 20, 
+                         col = NULL, 
+                         ...) {
+  
   plotType <- match.arg(plotType)
   oldpar   <- par(no.readonly = TRUE)
   L        <- dim(x)
@@ -106,8 +118,15 @@ plot.residMF <- function(x, plotType = c("scatter", "colourmap", "signplot"),
 #' should be plotted.
 #' @inheritParams plot.residMF
 #' @keywords internal
-scatterplotAPC <- function(mat, ages, years, plotAge = TRUE, plotYear = TRUE, 
-                           plotCohort  = TRUE, zeroLine  = TRUE, ...) {
+scatterplotAPC <- function(mat, 
+                           ages, 
+                           years, 
+                           plotAge = TRUE, 
+                           plotYear = TRUE, 
+                           plotCohort = TRUE, 
+                           zeroLine  = TRUE, 
+                           ...) {
+  
   nAges  <- length(ages)
   nYears <- length(years)  
   if (nrow(mat) != nAges ||  ncol(mat) != nYears) {

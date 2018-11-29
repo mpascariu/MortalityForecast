@@ -27,9 +27,10 @@ evalAccuracy = function(object, ...)
 #' # For examples go to ?doBackTesting
 #' @export
 evalAccuracy.doBackTesting <- function(object, 
-                        data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                        measures = NULL,
-                        ...) {
+                                       data.out = c("qx", "mx", "dx", "lx", 
+                                                    "Lx", "Tx", "ex"),
+                                       measures = NULL,
+                                       ...) {
   # Data
   x <- object$input$x
   data.in  <- object$input$data.in
@@ -58,7 +59,7 @@ evalAccuracy.doBackTesting <- function(object,
     z <- rbind(z, A[[i]]) 
   }
   zt  <- add_column(as.tibble(z), Scenario = "Total", Model = Mn, 
-                    LifeTableIndex = data.out, .before = T)
+                    LifeTableIndex = data.out, .before = TRUE)
   zt
 }
 
@@ -73,9 +74,10 @@ evalAccuracy.doBackTesting <- function(object,
 #' # For examples go to ?doBBackTesting
 #' @export
 evalAccuracy.doBBackTesting <- function(object,
-                                       data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                                       measures = NULL,
-                                       ...) {
+                                        data.out = c("qx", "mx", "dx", "lx", 
+                                                     "Lx", "Tx", "ex"),
+                                        measures = NULL,
+                                        ...) {
   data.out <- match.arg(data.out)
   ns <- nrow(object$scenarios)  # no. of scenarios
   A  <- tibble()
@@ -137,8 +139,14 @@ evalAccuracy.doBBackTesting <- function(object,
 #' @references \insertAllCited{}
 #' @author Marius D. Pascariu
 #' @keywords internal
-computeAccuracy <- function(u, u.hat, b, measures = NULL, 
-                            xa = NULL, ya = NULL, na.rm = TRUE){
+computeAccuracy <- function(u, 
+                            u.hat, 
+                            b, 
+                            measures = NULL, 
+                            xa = NULL, 
+                            ya = NULL, 
+                            na.rm = TRUE){
+  
   if (is.null(xa)) xa <- rownames(u)
   if (is.null(ya)) ya <- colnames(u)
   L1 <- rownames(u) %in% xa

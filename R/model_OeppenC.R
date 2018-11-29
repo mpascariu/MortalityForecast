@@ -29,7 +29,13 @@
 #' \code{\link{predict.Oeppen}}
 #' \code{\link{plot.Oeppen}}
 #' @export
-model_OeppenC <- function(data, data.B, x = NULL, y = NULL, verbose = TRUE, ...){
+model_OeppenC <- function(data, 
+                          data.B, 
+                          x = NULL, 
+                          y = NULL, 
+                          verbose = TRUE, 
+                          ...){
+  
   input <- c(as.list(environment()))
   Oeppen.input.check(input)
   x <- x %||% 1:nrow(data)
@@ -42,7 +48,7 @@ model_OeppenC <- function(data, data.B, x = NULL, y = NULL, verbose = TRUE, ...)
   # Info
   modelLN <- "Coherent Oeppen Mortality Model"
   modelSN <- "Oeppen-C"
-  modelF  <- "clr d[x,t] = a[x] + b[x]k[t]"
+  modelF  <- "clr d[x,t] = {a[x] + b[x]k[t]} + {A[x] + B[x]K[t]}"
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Fit benchmark model
@@ -116,14 +122,15 @@ model_OeppenC <- function(data, data.B, x = NULL, y = NULL, verbose = TRUE, ...)
 #' @export
 predict.OeppenC <- function(object,
                             h,
-                            order = c(1,0,0),
+                            order = c(0,1,0),
                             order.B = c(0,1,0),
                             include.drift = FALSE,
                             include.drift.B = TRUE,
                             level = c(80, 95),
                             jumpchoice = c("actual", "fit"),
                             method = "ML",
-                            verbose = TRUE, ...){
+                            verbose = TRUE, 
+                            ...){
   
   # Benchmark Oeppen forecast
   B <- object$benchmark

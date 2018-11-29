@@ -56,7 +56,12 @@
 #' matplot(pv, type = "l", log = "y")
 #' matplot(t(pv), type = "l", log = "y")
 #' @export
-model_MRW <- function(data, x = NULL, y = NULL, include.drift = TRUE, ...) {
+model_MRW <- function(data, 
+                      x = NULL, 
+                      y = NULL, 
+                      include.drift = TRUE, 
+                      ...) {
+  
   # Save the input
   input <- as.list(environment())
   call  <- match.call()
@@ -64,7 +69,7 @@ model_MRW <- function(data, x = NULL, y = NULL, include.drift = TRUE, ...) {
   # Info
   modelLN <- "Multivariate Random-Walk Model"
   modelSN <- "MRW"
-  modelF  <- "log m[x,t] = a + log m[x,t] + e[x,t]"
+  modelF  <- "y[x,t] = a + y[x,t]"
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Prepare data
@@ -126,7 +131,10 @@ model_MRW <- function(data, x = NULL, y = NULL, include.drift = TRUE, ...) {
 #' \code{StMoMo} R package.
 #' @author Marius D. Pascariu
 #' @export
-predict.MRW <- function(object, h = 10, level = c(80, 95), ...) {
+predict.MRW <- function(object, 
+                        h = 10, 
+                        level = c(80, 95), 
+                        ...) {
   
   data <- object$input$data
   x  <- object$x

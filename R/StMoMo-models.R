@@ -1,15 +1,30 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Thu Nov 29 13:10:19 2018
+# --------------------------------------------------- #
+
 
 #' Lee-Carter Mortality Model as implemented in StMoMo package
 #' @inheritParams doMortalityModels
 #' @inheritParams StMoMo::lc
 #' @param lx0 lx0
 #' @keywords internal
-LC <- function(data, x, y, link = "logit", lx0 = 1e5, verbose = FALSE) {
+LC <- function(data, 
+               x, 
+               y, 
+               link = "logit", 
+               lx0 = 1e5, 
+               verbose = FALSE) {
+  
   LCfit <- StMoMo::fit(object = lc(link = link), 
                        Dxt = data * lx0, 
                        Ext = data * 0 + lx0, 
-                       ages = x, years = y, 
-                       ages.fit = x, wxt = NULL, verbose = verbose)
+                       ages = x, 
+                       years = y, 
+                       ages.fit = x, 
+                       wxt = NULL, 
+                       verbose = verbose)
   return(LCfit)
 }
 
@@ -21,7 +36,13 @@ x_mean_ages <- function(x, ages) mean(ages) - x
 #' Lee-Carter Mortality Model as implemented in StMoMo package
 #' @inheritParams LC
 #' @keywords internal
-PLAT <- function(data, x, y, link = "log", lx0 = 1e5, verbose = FALSE) {
+PLAT <- function(data, 
+                 x, 
+                 y, 
+                 link = "log", 
+                 lx0 = 1e5, 
+                 verbose = FALSE) {
+  
   Dx  <- data * lx0
   Ex  <- Dx * 0 + lx0
   wxt <- genWeightMat(ages = x, years = y, clip = 3) # weighting matrix

@@ -43,7 +43,10 @@
 #' legend("topleft", legend = c("observed", "estimated"), col = 1:2, 
 #'        pch = c(16, NA), lty = c(NA, 1), lwd = 2, bty = "n")
 #' @export
-findDensity <- function(data, x, omega = 110, verbose = FALSE) {
+findDensity <- function(data, 
+                        x, 
+                        omega = 110, 
+                        verbose = FALSE) {
   
   if (is.matrix(data) || is.data.frame(data)) {
     # If matrix or data.frame do the for-loop below
@@ -67,8 +70,12 @@ findDensity <- function(data, x, omega = 110, verbose = FALSE) {
     }
     names(I) = rownames(L) = rownames(M) <- rownames(data)
     dimnames(P) <- list(x = x, y = rownames(data))
-    out <- list(x = x, density = P, input.raw.moments = data,
-                fitted.raw.moments = M, lambda = L, iterations = I)
+    out <- list(x = x, 
+                density = P, 
+                input.raw.moments = data,
+                fitted.raw.moments = M, 
+                lambda = L, 
+                iterations = I)
     
   } else {
 
@@ -111,8 +118,11 @@ findDensity <- function(data, x, omega = 110, verbose = FALSE) {
     mom <- c(1, mom.star.t)
     names(data) = names(mom) = names(lambda) <- paste0("M", 0:length(In))
     
-    out <- list(x = x, density = px[1:length(x)], input.raw.moments = data, 
-                fitted.raw.moments = mom, lambda = lambda, 
+    out <- list(x = x, 
+                density = px[1:length(x)], 
+                input.raw.moments = data, 
+                fitted.raw.moments = mom, 
+                lambda = lambda, 
                 iterations = as.numeric(k - 1))
   }
   out$call <- match.call()

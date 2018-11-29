@@ -32,7 +32,12 @@
 #' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' findMoments(data = dx, x = x, y = y, n = 4)
 #' @export
-findMoments <- function(data, x, y = NULL, n, na.rm = TRUE) {
+findMoments <- function(data, 
+                        x, 
+                        y = NULL, 
+                        n, 
+                        na.rm = TRUE) {
+  
   N  <- ncol(data)
   rM <- matrix(NA, nrow = N, ncol = n + 1)
   if (is.null(y)) y <- 1:N
@@ -57,7 +62,9 @@ findMoments <- function(data, x, y = NULL, n, na.rm = TRUE) {
   nM <- convertMoments(rM, from = "raw", to = "normalized")
   dimnames(cM) <- dimnames(rM)
   
-  out <- list(raw.moments = rM, central.moments = cM, normalized.moments = nM)
+  out <- list(raw.moments = rM, 
+              central.moments = cM, 
+              normalized.moments = nM)
   return(out)
 }
 
@@ -102,6 +109,7 @@ convertMoments <- function(data,
                            from = c("raw", "central", "normalized"), 
                            to = c("raw", "central", "normalized"), 
                            eta = NULL) {
+  
   if (is.vector(data)) data = matrix(data, nrow = 1)
   from <- match.arg(from)
   to <- match.arg(to)
@@ -119,12 +127,14 @@ convertMoments <- function(data,
 #' @param data Data.frame with central moments.
 #' @inheritParams convertMoments
 #' @keywords internal
-convertCM <- function(data, to = c("raw", "normalized"), eta) {
-  cM  <- data 
-  n   <- ncol(cM)
-  Mnames <- paste0("M", 1:n - 1)
+convertCM <- function(data, 
+                      to = c("raw", "normalized"), 
+                      eta) {
+  
+  cM <- data 
+  n  <- ncol(cM)
   rM <- t(moments::central2raw(t(cM), eta))
-  colnames(rM) = colnames(cM) <- Mnames
+  colnames(rM) = colnames(cM) <- paste0("M", 1:n - 1)
   out <- rM
   
   if (to == "normalized") {
@@ -140,11 +150,14 @@ convertCM <- function(data, to = c("raw", "normalized"), eta) {
 #' @param data Data.frame with normalized moments.
 #' @inheritParams convertMoments
 #' @keywords internal
-convertNM <- function(data, to = c("central", "raw")) {
-  nM <- data                                 # Normalized moments
+convertNM <- function(data, 
+                      to = c("central", "raw")) {
+  
+  nM <- data
   n  <- ncol(nM)
   if (n < 3L) {
-    stop("'data' must have at least 3 columns. That is M0, M1 and M2.", call. = F)
+    stop("'data' must have at least 3 columns. That is M0, M1 and M2.", 
+         call. = FALSE)
   }
   Mnames <- paste0("M", 1:n - 1)
   colnames(nM) <- Mnames
@@ -178,11 +191,14 @@ convertNM <- function(data, to = c("central", "raw")) {
 #' @param data Data.frame with raw moments.
 #' @inheritParams convertMoments
 #' @keywords internal
-convertRM <- function(data, to = c("central", "normalized")) {
-  rM <- data                                 # Raw moments
+convertRM <- function(data, 
+                      to = c("central", "normalized")) {
+  
+  rM <- data
   n  <- ncol(rM)
   if (n < 3L) {
-    stop("'data' must have at least 3 columns. That is M0, M1 and M2.", call. = F)
+    stop("'data' must have at least 3 columns. That is M0, M1 and M2.", 
+         call. = FALSE)
   }
   
   mM <- cM <- t(moments::raw2central(t(rM)))  # Central moments

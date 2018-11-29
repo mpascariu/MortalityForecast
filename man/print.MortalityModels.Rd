@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class \code{"MortalityModels"}}
 
-\item{...}{Further arguments passed to or from other methods.}
+\item{...}{Arguments to be passed to or from other methods.}
 }
 \description{
 Print function for doMortalityModels

@@ -1,7 +1,9 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
-# Last update: Fri Nov 16 16:04:32 2018
+# License: GNU General Public License v3.0
+# Last update: Thu Nov 29 13:11:11 2018
 # --------------------------------------------------- #
+
 
 #' IF `a` is not NULL choose `a` else take `b`
 #' @name AorB
@@ -23,8 +25,12 @@
 #' @author William Revelle (\email{revelle@@northwestern.edu})
 #' @keywords internal
 #' 
-head_tail <- function(x, hlength = 4, tlength = 4, 
-                      digits = 2, ellipsis = TRUE) {
+head_tail <- function(x, 
+                      hlength = 4, 
+                      tlength = 4, 
+                      digits = 2, 
+                      ellipsis = TRUE) {
+  
   if (is.data.frame(x) | is.matrix(x)) {
     if (is.matrix(x)) x = data.frame(unclass(x))
     nvar <- dim(x)[2]
@@ -59,8 +65,13 @@ head_tail <- function(x, hlength = 4, tlength = 4,
 #' @inheritParams doMortalityModels
 #' @keywords internal
 #' @export
-wide2long <- function(data, x = NULL, y = NULL, 
-                      which.x = NULL, which.y = NULL, ...) {
+wide2long <- function(data, 
+                      x = NULL, 
+                      y = NULL, 
+                      which.x = NULL, 
+                      which.y = NULL, 
+                      ...) {
+  
   if (is.null(x)) x = 1:nrow(data)
   if (is.null(y)) y = 1:ncol(data)
   if (is.null(which.x)) which.x = x
@@ -78,7 +89,13 @@ wide2long <- function(data, x = NULL, y = NULL,
 #' @inheritParams wide2long
 #' @keywords internal
 #' @export
-wide.list.2.long.df <- function(data, x, y, which.x = NULL, which.y = NULL, ...) {
+wide.list.2.long.df <- function(data, 
+                                x, 
+                                y, 
+                                which.x = NULL, 
+                                which.y = NULL, 
+                                ...) {
+  
   fn  <- function(Z) wide2long(data = Z, x, y, which.x, which.y)
   B   <- lapply(data, fn)
   out <- NULL

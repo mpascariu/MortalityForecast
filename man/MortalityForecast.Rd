@@ -28,7 +28,6 @@ Other contributors:
 \itemize{
   \item Marie-Pier Bergeron-Boucher [contributor]
   \item Adam Lenart [contributor]
-  \item Jim Oeppen [contributor]
 }
 
 }
