@@ -35,6 +35,9 @@ An object of the class \code{predict.MRW} with components:
 Returns forecasts and other information for a Multivariate 
 Random Walk Model.
 }
+\examples{
+# For examples go to ?model.MRW
+}
 \author{
 Marius D. Pascariu
 }

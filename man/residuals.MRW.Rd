@@ -14,3 +14,6 @@
 \description{
 Computed deviance residuals for a Multivariate Random-Walk model.
 }
+\examples{
+# For examples go to ?model.MRW
+}

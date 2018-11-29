@@ -29,5 +29,5 @@ Note: the output is a ggplot2 object. Therefore, one can add or
 modify the components of the figure.
 }
 \examples{
-# For examples go to ?model_Oeppen
+# For examples go to ?model.Oeppen
 }

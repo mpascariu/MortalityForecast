@@ -27,9 +27,9 @@
 #' 
 #' M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 #' 
-#' oex <- getObserved(M, data.out = "ex")
-#' fex <- getFitted(M, data.out = "ex")
-#' rex <- getResiduals(M, data.out = "ex")
+#' oex <- get.Observed(M, data.out = "ex")
+#' fex <- get.Fitted(M, data.out = "ex")
+#' rex <- get.Residuals(M, data.out = "ex")
 #' @export
 doMortalityModels <- function(data, 
                               x = NULL, 
@@ -52,34 +52,34 @@ doMortalityModels <- function(data,
 
   # The Naive model - Multivariate Random-Walk
   if ("MRW" %in% models) {
-    MRW <- model_MRW(data = log(mx.data), x = x, y = y, include.drift = FALSE)
+    MRW <- model.MRW(data = log(mx.data), x = x, y = y, include.drift = FALSE)
   }
   # Random Walk with drift
   if ("MRWD" %in% models) {
-    MRWD <- model_MRW(data = log(mx.data), x = x, y = y, include.drift = TRUE)
+    MRWD <- model.MRW(data = log(mx.data), x = x, y = y, include.drift = TRUE)
   }
   # Lee-Carter (1992)
   if ("LC" %in% models) {
     LC <- LC(data = mx.data, x = x, y = y, link = "log")
   }
   if ("LeeCarter" %in% models) {
-    LeeCarter <- model_LeeCarter(data = mx.data, x = x, y = y)
+    LeeCarter <- model.LeeCarter(data = mx.data, x = x, y = y)
   }
   # Hyndman-Ullah (1992)
   if ("HyndmanUllah" %in% models) {
-    HyndmanUllah <- model_HyndmanUllah(data = mx.data, x = x, y = y)
+    HyndmanUllah <- model.HyndmanUllah(data = mx.data, x = x, y = y)
   }
   # Plat (2009)
   if ("PLAT" %in% models) PLAT <- PLAT(data = mx.data, x = x, y = y)
   # Oeppen (2008)
-  if ("Oeppen" %in% models) Oeppen <- model_Oeppen(data = dx.data, x = x, y = y)
+  if ("Oeppen" %in% models) Oeppen <- model.Oeppen(data = dx.data, x = x, y = y)
   # Maximum Entropy Mortality Models - PLC (2018)
-  if ("MEM2" %in% models)  MEM2 <- model_MEM(data = dx.data, x = x, y = y, n = 2)
-  if ("MEM3" %in% models)  MEM3 <- model_MEM(data = dx.data, x = x, y = y, n = 3)
-  if ("MEM4" %in% models)  MEM4 <- model_MEM(data = dx.data, x = x, y = y, n = 4)
-  if ("MEM5" %in% models)  MEM5 <- model_MEM(data = dx.data, x = x, y = y, n = 5)
-  if ("MEM6" %in% models)  MEM6 <- model_MEM(data = dx.data, x = x, y = y, n = 6)
-  if ("MEM7" %in% models)  MEM7 <- model_MEM(data = dx.data, x = x, y = y, n = 7)
+  if ("MEM2" %in% models)  MEM2 <- model.MEM(data = dx.data, x = x, y = y, n = 2)
+  if ("MEM3" %in% models)  MEM3 <- model.MEM(data = dx.data, x = x, y = y, n = 3)
+  if ("MEM4" %in% models)  MEM4 <- model.MEM(data = dx.data, x = x, y = y, n = 4)
+  if ("MEM5" %in% models)  MEM5 <- model.MEM(data = dx.data, x = x, y = y, n = 5)
+  if ("MEM6" %in% models)  MEM6 <- model.MEM(data = dx.data, x = x, y = y, n = 6)
+  if ("MEM7" %in% models)  MEM7 <- model.MEM(data = dx.data, x = x, y = y, n = 7)
 
   remove(data, data.in, models, dx.data, mx.data)
   out <- as.list(environment())

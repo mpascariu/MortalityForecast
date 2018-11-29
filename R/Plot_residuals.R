@@ -42,8 +42,8 @@
 #' \code{\link[fields]{image.plot}}. See \code{\link[fields]{image.plot}} 
 #' for further parameters that can be passed to this type of plots.
 #'
-#' When \code{plotType = "signplot"} a two dimensional black and white map of the
-#' residuals is plotted with dark grey representing negative residuals and 
+#' When \code{plotType = "signplot"} a two dimensional black and white map of 
+#' the residuals is plotted with dark grey representing negative residuals and 
 #' light grey representing positive residuals. This is produced using 
 #' function \code{\link[graphics]{image.default}}. 
 #'   

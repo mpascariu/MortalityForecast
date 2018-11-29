@@ -65,3 +65,6 @@ The output is a list with the components:
 \description{
 #' Forecast the Age at Death Distribution using the Coherent Oeppen model
 }
+\examples{
+# For examples go to ?model.OeppenC
+}

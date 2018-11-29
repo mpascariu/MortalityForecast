@@ -5,14 +5,18 @@
 # --------------------------------------------------- #
 
 #' Get Predicted Values
+#' 
+#' @inherit get.Fitted description
 #' @param object An object of class \code{doForecasts}.
 #' @inheritParams evalAccuracy.doBackTesting
 #' @seealso \code{\link{doForecasts}}
 #' @author Marius D. Pascariu
 #' @export
-getForecasts <- function(object, 
-                         data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                         ...) {
+get.Forecasts <- function(object, 
+                          data.out = c("qx", "mx", "dx", "lx", 
+                                       "Lx", "Tx", "ex"),
+                          ...) {
+  
   data.out <- match.arg(data.out)
   Mn <- object$input$object$input$models # Model names
   x  <- object$x
@@ -38,7 +42,7 @@ getForecasts <- function(object,
     MX[[i]] <- mx
   }
   
-  fn <- function(mx, x_max = 110) {
+  fn <- function(mx) {
     xx <- x
     Z <- convertFx(x = xx, data = mx, from = "mx", to = data.out, lx0 = 1)
     Z[paste(object$x), ]
@@ -46,6 +50,6 @@ getForecasts <- function(object,
   
   out <- lapply(MX, fn)
   names(out) <- Mn
-  out <- structure(class = "getForecasts", out)
+  out <- structure(class = "get.Forecasts", out)
   return(out)
 }

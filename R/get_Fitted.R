@@ -1,6 +1,16 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Thu Nov 29 14:25:29 2018
+# --------------------------------------------------- #
 
 
 #' Get Fitted Values
+#' 
+#' Extract the values from an object containing an estimated mortality model
+#' (e.g. \code{LeeCarter, Oeppen} etc.). This function allows the user to read 
+#' the values already converted to a life table index (e.g. life expectancy) 
+#' by specifying the requiered format in the argument \code{data.out}.
 #' @param object An object of class \code{MortalityModels}.
 #' @inheritParams evalAccuracy.doBackTesting
 #' @seealso \code{\link{doMortalityModels}}
@@ -8,9 +18,9 @@
 #' @examples 
 #' # For examples go to ?doMortalityModels
 #' @export
-getFitted <- function(object, 
-                      data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                      ...) {
+get.Fitted <- function(object, 
+                       data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                       ...) {
   
   data.out <- match.arg(data.out)
   Mn   <- object$input$models # Model names
@@ -41,17 +51,17 @@ getFitted <- function(object,
   
   out <- lapply(MX, fn)
   names(out) <- Mn
-  out <- structure(class = "getFitted", out)
+  out <- structure(class = "get.Fitted", out)
   return(out)
 }
 
 
-#' Summary for getFitted
-#' @param object An object of class \code{\link{getFitted}}.
-#' @inheritParams summary.getResiduals
+#' Summary for get.Fitted
+#' @param object An object of class \code{\link{get.Fitted}}.
+#' @inheritParams summary.get.Residuals
 #' @keywords internal
 #' @export
-summary.getFitted <- function(object, ..., digits = NULL) {
+summary.get.Fitted <- function(object, ..., digits = NULL) {
   digits <- digits %||% max(4L, getOption("digits") - 2L)
-  summary.getResiduals(object, ..., digits)
+  summary.get.Residuals(object, ..., digits)
 }

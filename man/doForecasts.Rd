@@ -37,5 +37,5 @@ MM <- c("MRWD", "HyndmanUllah", "Oeppen", "MEM6")
 M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 P <- doForecasts(M, h, level = 95, jumpchoice = "actual")
 
-pex <- getForecasts(P, data.out = "ex")
+pex <- get.Forecasts(P, data.out = "ex")
 }

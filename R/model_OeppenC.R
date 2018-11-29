@@ -7,7 +7,7 @@
 
 #' The Coherent Oeppen Mortality Model (Oeppen-C)
 #' 
-#' @inheritParams model_Oeppen
+#' @inheritParams model.Oeppen
 #' @param data.B A data.frame or a matrix containing mortality data for the 
 #' benchmark population. Must be the same format as in \code{data}; 
 #' @return The output is a list with the components:
@@ -29,7 +29,7 @@
 #' \code{\link{predict.Oeppen}}
 #' \code{\link{plot.Oeppen}}
 #' @export
-model_OeppenC <- function(data, 
+model.OeppenC <- function(data, 
                           data.B, 
                           x = NULL, 
                           y = NULL, 
@@ -52,7 +52,7 @@ model_OeppenC <- function(data,
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Fit benchmark model
-  B <- model_Oeppen(data = data.B, x = x, y = y, verbose = FALSE)
+  B <- model.Oeppen(data = data.B, x = x, y = y, verbose = FALSE)
   B.cdx <- with(coef(B), clrInv(c(kt) %*% t(bx)))
   
   # Estimate model parameters: a[x], b[x], k[t]
@@ -119,6 +119,7 @@ model_OeppenC <- function(data,
 #'  \item{info}{Short details about the model;}
 #'  \item{benchmark}{An object containing the predicted results for the 
 #'  benchmark population.}
+#' @examples # For examples go to ?model.OeppenC
 #' @export
 predict.OeppenC <- function(object,
                             h,
@@ -186,6 +187,7 @@ predict.OeppenC <- function(object,
 #' Residuals of the Coherent Oeppen Mortality Model
 #' @param object An object of class \code{"OeppenC"}
 #' @inheritParams residuals_default
+#' @examples # For examples go to ?model.OeppenC
 #' @export
 residuals.OeppenC <- function(object, ...){
   residuals_default(object, ...)

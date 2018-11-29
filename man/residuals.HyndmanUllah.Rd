@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_HyndmanUllah.R
 \name{residuals.HyndmanUllah}
 \alias{residuals.HyndmanUllah}
-\title{Residuals HyndmanUllah}
+\title{Residuals of the Hyndman-Ullah Mortality Model}
 \usage{
 \method{residuals}{HyndmanUllah}(object, ...)
 }
@@ -12,5 +12,8 @@
 \item{...}{Further arguments passed to or from other methods.}
 }
 \description{
-Residuals HyndmanUllah
+Residuals of the Hyndman-Ullah Mortality Model
+}
+\examples{
+# For examples go to ?model.HyndmanUllah
 }

@@ -37,27 +37,55 @@
 #' @references \insertAllCited{}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
 #' @examples
+#' # Example 1 ----------------------
 #' # Data
 #' x  <- 0:100
 #' y  <- 1980:2014
 #' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' 
 #' # Fit model
-#' M <- model_Oeppen(dx, x, y)
+#' M <- model.Oeppen(dx, x, y)
 #' M
 #' R <- residuals(M)
 #' 
 #' summary(M)
 #' coef(M)
 #' 
+#' # Plot observed and fitted values
 #' plot(M, plotType = "observed")
 #' plot(M, plotType = "fitted")
 #' 
+#' # Plot residuals
 #' plot(R, plotType = "scatter")
 #' plot(R, plotType = "colourmap")
 #' plot(R, plotType = "signplot")
+#' 
+#' # Example 1 ----------------------
+#' # Perform forecasts
+#' P  <- predict(M, h = 16)
+#' P
+#' 
+#' plot(P, plotType = "mean")
+#' plot(P, plotType = "lower")
+#' plot(P, plotType = "upper")
+#' 
+#' #' # Example 2 ----------------------
+#' # One can specify manually the ARIMA order, a drift to be included or not 
+#' # and the jump choice of the first forecast year.
+#' P2 <- predict(M, h = 20, 
+#'               order = c(0,1,0), 
+#'               include.drift = TRUE, 
+#'               jumpchoice = "fit")
+#' 
+#' \dontrun{
+#' # Example 3 ----------------------
+#' # Compute life tables using forecast values using the MortalityLaws R package
+#' library(MortalityLaws)
+#' dx <- P$predicted.values
+#' lt <- LifeTable(x = P$x, dx = dx)
+#' }
 #' @export
-model_Oeppen <- function(data, 
+model.Oeppen <- function(data, 
                          x = NULL, 
                          y = NULL, 
                          verbose = TRUE, 
@@ -117,7 +145,7 @@ model_Oeppen <- function(data,
 
 
 #' Validate input values
-#' @param X A list with input arguments provided in \code{\link{model_Oeppen}} function
+#' @param X A list with input arguments provided in \code{\link{model.Oeppen}} function
 #' @keywords internal
 Oeppen.input.check <- function(X) {
   # Validate the other arguments
@@ -125,12 +153,12 @@ Oeppen.input.check <- function(X) {
     if (any(data < 0)) {
       stop("'data' contains negative values. ",
            "The compositions must always be positive or equal to zero.", 
-           call. = F)
+           call. = FALSE)
     }
     if (any(is.na(data))) {
       stop("'data' contains NA values. ",
            "The function does not know how to deal with these yet.", 
-           call. = F)
+           call. = FALSE)
     }
     if (any(is.na(data))) {
       stop("'data' contains NA values", call. = FALSE)
@@ -183,33 +211,7 @@ Oeppen.input.check <- function(X) {
 #'  \item{x}{Vector of ages used in prediction;} 
 #'  \item{y}{Vector of years used in prediction.}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
-#' @examples 
-#' # Example 1 ----------------------
-#' x  <- 0:100
-#' y  <- 1980:2014
-#' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' M  <- model_Oeppen(dx, x, y)
-#' P  <- predict(M, h = 16)
-#' 
-#' plot(P, plotType = "mean")
-#' plot(P, plotType = "lower")
-#' plot(P, plotType = "upper")
-#' 
-#' #' # Example 2 ----------------------
-#' # One can specify manually the ARIMA order, a drift to be included or not 
-#' # and the jump choice of the first forecast year.
-#' P2 <- predict(M, h = 20, 
-#'               order = c(0,1,0), 
-#'               include.drift = TRUE, 
-#'               jumpchoice = "fit")
-#' 
-#' \dontrun{
-#' # Example 3 ----------------------
-#' # Compute life tables using forecast values using the MortalityLaws R package
-#' library(MortalityLaws)
-#' dx <- P$predicted.values
-#' lt <- LifeTable(x = P$x, dx = dx)
-#' }
+#' @examples # For examples go to ?model.Oeppen
 #' @export
 predict.Oeppen <- function(object,
                            h, 
@@ -315,6 +317,7 @@ get_dx_values <- function(object, jumpchoice, y, kt, B.kt = NULL) {
 #' Residuals of the Oeppen Mortality Model
 #' @param object An object of class \code{"Oeppen"}
 #' @inheritParams residuals_default
+#' @examples # For examples go to ?model.Oeppen
 #' @export
 residuals.Oeppen <- function(object, ...){
   residuals_default(object, ...)
@@ -382,7 +385,7 @@ print.predict.Oeppen <- function(x, ...) {
 #' @inherit plot.MEM details
 #' @inheritParams plot.MEM
 #' @examples 
-#' # For examples go to ?model_Oeppen
+#' # For examples go to ?model.Oeppen
 #' @export
 plot.Oeppen <- function(x, plotType = c("fitted", "observed"), 
                            ny = 7, level = 80, ...){

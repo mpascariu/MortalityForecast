@@ -45,7 +45,7 @@ evalAccuracy.doBackTesting <- function(object,
                   lx0 = 1, ...)
   # Get the forecast results in the same format
   # H is a list of matrices, each matrix coresponding to 1 model
-  H  <- getForecasts(object$Forecast, data.out) # forecast data
+  H  <- get.Forecasts(object$Forecast, data.out) # forecast data
   B  <- H[[1]]                                  # Benchmark model
   Mn <- object$input$models                     # Model names
   
@@ -100,7 +100,7 @@ evalAccuracy.doBBackTesting <- function(object,
 
 # #' Print evalAccuracy
 # #' @param x An object of the class \code{evalAccuracy}
-# #' @inheritParams summary.getResiduals
+# #' @inheritParams summary.get.Residuals
 # #' @keywords internal
 # #' @export
 # print.evalAccuracy <- function(x, digits = max(3L, getOption("digits") - 3L), 

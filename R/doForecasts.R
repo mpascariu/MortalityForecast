@@ -24,7 +24,7 @@
 #' M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 #' P <- doForecasts(M, h, level = 95, jumpchoice = "actual")
 #' 
-#' pex <- getForecasts(P, data.out = "ex")
+#' pex <- get.Forecasts(P, data.out = "ex")
 #' @export
 doForecasts <- function(object, 
                         h, 
@@ -54,7 +54,8 @@ doForecasts <- function(object,
       P <- predict(object = M, 
                    h = h, 
                    jumpchoice = jumpchoice, 
-                   level = level, ...)
+                   level = level, 
+                   ...)
     }
     assign(Mn[i], P)
   }

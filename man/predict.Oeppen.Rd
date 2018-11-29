@@ -56,32 +56,7 @@ The output is a list with the components:
 Forecast the Age at Death Distribution using the Oeppen model.
 }
 \examples{
-# Example 1 ----------------------
-x  <- 0:100
-y  <- 1980:2014
-dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-M  <- model_Oeppen(dx, x, y)
-P  <- predict(M, h = 16)
-
-plot(P, plotType = "mean")
-plot(P, plotType = "lower")
-plot(P, plotType = "upper")
-
-#' # Example 2 ----------------------
-# One can specify manually the ARIMA order, a drift to be included or not 
-# and the jump choice of the first forecast year.
-P2 <- predict(M, h = 20, 
-              order = c(0,1,0), 
-              include.drift = TRUE, 
-              jumpchoice = "fit")
-
-\dontrun{
-# Example 3 ----------------------
-# Compute life tables using forecast values using the MortalityLaws R package
-library(MortalityLaws)
-dx <- P$predicted.values
-lt <- LifeTable(x = P$x, dx = dx)
-}
+# For examples go to ?model.Oeppen
 }
 \author{
 Marius D. Pascariu and Marie-Pier Bergeron-Boucher

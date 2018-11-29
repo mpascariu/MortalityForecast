@@ -38,7 +38,7 @@ MM <- c("MRWD", "HyndmanUllah", "Oeppen")
 
 M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
 
-oex <- getObserved(M, data.out = "ex")
-fex <- getFitted(M, data.out = "ex")
-rex <- getResiduals(M, data.out = "ex")
+oex <- get.Observed(M, data.out = "ex")
+fex <- get.Fitted(M, data.out = "ex")
+rex <- get.Residuals(M, data.out = "ex")
 }

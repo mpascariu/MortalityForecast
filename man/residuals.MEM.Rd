@@ -15,9 +15,5 @@
 Computed deviance residuals for a fitted Maximum-Entropy Mortality Model.
 }
 \examples{
-x  <- 0:110
-y  <- 1965:2014
-dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-M  <- model_MEM(dx, x, y, n = 5)
-residuals(M)
+# For examples go to ?model.MEM
 }

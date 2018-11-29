@@ -14,3 +14,6 @@
 \description{
 Residuals of the Li-Lee Mortality Model
 }
+\examples{
+# For examples go to ?model.LiLee
+}

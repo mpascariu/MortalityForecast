@@ -8,7 +8,7 @@
 #' 
 #' Fit the Lee-Carter mortality model
 #' @inheritParams doMortalityModels
-#' @inherit model_Oeppen return
+#' @inherit model.Oeppen return
 #' @seealso 
 #' \code{\link{predict.LeeCarter}}
 #' @details \insertNoCite{lee1992}{MortalityForecast}
@@ -20,7 +20,7 @@
 #' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
 #' 
 #' # Fit the model
-#' M <- model_LeeCarter(data = mx, x = x, y = y)
+#' M <- model.LeeCarter(data = mx, x = x, y = y)
 #' M
 #' summary(M)
 #' 
@@ -35,7 +35,12 @@
 #' P <- predict(M, h = 20)
 #' P
 #' @export
-model_LeeCarter <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
+model.LeeCarter <- function(data, 
+                            x = NULL, 
+                            y = NULL, 
+                            verbose = TRUE, 
+                            ...){
+  
   input <- c(as.list(environment()))
   if (any(data == 0)) {
     stop("The input data contains death rates equal to zero at various ages.")
@@ -88,17 +93,9 @@ model_LeeCarter <- function(data, x = NULL, y = NULL, verbose = TRUE, ...){
 #' @inheritParams predict.Oeppen
 #' @inherit predict.Oeppen return
 #' @seealso 
-#' \code{\link{model_LeeCarter}}
+#' \code{\link{model.LeeCarter}}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
-#' @examples 
-#' # Data
-#' x  <- 0:89
-#' y  <- 1985:2014
-#' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
-#' 
-#' M <- model_LeeCarter(data = mx, x = x, y = y) # fit
-#' P <- predict(M, h = 20)  # forecast
-#' P
+#' @examples # For examples go to ?model.LeeCarter
 #' @export
 predict.LeeCarter <- function(object, 
                                h, 
@@ -161,7 +158,7 @@ predict.LeeCarter <- function(object,
 #' the k[t] time-series. If necesary an adjustment for the jump-off is 
 #' provided.
 #' @inheritParams predict.LeeCarter 
-#' @inheritParams model_LeeCarter
+#' @inheritParams model.LeeCarter
 #' @param kt Predicted k[t] values in the model;
 #' @param B.kt Predicted k[t] values of the benchmark model, used in the Li-Lee model only.
 #' @keywords internal
@@ -211,6 +208,7 @@ get_mx_values <- function(object, jumpchoice, y, kt, B.kt = NULL){
 #' Residuals of the Lee-Carter Mortality Model
 #' @param object An object of class \code{"LeeCarter"}
 #' @inheritParams residuals_default
+#' @examples # For examples go to ?model.LeeCarter
 #' @export
 residuals.LeeCarter <- function(object, ...){
   residuals_default(object, ...)

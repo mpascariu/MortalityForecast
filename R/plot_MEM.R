@@ -15,12 +15,15 @@
 #' Default: 80.
 #' @details Note: the output is a ggplot2 object. Therefore, one can add or 
 #' modify the components of the figure.
-#' @seealso \code{\link{model_MEM}}
+#' @seealso \code{\link{model.MEM}}
 #' @examples 
-#' # For examples go to ?model_MEM
+#' # For examples go to ?model.MEM
 #' @export   
-plot.MEM <- function(x, plotType = c("fitted", "observed"), 
-                                    ny = 7, level = 80, ...) 
+plot.MEM <- function(x, 
+                     plotType = c("fitted", "observed"), 
+                     ny = 7, 
+                     level = 80, 
+                     ...) 
 {
   plotType <- match.arg(plotType)
   if (plotType == "fitted") {
@@ -40,7 +43,7 @@ plot.MEM <- function(x, plotType = c("fitted", "observed"),
 #' Plot Convergence in Age at Death Distribution
 #' 
 #' @inheritParams fitted2dens
-#' @inheritParams model_MEM
+#' @inheritParams model.MEM
 #' @keywords internal
 ggplotDistribConvergence <- function(mat, x, y, ny, level) {
   dx = ..quantile.. <- NULL # hack CRAN note
@@ -77,7 +80,7 @@ ggplotDistribConvergence <- function(mat, x, y, ny, level) {
 #' x  <- 0:110
 #' y  <- 1965:2014
 #' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' M  <- model_MEM(dx, x, y, n = 5)
+#' M  <- model.MEM(dx, x, y, n = 5)
 #' fitted2dens(fitted(M), x, y[-1])
 #' @keywords internal
 #' @export
@@ -110,7 +113,7 @@ fitted2dens <- function(mat, x, y, ny = 7, lx0 = 300) {
 #' ggplot the predicted values of a Maximum-Entropy Mortality Model
 #' 
 #' @param x An object of the class \code{\link{predict.MEM}}.
-#' @param y An object of the class \code{\link{model_MEM}}. 
+#' @param y An object of the class \code{\link{model.MEM}}. 
 #' Needed only for ploting moments. See \code{plotType}.
 #' @param plotType The type of the plot. The alternatives are 
 #' \code{"mean", "lower", "upper", "raw_moments", "normalised_moments", "scaled_moments"}. 
@@ -119,10 +122,13 @@ fitted2dens <- function(mat, x, y, ny = 7, lx0 = 300) {
 #' @examples
 #' # For examples go to ?predict.MEM
 #' @export
-plot.predict.MEM <- function(x, y = NULL,
-                             plotType = c("mean", "lower", "upper", 
-                                          "raw_moments", "normalised_moments", "scaled_moments"), 
-                             ny = 7, level = 80, ...) 
+plot.predict.MEM <- function(x, 
+                             y = NULL,
+                             plotType = c("mean", "lower", "upper", "raw_moments", 
+                                          "normalised_moments", "scaled_moments"), 
+                             ny = 7, 
+                             level = 80, 
+                             ...) 
 {
   plotType <- match.arg(plotType)
   if (plotType == "mean") {

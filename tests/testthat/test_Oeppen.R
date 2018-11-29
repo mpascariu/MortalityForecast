@@ -10,8 +10,8 @@ library(MortalityForecast)
 x = 0:110
 y = 1960:2016
 D <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-M1 <- model_Oeppen(D, x = x, y = y)
-M2 <- model_Oeppen(D)
+M1 <- model.Oeppen(D, x = x, y = y)
+M2 <- model.Oeppen(D)
 vsn <- 1e-200
 
 testCodaFit <- function(M){
@@ -76,15 +76,15 @@ test_that("Test that plots are produced",{
 
 # Validate input tests
 
-expect_error(model_Oeppen(D, x = c(NA,1:109), y = 1960:2016))
-expect_error(model_Oeppen(D, x = 0:110, y = c(NA,1961:2016)))
-expect_error(model_Oeppen(D, y = 1960:20160))
-expect_error(model_Oeppen(D, x = 0:1000))
+expect_error(model.Oeppen(D, x = c(NA,1:109), y = 1960:2016))
+expect_error(model.Oeppen(D, x = 0:110, y = c(NA,1961:2016)))
+expect_error(model.Oeppen(D, y = 1960:20160))
+expect_error(model.Oeppen(D, x = 0:1000))
 
 dNA <- D
 dNA[1,1] <- NA
-expect_error(model_Oeppen(dNA))
+expect_error(model.Oeppen(dNA))
 
 dNeg <- dNA
 dNeg[1,1] <- -1
-expect_error(model_Oeppen(dNeg))
+expect_error(model.Oeppen(dNeg))

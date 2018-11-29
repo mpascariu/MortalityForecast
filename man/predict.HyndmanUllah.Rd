@@ -42,17 +42,10 @@ The output is a list with the components:
 Forecast age-specific death rates using the Hyndman-Ullah mortality model
 }
 \examples{
-# Data
-x  <- 0:89
-y  <- 1985:2014
-mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
-
-M <- model_HyndmanUllah(data = mx, x = x, y = y) # fit
-P <- predict(M, h = 20)  # forecast
-P
+# For examples go to ?model.HyndmanUllah
 }
 \seealso{
-\code{\link{model_HyndmanUllah}}
+\code{\link{model.HyndmanUllah}}
 }
 \author{
 Marius D. Pascariu and Marie-Pier Bergeron-Boucher

@@ -38,7 +38,7 @@
 #' # Fit model the Maximum-Entropy Mortality of order 5,
 #' # that is using the first 6 statistical moments (moment 0 to 5).
 #' 
-#' M <- model_MEM(data = dx, x = x, y = y, n = 5)
+#' M <- model.MEM(data = dx, x = x, y = y, n = 5)
 #' M
 #' R <- residuals(M)
 #' 
@@ -48,8 +48,19 @@
 #' plot(R, plotType = "scatter")
 #' plot(R, plotType = "colourmap")
 #' plot(R, plotType = "signplot")
+#' 
+#' # Perform forecasts
+#' P <- predict(M, h = 16, x.h = 0:120)
+#' 
+#' plot(P, plotType = "mean")
+#' plot(P, plotType = "lower")
+#' plot(P, plotType = "upper")
+#' 
+#' plot(P, M, plotType = "raw_moments")
+#' plot(P, M, plotType = "normalised_moments")
+
 #' @export
-model_MEM <- function(data, 
+model.MEM <- function(data, 
                       x = NULL, 
                       y = NULL, 
                       n = 5, 
@@ -73,7 +84,7 @@ model_MEM <- function(data,
   nMT <- log(abs(nM))
   sg  <- sign(nM)
   
-  V   <- model_MRW(t(nMT), x = NULL, y, include.drift = TRUE)
+  V   <- model.MRW(t(nMT), x = NULL, y, include.drift = TRUE)
   fnM <- fnM <- t(exp(fitted(V)) * as.numeric(sg[1,]))       # fitted normalized moments
   frM <- convertMoments(fnM, from = "normalized", to = "raw") # fitted raw moments
   
@@ -102,7 +113,7 @@ model_MEM <- function(data,
 
 
 #' Find age and year vectors
-#' @inheritParams model_MEM
+#' @inheritParams model.MEM
 #' @keywords internal
 #' @export
 find_ages_and_years <- function(data, x, y) {
@@ -144,12 +155,7 @@ find_ages_and_years <- function(data, x, y) {
 #' Computed deviance residuals for a fitted Maximum-Entropy Mortality Model.
 #' @param object An object of class \code{MEM};
 #' @inheritParams residuals_default
-#' @examples 
-#' x  <- 0:110
-#' y  <- 1965:2014
-#' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' M  <- model_MEM(dx, x, y, n = 5)
-#' residuals(M)
+#' @examples # For examples go to ?model.MEM
 #' @export
 residuals.MEM <- function(object, ...) {
   residuals_default(object, ...)
@@ -193,20 +199,8 @@ print.MEM <- function(x, ...) {
 #'  in the extrapolation of the moments;} 
 #'  \item{x}{Vector of ages used in prediction;} 
 #'  \item{y}{Vector of years used in prediction.}
-#' @seealso \code{\link{model_MEM}}
-#' @examples
-#' x  <- 0:110
-#' y  <- 1985:2016
-#' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' M  <- model_MEM(dx, x, y, n = 5)
-#' P  <- predict(M, h = 16, x.h = 0:120)
-#' 
-#' plot(P, plotType = "mean")
-#' plot(P, plotType = "lower")
-#' plot(P, plotType = "upper")
-#' 
-#' plot(P, M, plotType = "raw_moments")
-#' plot(P, M, plotType = "normalised_moments")
+#' @seealso \code{\link{model.MEM}}
+#' @examples # For examples go to ?model.MEM
 #' @export
 predict.MEM <- function(object, 
                         h, 

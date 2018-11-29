@@ -44,8 +44,8 @@ evalRobustness.doBBackTesting <- function(object,
   RR <- 0
   N  <- -c(1:3)
   for (s in 1:(sn - 1)) {
-    F1 <- getForecasts(O[[s]]$Forecast, data.out)
-    F2 <- getForecasts(O[[s + 1]]$Forecast, data.out)
+    F1 <- get.Forecasts(O[[s]]$Forecast, data.out)
+    F2 <- get.Forecasts(O[[s + 1]]$Forecast, data.out)
     # The benchmark is always the first model specified in Mn (`models` argument)
     b1 <- F1[[1]]
     b2 <- F2[[1]]

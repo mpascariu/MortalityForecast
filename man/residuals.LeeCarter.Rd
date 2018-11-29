@@ -14,3 +14,6 @@
 \description{
 Residuals of the Lee-Carter Mortality Model
 }
+\examples{
+# For examples go to ?model.LeeCarter
+}

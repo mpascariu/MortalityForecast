@@ -8,14 +8,24 @@
 #' 
 #' Fit the Li-Lee mortality model
 #' @inheritParams doMortalityModels
-#' @inheritParams model_OeppenC
-#' @inherit model_OeppenC return
+#' @inheritParams model.OeppenC
+#' @inherit model.OeppenC return
 #' @seealso 
 #' \code{\link{predict.LiLee}}
 #' @details \insertNoCite{li2005}{MortalityForecast}
 #' @references \insertAllCited{}
+#' @examples 
+#' # Data
+#' x <- 0:89
+#' y <- 1985:2014
+#' B.mx <- HMD_male$mx$USA[paste(x), paste(y)]
+#' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
+#' 
+#' M <- model.LiLee(data = mx, data.B = B.mx, x = x, y = y) # fit
+#' P <- predict(M, h = 20)  # forecast
+#' P
 #' @export
-model_LiLee <- function(data, 
+model.LiLee <- function(data, 
                         data.B, 
                         x = NULL, 
                         y = NULL, 
@@ -36,7 +46,7 @@ model_LiLee <- function(data,
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Fit benchmark model
-  B <- model_LeeCarter(data = data.B, x = x, y = y)
+  B <- model.LeeCarter(data = data.B, x = x, y = y)
   B.cmx <- with(B$coefficients, c(bx) %*% t(kt))
   
   # Estimate model parameters: a[x], b[x], k[t]
@@ -79,18 +89,9 @@ model_LiLee <- function(data,
 #' @inheritParams predict.OeppenC
 #' @inherit predict.OeppenC return
 #' @seealso 
-#' \code{\link{model_LiLee}}
+#' \code{\link{model.LiLee}}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
-#' @examples 
-#' # Data
-#' x <- 0:89
-#' y <- 1985:2014
-#' B.mx <- HMD_male$mx$USA[paste(x), paste(y)]
-#' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
-#' 
-#' M <- model_LiLee(data = mx, data.B = B.mx, x = x, y = y) # fit
-#' P <- predict(M, h = 20)  # forecast
-#' P
+#' @examples # For examples go to ?model.LiLee
 #' @export
 predict.LiLee <- function(object,
                           h,
@@ -168,6 +169,7 @@ predict.LiLee <- function(object,
 #' Residuals of the Li-Lee Mortality Model
 #' @param object An object of class \code{"LeeCarter2"}
 #' @inheritParams residuals_default
+#' @examples # For examples go to ?model.LiLee
 #' @export
 residuals.LiLee <- function(object, ...){
   residuals_default(object, ...)

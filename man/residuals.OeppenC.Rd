@@ -14,3 +14,6 @@
 \description{
 Residuals of the Coherent Oeppen Mortality Model
 }
+\examples{
+# For examples go to ?model.OeppenC
+}

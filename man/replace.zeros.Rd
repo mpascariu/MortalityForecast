@@ -2,8 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{replace.zeros}
 \alias{replace.zeros}
-\title{If there are death rates are equal to zero they will be replaced
-using the multiplicative replacement strategy.}
+\title{Replace zero's in input matrix}
 \usage{
 replace.zeros(mx, radix = 1e+05)
 }
@@ -13,8 +12,9 @@ replace.zeros(mx, radix = 1e+05)
 \item{radix}{radix. Default: 1e5.}
 }
 \description{
-If there are death rates are equal to zero they will be replaced
-using the multiplicative replacement strategy.
+If a matrix or data.frame contains death-rates equal to zero,
+they will be replaced with positive values using the multiplicative 
+replacement strategy.
 }
 \examples{
 x  <- 0:25

@@ -9,14 +9,29 @@
 #' @inheritParams doMortalityModels
 #' @inheritParams demography::fdm
 #' @inherit demography::fdm details
-#' @inherit model_Oeppen return
+#' @inherit model.Oeppen return
 #' @seealso 
-#' \code{\link{model_LeeCarter}}
-#' \code{\link{model_Oeppen}}
+#' \code{\link{model.LeeCarter}}
+#' \code{\link{model.Oeppen}}
 #' @details \insertNoCite{hyndman2007}{MortalityForecast}
 #' @references \insertAllCited{}
+#' @examples 
+#' # Data
+#' x  <- 0:89
+#' y  <- 1985:2014
+#' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
+#' 
+#' M <- model.HyndmanUllah(data = mx, x = x, y = y) # fit
+#' P <- predict(M, h = 20)  # forecast
+#' P
 #' @export
-model_HyndmanUllah <- function(data, x, y, order = 1, transform = TRUE, ...) {
+model.HyndmanUllah <- function(data, 
+                               x, 
+                               y, 
+                               order = 1, 
+                               transform = TRUE, 
+                               ...) {
+  
   input <- c(as.list(environment()))
   x <- x %||% 1:nrow(data)
   y <- y %||% 1:ncol(data)
@@ -38,9 +53,16 @@ model_HyndmanUllah <- function(data, x, y, order = 1, transform = TRUE, ...) {
   cf <- NULL
   
   # Exit
-  out <- list(input = input, info = info, call = match.call(), 
-              fitted.values = fv, observed.values = data,
-              coefficients = cf, residuals = resid, x = x, y = y, demography = M)
+  out <- list(input = input, 
+              info = info, 
+              call = match.call(), 
+              fitted.values = fv, 
+              observed.values = data,
+              coefficients = cf, 
+              residuals = resid, 
+              x = x, 
+              y = y, 
+              demography = M)
   out <- structure(class = "HyndmanUllah", out)
   return(out)
 }
@@ -52,21 +74,17 @@ model_HyndmanUllah <- function(data, x, y, order = 1, transform = TRUE, ...) {
 #' @inheritParams predict.Oeppen
 #' @inherit predict.Oeppen return
 #' @seealso 
-#' \code{\link{model_HyndmanUllah}}
+#' \code{\link{model.HyndmanUllah}}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
-#' @examples 
-#' # Data
-#' x  <- 0:89
-#' y  <- 1985:2014
-#' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
-#' 
-#' M <- model_HyndmanUllah(data = mx, x = x, y = y) # fit
-#' P <- predict(M, h = 20)  # forecast
-#' P
+#' @examples # For examples go to ?model.HyndmanUllah
 #' @export
-predict.HyndmanUllah <- function(object, h, level = 95, 
+predict.HyndmanUllah <- function(object, 
+                                 h, 
+                                 level = 95, 
                                  jumpchoice = c("actual", "fit"), 
-                                 verbose = TRUE, ...){
+                                 verbose = TRUE, 
+                                 ...){
+  
   x <- object$x
   
   # Timeline
@@ -77,20 +95,24 @@ predict.HyndmanUllah <- function(object, h, level = 95,
   J <- match.arg(jumpchoice)
   P <- forecast(object$demography, h = h, jumpchoice = J, level = level)$rate
   m <- P[c("mean", "lower", "upper")] # forecast mx
-  Cnames <- c('mean', paste0('L', level), paste0('U', level))
-  names(m) <- Cnames
+  names(m) <- c('mean', paste0('L', level), paste0('U', level))
   
   # Exit
-  out <- list(call = match.call(), predicted.values = m[[1]],
-              conf.intervals = m[-1], x = x, y = fcy, info = object$info)
+  out <- list(call = match.call(), 
+              predicted.values = m[[1]],
+              conf.intervals = m[-1], 
+              x = x, 
+              y = fcy, 
+              info = object$info)
   out <- structure(class = 'predict.HyndmanUllah', out)
   return(out)
 }
 
 
-#' Residuals HyndmanUllah
+#' Residuals of the Hyndman-Ullah Mortality Model
 #' @param object An object of class \code{"HyndmanUllah"}
 #' @inheritParams residuals_default
+#' @examples # For examples go to ?model.HyndmanUllah
 #' @export
 residuals.HyndmanUllah <- function(object, ...){
   residuals_default(object, ...)

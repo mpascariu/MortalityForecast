@@ -129,8 +129,11 @@ find_arima <- function(a) {
 }
 
 
-#' If there are death rates are equal to zero they will be replaced
-#' using the multiplicative replacement strategy.
+#' Replace zero's in input matrix
+#' 
+#' If a matrix or data.frame contains death-rates equal to zero,
+#' they will be replaced with positive values using the multiplicative 
+#' replacement strategy.
 #' @param mx Matrix of death rates
 #' @param radix radix. Default: 1e5.
 #' @examples 

@@ -48,7 +48,7 @@
 #' y  <- 1980:2000
 #' mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
 #' 
-#' M <- model_MRW(data = log(mx), x = x, y = y, include.drift = TRUE)
+#' M <- model.MRW(data = log(mx), x = x, y = y, include.drift = TRUE)
 #' P <- predict(M, h = 16)
 #' R <- residuals(M)
 #' 
@@ -56,7 +56,7 @@
 #' matplot(pv, type = "l", log = "y")
 #' matplot(t(pv), type = "l", log = "y")
 #' @export
-model_MRW <- function(data, 
+model.MRW <- function(data, 
                       x = NULL, 
                       y = NULL, 
                       include.drift = TRUE, 
@@ -129,6 +129,7 @@ model_MRW <- function(data,
 #'  \item{y}{Numerical vector indicating the years in output.}
 #' @source The original implementation of this function was taken from 
 #' \code{StMoMo} R package.
+#' @examples # For examples go to ?model.MRW
 #' @author Marius D. Pascariu
 #' @export
 predict.MRW <- function(object, 
@@ -178,6 +179,7 @@ predict.MRW <- function(object,
 #' Computed deviance residuals for a Multivariate Random-Walk model.
 #' @param object An object of class \code{MRW};
 #' @inheritParams residuals_default
+#' @examples # For examples go to ?model.MRW
 #' @export
 residuals.MRW <- function(object, ...) {
   residuals_default(object, ...)

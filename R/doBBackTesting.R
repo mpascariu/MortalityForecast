@@ -37,7 +37,8 @@ doBBackTesting <- function(data,
                            strategy = c(f = 20, h = 20, s = 2),
                            level = 95,
                            jumpchoice = c("actual", "fit"),
-                           verbose = TRUE, ...) {
+                           verbose = TRUE, 
+                           ...) {
   
   data.in    <- match.arg(data.in)
   jumpchoice <- match.arg(jumpchoice)
@@ -61,7 +62,8 @@ doBBackTesting <- function(data,
                         models = models, 
                         level = level, 
                         jumpchoice = jumpchoice, 
-                        verbose = FALSE, ...)
+                        verbose = FALSE, 
+                        ...)
     B[[k]] <- Bk
     remove(k, yf, yh, y_, Bk)
   }

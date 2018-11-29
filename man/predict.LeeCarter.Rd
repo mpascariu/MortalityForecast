@@ -56,17 +56,10 @@ The output is a list with the components:
 Forecast age-specific death rates using the Lee-Carter model.
 }
 \examples{
-# Data
-x  <- 0:89
-y  <- 1985:2014
-mx <- HMD_male$mx$GBRTENW[paste(x), paste(y)]
-
-M <- model_LeeCarter(data = mx, x = x, y = y) # fit
-P <- predict(M, h = 20)  # forecast
-P
+# For examples go to ?model.LeeCarter
 }
 \seealso{
-\code{\link{model_LeeCarter}}
+\code{\link{model.LeeCarter}}
 }
 \author{
 Marius D. Pascariu and Marie-Pier Bergeron-Boucher

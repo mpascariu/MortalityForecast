@@ -32,14 +32,14 @@ plot.doBackTesting <- function(x,
                   ex = "The expectation of life at age x, \ne[x]")
   
   # Observed values
-  O  <- getObserved(x = x, 
-                    data.in = B$input$data.in,    
-                    data.out = data.out, 
-                    data = B$input$data)
+  O  <- get.Observed(x = x, 
+                     data.in = B$input$data.in,    
+                     data.out = data.out, 
+                     data = B$input$data)
   
   # Forecast values
-  H  <- getForecasts(object = B$Forecast, 
-                     data.out = data.out) 
+  H  <- get.Forecasts(object = B$Forecast, 
+                      data.out = data.out) 
   
   # ggplot method
   if (facet == "y") {

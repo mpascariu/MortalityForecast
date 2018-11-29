@@ -50,19 +50,8 @@ The output is a list with the components:
 Predict Maximum-Entropy Mortality Model
 }
 \examples{
-x  <- 0:110
-y  <- 1985:2016
-dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-M  <- model_MEM(dx, x, y, n = 5)
-P  <- predict(M, h = 16, x.h = 0:120)
-
-plot(P, plotType = "mean")
-plot(P, plotType = "lower")
-plot(P, plotType = "upper")
-
-plot(P, M, plotType = "raw_moments")
-plot(P, M, plotType = "normalised_moments")
+# For examples go to ?model.MEM
 }
 \seealso{
-\code{\link{model_MEM}}
+\code{\link{model.MEM}}
 }

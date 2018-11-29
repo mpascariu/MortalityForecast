@@ -1,6 +1,7 @@
 #' Compute Statistical Moments
 #' 
-#' @description Compute raw and central statistical moments of a distribution of deaths.
+#' @description Compute raw and central statistical moments of a distribution 
+#' of deaths.
 #' @details 
 #' If \eqn{f(x)} is a probability density function, then \eqn{\mu(n)} is called 
 #' the n-th moment of the probability distribution, where: \cr
@@ -11,15 +12,16 @@
 #' The order should be at least 2.  
 #' @param na.rm Logical value. If \code{TRUE}, remove \code{NA} values. 
 #' Otherwise, keep \code{NA} values.
-#' @inheritParams model_MEM
+#' @inheritParams model.MEM
 #' @return An object containing:
 #' \itemize{
-#' \item \code{central.moments} --- Moments about the mean (c = mean). The zeroth moment is 
-#' the total probability (i.e. one), the first moment is zero, 
-#' the second central moment is the variance, the third central moment 
+#' \item \code{central.moments} --- Moments about the mean (c = mean). 
+#' The zeroth moment is the total probability (i.e. one), the first moment 
+#' is zero, the second central moment is the variance, the third central moment 
 #' is the skewness (with normalization), and the fourth central moment 
 #' is the kurtosis (with normalization).
-#' \item \code{raw.moments} --- Moments about zero (c = 0). The first moment is the mean.
+#' \item \code{raw.moments} --- Moments about zero (c = 0). 
+#' The first moment is the mean.
 #' \item \code{normalized.moments} --- Normalized moments. 
 #' } 
 #' @seealso 
