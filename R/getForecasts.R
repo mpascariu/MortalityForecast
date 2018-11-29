@@ -1,5 +1,8 @@
-# Thu Aug 23 17:46:12 2018 --------- Marius D. Pascariu ---
-
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Tue Nov 27 16:14:24 2018
+# --------------------------------------------------- #
 
 #' Get Predicted Values
 #' @param object An object of class \code{doForecasts}.
@@ -25,7 +28,7 @@ getForecasts <- function(object,
     } else if (Mn[i] %in% c("MRW", "MRWD")) {
       mx <- exp(M$predicted.values)
       
-    } else if (Mn[i] %in% c("LeeCarter2", "HyndmanUllah")) {
+    } else if (Mn[i] %in% c("LeeCarter", "HyndmanUllah")) {
       mx <- M$predicted.values
       
     } else {

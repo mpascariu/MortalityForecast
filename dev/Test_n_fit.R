@@ -20,7 +20,7 @@ HMD <- HMD_LT_f
 x  <- 0:100
 y  <- 1900:2016
 s2 <- 20 # forecasting horizon
-s3 <- 3  # step
+s3 <- 4  # step
 n_fit_max <- min(60, diff(range(y)) - s2 + 1)
 nfit <- 5:n_fit_max # no. of years to be used in fitting 
 input_data <- "mx"  # indicator used as input in fitting
@@ -76,7 +76,7 @@ plot_results <- function(A, nfit) {
   }
 }
 
-# quartz()
+quartz()
 plot_results(A1, nfit)
 plot_results(A2, nfit)
 plot_results(A3, nfit)
@@ -84,7 +84,9 @@ plot_results(A4, nfit)
 
 
 
-plot(BB[[7]]$results$S10, data.out = "mx", facet = "x")
+plot(BB[[7]]$results$S10, data.out = "ex", facet = "x") # !!!!
+
+plot(BB[[27]]$results$S14, data.out = "ex", facet = "x")
 
 
 

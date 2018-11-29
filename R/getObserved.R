@@ -1,4 +1,8 @@
-
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Tue Nov 27 16:15:10 2018
+# --------------------------------------------------- #
 
 #' Get Observed Values
 #' @inheritParams getFitted
@@ -15,10 +19,11 @@ getObserved <- function(object = NULL,
                         x = NULL,
                         ...) {
   
-  x <- x %||% object$x
-  data <- data %||% object$input$data
+  data     <- data %||% object$input$data
   data.in  <- data.in %||% object$input$data.in
   data.out <- match.arg(data.out)
+  
+  x <- x %||% object$x
   
   if (data.in == data.out) {
     out <- data
@@ -33,4 +38,3 @@ getObserved <- function(object = NULL,
   
   return(out)
 }
-

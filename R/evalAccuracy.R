@@ -175,9 +175,10 @@ computeAccuracy <- function(u, u.hat, b, measures = NULL,
   # 8.Median Absolute Percentage Error
   MdAPE <- median(100 * APE, na.rm = N)
   # 9.Root Mean Square Percentage Erorr
-  RMSPE <- sqrt(mean((100 * PE)^2, na.rm = N))
+  PEs <- (100 * PE)^2
+  RMSPE <- sqrt(mean(PEs, na.rm = N))
   # 10.Root Median Square Percentage Error
-  RMdSPE <- sqrt(median((100 * PE)^2, na.rm = N))
+  RMdSPE <- sqrt(median(PEs, na.rm = N))
   
   # ----------------------------------------------
   # III. Symmetric errors
@@ -187,9 +188,10 @@ computeAccuracy <- function(u, u.hat, b, measures = NULL,
   # measures (Makridakis, 1993).
   
   # 11.Symmetric Mean Absolute Percentage Error
-  sMAPE <- mean(200 * AE/(u + u.hat), na.rm = N)
+  sape <- 200 * AE/(u + u.hat)
+  sMAPE <- mean(sape, na.rm = N)
   # 12.Symmetric Median Absolute Percentage Error
-  sMdAPE <- median(200 * AE/(u + u.hat), na.rm = N)
+  sMdAPE <- median(sape, na.rm = N)
   
   # ---------------------------------------------------------------
   # IV. Measures based on relative errors

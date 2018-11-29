@@ -1,4 +1,8 @@
-
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Tue Nov 27 16:09:51 2018
+# --------------------------------------------------- #
 
 #' Plot method for objects of the class doBackTesting
 #' @param x An object of the class \code{doBackTesting}.
@@ -24,15 +28,20 @@ plot.doBackTesting <- function(x, data.out, facet = c("x", "y"),
                   Tx = "Tx",
                   ex = "The expectation of life at age x, \ne[x]")
   
-  O  <- getObserved(x = x, # Observed values
+  # Observed values
+  O  <- getObserved(x = x, 
                     data.in = B$input$data.in,    
                     data.out = data.out, 
                     data = B$input$data)
-  H  <- getForecasts(B$Forecast, data.out) # Forecast values
+  
+  # Forecast values
+  H  <- getForecasts(object = B$Forecast, 
+                     data.out = data.out) 
   
   # ggplot method
   if (facet == "y") {
     P = plot_y_facets(O, H, x, y1, y2, which)
+    
   } else {
     P = plot_x_facets(O, H, x, y1, y2, which)
   }
@@ -98,7 +107,7 @@ plot_y_facets <- function(O, H, x, y1, y2, which) {
 #' Change factor levels in order to get nice legends in ggplots
 #' @param vect A vector of the class \code{factor}.
 #' @examples 
-#' x <- factor(c("MRWD", "LeeCarter", "HyndmanUllah", "CoDa", "MEM6"))
+#' x <- factor(c("MRWD", "LeeCarter", "HyndmanUllah", "Oeppen", "MEM6"))
 #' new.x <- change_model_factor_levels(x)
 #' @keywords internal
 #' @export
@@ -107,7 +116,7 @@ change_model_factor_levels <- function(vect) {
                                             "M.Random-Walk w Drift" = "MRWD", 
                                             "Lee-Carter" = "LeeCarter", 
                                             "Hyndman-Ullah" = "HyndmanUllah", 
-                                            "Oeppen" = "CoDa",
+                                            "Oeppen" = "Oeppen",
                                             "MEM-2" = "MEM2",
                                             "MEM-3" = "MEM3",
                                             "MEM-4" = "MEM4",

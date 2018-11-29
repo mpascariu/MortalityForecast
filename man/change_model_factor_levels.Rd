@@ -13,7 +13,7 @@ change_model_factor_levels(vect)
 Change factor levels in order to get nice legends in ggplots
 }
 \examples{
-x <- factor(c("MRWD", "LeeCarter", "HyndmanUllah", "CoDa", "MEM6"))
+x <- factor(c("MRWD", "LeeCarter", "HyndmanUllah", "Oeppen", "MEM6"))
 new.x <- change_model_factor_levels(x)
 }
 \keyword{internal}

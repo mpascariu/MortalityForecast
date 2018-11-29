@@ -52,9 +52,12 @@
 #' plot(B, data.out = "mx", facet = "x")
 #' plot(B, data.out = "mx", facet = "y") 
 #' @export
-doBackTesting <- function(data, x, y.fit, y.for, 
+doBackTesting <- function(data, 
+                          x, 
+                          y.fit, 
+                          y.for, 
                           data.in = c("qx", "mx", "dx", "lx"),
-                          models = c("MRWD", "LC"), 
+                          models, 
                           level = 95, 
                           jumpchoice = c("actual", "fit"), 
                           verbose = FALSE,
@@ -62,21 +65,34 @@ doBackTesting <- function(data, x, y.fit, y.for,
   # Prepare data
   data.in    <- match.arg(data.in)
   jumpchoice <- match.arg(jumpchoice)
-  input <- as.list(environment())
-  call  <- match.call()
-  h     <- max(y.for) - min(y.for) + 1
+  input      <- as.list(environment())
+  h          <- max(y.for) - min(y.for) + 1
   
-  # Fit - Forecast - Check Accuracy
   D <- list(training.set = data[paste(x), paste(y.fit)], 
             validation.set = data[paste(x), paste(y.for)])
-  M <- doMortalityModels(data = D[[1]], x = x, y = y.fit, 
-                         data.in = data.in, models = models, verbose = FALSE)
-  P <- doForecasts(object = M, h = h, level = level, jumpchoice = jumpchoice, 
+  
+  # Fit
+  M <- doMortalityModels(data = D[[1]], 
+                         x = x, 
+                         y = y.fit, 
+                         data.in = data.in, 
+                         models = models, 
+                         verbose = FALSE)
+  
+  # Forecast
+  P <- doForecasts(object = M, 
+                   h = h, 
+                   level = level, 
+                   jumpchoice = jumpchoice, 
                    verbose = FALSE)
   
-  # Output
-  out <- list(input = input, call = call, 
-              Datasets = D, Fitted = M, Forecast = P)
+  # Exit
+  out <- list(input = input, 
+              call = match.call(), 
+              Datasets = D, 
+              Fitted = M, 
+              Forecast = P)
+  
   out <- structure(class = "doBackTesting", out)
   return(out)
 }

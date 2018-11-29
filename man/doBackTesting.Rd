@@ -5,8 +5,8 @@
 \title{Perform In-Sample Testing of Mortality Forecasts Over One Time Period}
 \usage{
 doBackTesting(data, x, y.fit, y.for, data.in = c("qx", "mx", "dx", "lx"),
-  models = c("MRWD", "LC"), level = 95, jumpchoice = c("actual",
-  "fit"), verbose = FALSE, ...)
+  models, level = 95, jumpchoice = c("actual", "fit"),
+  verbose = FALSE, ...)
 }
 \arguments{
 \item{data}{A data.frame or a matrix containing mortality data 

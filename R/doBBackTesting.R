@@ -1,5 +1,8 @@
-# Thu Aug 23 14:08:14 2018 --------- Marius D. Pascariu ---
-
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Tue Nov 27 16:16:04 2018
+# --------------------------------------------------- #
 
 #' Perform In-Sample Testing of Mortality Forecasts Over Multiple Time Periods
 #' @inheritParams doMortalityModels
@@ -51,14 +54,22 @@ doBBackTesting <- function(data,
     y_ <- c(yf, yh)
     if (verbose) cat(paste0("\nTest scenario ", k, "/", nc, ": "))
     Bk <- doBackTesting(data = data[, paste(y_)], 
-                        x = x, y.fit = yf, y.for = yh, data.in = data.in,
-                        models = models, level = level, jumpchoice = jumpchoice, 
+                        x = x, 
+                        y.fit = yf, 
+                        y.for = yh, 
+                        data.in = data.in,
+                        models = models, 
+                        level = level, 
+                        jumpchoice = jumpchoice, 
                         verbose = FALSE, ...)
     B[[k]] <- Bk
     remove(k, yf, yh, y_, Bk)
   }
   names(B) <- paste0("S", 1:nc)
-  out <- list(input = input, call = call, scenarios = S, results = B)
+  out <- list(input = input, 
+              call = call, 
+              scenarios = S, 
+              results = B)
   out <- structure(class = "doBBackTesting", out)
   return(out)
 }
@@ -103,6 +114,7 @@ buildScenarios <- function(y, strategy = c(f = 20, h = 20, s = 2)) {
   bop_fit <- rev(seq(from = max(y) - S[1] - S[2] + 1, 
                      to = min(y), 
                      by = -1 * S[3]))
+  
   eop_fit <- bop_fit + S[1] - 1
   bop_fc  <- eop_fit + 1
   eop_fc  <- bop_fc + S[2] - 1
