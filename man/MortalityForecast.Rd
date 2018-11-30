@@ -3,7 +3,7 @@
 \docType{package}
 \name{MortalityForecast}
 \alias{MortalityForecast-package}
-\title{MortalityForecast: Standard Tools to Compare and Evaluate Mortality Forecasting Methods}
+\title{MortalityForecast: Standard Tools to Compare and Evaluate Various Mortality Forecasting Methods}
 \description{
 Standard tools to compare and evaluate mortality forecasting methods.
 }

@@ -1,18 +1,19 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
-# Last update: Wed Nov 14 14:27:03 2018
+# License: GNU General Public License v3.0
+# Last update: Fri Nov 30 11:42:38 2018
 # --------------------------------------------------- #
 remove(list = ls())
 
+
 # Code used for downloading and creating of the testing data object in the packages
 library(MortalityLaws)
-library(dplyr)
-library(tidyr)
+library(tidyverse)
 
 
 # Download HMD data
 source("/Users/mpascariu/Desktop/HMD-credentials.r")
-cntr <- c("GBRTENW", "DNK", "NLD", "SWE", "NOR", "USA")
+cntr <- c("DNK", "GBRTENW", "NLD", "SWE", "USA")
 x <- 0:110
 y <- 1950:2016
 
