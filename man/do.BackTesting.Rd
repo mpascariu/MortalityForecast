@@ -23,7 +23,19 @@ Optional. Default: \code{NULL}.}
 \item{data.in}{Specify the type of input \code{data}. Various life table 
 indices are accepted: \code{"qx", "mx", "dx", "lx"}.}
 
-\item{models}{Mortality models to be evaluated.}
+\item{models}{One or several mortality models to be estimated. 
+The following options are available: \itemize{
+  \item{\code{"MRW"}} -- The Multivariate Random-Walk (w/o Drift);
+  \item{\code{"MRWD"}} -- The Multivariate Random-Walk with Drift;
+  \item{\code{"LeeCarter"}} -- The Lee-Carter Mortality Model;
+  \item{\code{"HyndmanUllah"}} -- The Hyndman-Ullah Mortality Model;
+  \item{\code{"Oeppen"}} -- The Oeppen Mortality Model;
+  \item{\code{"MEM2"}} -- The Maximum Entropy Mortality Model of order 2;
+  \item{\code{"MEM3"}} -- The Maximum Entropy Mortality Model of order 3;
+  \item{\code{"MEM4"}} -- The Maximum Entropy Mortality Model of order 4;
+  \item{\code{"MEM5"}} -- The Maximum Entropy Mortality Model of order 5;
+  \item{\code{"MEM6"}} -- The Maximum Entropy Mortality Model of order 6;
+}}
 
 \item{level}{Significance level of the confidence interval.}
 

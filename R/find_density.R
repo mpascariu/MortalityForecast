@@ -50,9 +50,9 @@
 #'        pch = c(16, NA), lty = c(NA, 1), lwd = 2, bty = "n")
 #' @export
 find.density <- function(data, 
-                        x, 
-                        omega = 110, 
-                        verbose = FALSE) {
+                         x, 
+                         omega = 110, 
+                         verbose = FALSE) {
   
   if (is.matrix(data) || is.data.frame(data)) {
     # If matrix or data.frame do the for-loop below

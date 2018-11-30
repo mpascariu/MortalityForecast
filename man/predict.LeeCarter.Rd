@@ -55,8 +55,14 @@ The output is a list with the components:
 \description{
 Forecast age-specific death rates using the Lee-Carter model.
 }
+\details{
+\insertNoCite{lee1992}{MortalityForecast}
+}
 \examples{
 # For examples go to ?model.LeeCarter
+}
+\references{
+\insertAllCited{}
 }
 \seealso{
 \code{\link{model.LeeCarter}}

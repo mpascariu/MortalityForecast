@@ -49,8 +49,14 @@ The output is a list with the components:
 \description{
 Predict Maximum-Entropy Mortality Model
 }
+\details{
+\insertNoCite{pascariu_phd2018}{MortalityForecast}
+}
 \examples{
 # For examples go to ?model.MEM
+}
+\references{
+\insertAllCited{}
 }
 \seealso{
 \code{\link{model.MEM}}

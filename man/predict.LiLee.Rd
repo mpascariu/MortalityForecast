@@ -65,8 +65,14 @@ The output is a list with the components:
 \description{
 Forecast age-specific death rates using the Li-Lee model
 }
+\details{
+\insertNoCite{li2005}{MortalityForecast}
+}
 \examples{
 # For examples go to ?model.LiLee
+}
+\references{
+\insertAllCited{}
 }
 \seealso{
 \code{\link{model.LiLee}}

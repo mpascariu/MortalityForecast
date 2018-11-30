@@ -45,6 +45,9 @@ the components:
 \description{
 The Maximum-Entropy Mortality Model
 }
+\details{
+\insertNoCite{pascariu_phd2018}{MortalityForecast}
+}
 \examples{
 # Data
 x  <- 0:110
@@ -74,6 +77,9 @@ plot(P, plotType = "upper")
 
 plot(P, M, plotType = "raw_moments")
 plot(P, M, plotType = "normalised_moments")
+}
+\references{
+\insertAllCited{}
 }
 \seealso{
 \code{\link{predict.MEM}} 

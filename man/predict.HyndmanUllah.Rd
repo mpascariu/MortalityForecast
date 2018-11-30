@@ -41,8 +41,14 @@ The output is a list with the components:
 \description{
 Forecast age-specific death rates using the Hyndman-Ullah mortality model
 }
+\details{
+\insertNoCite{hyndman2007}{MortalityForecast}
+}
 \examples{
 # For examples go to ?model.HyndmanUllah
+}
+\references{
+\insertAllCited{}
 }
 \seealso{
 \code{\link{model.HyndmanUllah}}

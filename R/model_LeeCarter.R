@@ -95,6 +95,8 @@ model.LeeCarter <- function(data,
 #' @seealso 
 #' \code{\link{model.LeeCarter}}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
+#' @details \insertNoCite{lee1992}{MortalityForecast}
+#' @references \insertAllCited{}
 #' @examples # For examples go to ?model.LeeCarter
 #' @export
 predict.LeeCarter <- function(object, 

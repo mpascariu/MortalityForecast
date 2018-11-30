@@ -91,6 +91,8 @@ model.LiLee <- function(data,
 #' @seealso 
 #' \code{\link{model.LiLee}}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
+#' @details \insertNoCite{li2005}{MortalityForecast}
+#' @references \insertAllCited{}
 #' @examples # For examples go to ?model.LiLee
 #' @export
 predict.LiLee <- function(object,

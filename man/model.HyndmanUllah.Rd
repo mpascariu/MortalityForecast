@@ -56,6 +56,5 @@ P
 \insertAllCited{}
 }
 \seealso{
-\code{\link{model.LeeCarter}}
-\code{\link{model.Oeppen}}
+\code{\link{predict.HyndmanUllah}}
 }

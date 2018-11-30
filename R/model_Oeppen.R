@@ -16,7 +16,6 @@
 #' death distribution (dx). 
 #' \insertCite{@See @oeppen2008 and @bergeron2017;textual}{MortalityForecast} 
 #' for a detail description and mathematical formulation.
-#' 
 #' @inheritParams do.MortalityModels 
 #' @return The output is a list with the components:
 #'  \item{input}{List with arguments provided in input. Saved for convenience;}
@@ -211,6 +210,11 @@ Oeppen.input.check <- function(X) {
 #'  \item{x}{Vector of ages used in prediction;} 
 #'  \item{y}{Vector of years used in prediction.}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
+#' @details 
+#' \insertNoCite{@See @oeppen2008 and @bergeron2017;textual}{MortalityForecast}
+#' @references \insertAllCited{}
+#' @seealso 
+#' \code{\link{model.Oeppen}}
 #' @examples # For examples go to ?model.Oeppen
 #' @export
 predict.Oeppen <- function(object,

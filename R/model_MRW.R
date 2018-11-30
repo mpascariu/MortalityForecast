@@ -127,6 +127,8 @@ model.MRW <- function(data,
 #'  intervals;}
 #'  \item{x}{Numerical vector indicating the age classes in output;}
 #'  \item{y}{Numerical vector indicating the years in output.}
+#' @details \insertNoCite{haberman2011}{MortalityForecast}
+#' @references \insertAllCited{}
 #' @source The original implementation of this function was taken from 
 #' \code{StMoMo} R package.
 #' @examples # For examples go to ?model.MRW

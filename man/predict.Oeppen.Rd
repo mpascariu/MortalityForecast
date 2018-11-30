@@ -55,8 +55,17 @@ The output is a list with the components:
 \description{
 Forecast the Age at Death Distribution using the Oeppen model.
 }
+\details{
+\insertNoCite{@See @oeppen2008 and @bergeron2017;textual}{MortalityForecast}
+}
 \examples{
 # For examples go to ?model.Oeppen
+}
+\references{
+\insertAllCited{}
+}
+\seealso{
+\code{\link{model.Oeppen}}
 }
 \author{
 Marius D. Pascariu and Marie-Pier Bergeron-Boucher

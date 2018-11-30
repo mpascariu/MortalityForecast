@@ -11,8 +11,7 @@
 #' @inherit demography::fdm details
 #' @inherit model.Oeppen return
 #' @seealso 
-#' \code{\link{model.LeeCarter}}
-#' \code{\link{model.Oeppen}}
+#' \code{\link{predict.HyndmanUllah}}
 #' @details \insertNoCite{hyndman2007}{MortalityForecast}
 #' @references \insertAllCited{}
 #' @examples 
@@ -77,6 +76,8 @@ model.HyndmanUllah <- function(data,
 #' \code{\link{model.HyndmanUllah}}
 #' @author Marius D. Pascariu and Marie-Pier Bergeron-Boucher
 #' @examples # For examples go to ?model.HyndmanUllah
+#' @details \insertNoCite{hyndman2007}{MortalityForecast}
+#' @references \insertAllCited{}
 #' @export
 predict.HyndmanUllah <- function(object, 
                                  h, 

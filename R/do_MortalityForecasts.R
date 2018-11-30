@@ -14,17 +14,7 @@
 #'  Possibilities: \code{"actual"} (use actual rates from final year) 
 #'  and \code{"fit"} (use fitted rates).
 #' @inheritParams do.MortalityModels
-#' @examples 
-#' x  <- 0:100
-#' y  <- 1985:1999
-#' h  <- 17
-#' D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' MM <- c("MRWD", "HyndmanUllah", "Oeppen", "MEM6")
-#' 
-#' M <- do.MortalityModels(data = D, x, y, data.in = "dx", models = MM)
-#' P <- do.MortalityForecasts(M, h, level = 95, jumpchoice = "actual")
-#' 
-#' pex <- get.Forecasts(P, data.out = "ex")
+#' @examples # For examples go to ?do.MortalityModels
 #' @export
 do.MortalityForecasts <- function(object, 
                                   h, 

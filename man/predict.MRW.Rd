@@ -35,8 +35,14 @@ An object of the class \code{predict.MRW} with components:
 Returns forecasts and other information for a Multivariate 
 Random Walk Model.
 }
+\details{
+\insertNoCite{haberman2011}{MortalityForecast}
+}
 \examples{
 # For examples go to ?model.MRW
+}
+\references{
+\insertAllCited{}
 }
 \author{
 Marius D. Pascariu

@@ -29,6 +29,8 @@
 #' \code{\link{predict.MEM}} 
 #' \code{\link{plot.MEM}} 
 #' \code{\link{find.moments}}
+#' @details \insertNoCite{pascariu_phd2018}{MortalityForecast}
+#' @references \insertAllCited{}
 #' @examples 
 #' # Data
 #' x  <- 0:110
@@ -200,6 +202,8 @@ print.MEM <- function(x, ...) {
 #'  \item{x}{Vector of ages used in prediction;} 
 #'  \item{y}{Vector of years used in prediction.}
 #' @seealso \code{\link{model.MEM}}
+#' @details \insertNoCite{pascariu_phd2018}{MortalityForecast}
+#' @references \insertAllCited{}
 #' @examples # For examples go to ?model.MEM
 #' @export
 predict.MEM <- function(object, 

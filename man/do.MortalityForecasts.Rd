@@ -28,14 +28,5 @@ the process that take place inside the function and avoid progress messages.}
 Perform Multiple Forecast of Mortality Using Various Models
 }
 \examples{
-x  <- 0:100
-y  <- 1985:1999
-h  <- 17
-D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-MM <- c("MRWD", "HyndmanUllah", "Oeppen", "MEM6")
-
-M <- do.MortalityModels(data = D, x, y, data.in = "dx", models = MM)
-P <- do.MortalityForecasts(M, h, level = 95, jumpchoice = "actual")
-
-pex <- get.Forecasts(P, data.out = "ex")
+# For examples go to ?do.MortalityModels
 }

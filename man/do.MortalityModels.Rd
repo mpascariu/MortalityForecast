@@ -20,7 +20,19 @@ Optional. Default: \code{NULL}.}
 \item{data.in}{Specify the type of input \code{data}. Various life table 
 indices are accepted: \code{"qx", "mx", "dx", "lx"}.}
 
-\item{models}{Mortality models to be evaluated.}
+\item{models}{One or several mortality models to be estimated. 
+The following options are available: \itemize{
+  \item{\code{"MRW"}} -- The Multivariate Random-Walk (w/o Drift);
+  \item{\code{"MRWD"}} -- The Multivariate Random-Walk with Drift;
+  \item{\code{"LeeCarter"}} -- The Lee-Carter Mortality Model;
+  \item{\code{"HyndmanUllah"}} -- The Hyndman-Ullah Mortality Model;
+  \item{\code{"Oeppen"}} -- The Oeppen Mortality Model;
+  \item{\code{"MEM2"}} -- The Maximum Entropy Mortality Model of order 2;
+  \item{\code{"MEM3"}} -- The Maximum Entropy Mortality Model of order 3;
+  \item{\code{"MEM4"}} -- The Maximum Entropy Mortality Model of order 4;
+  \item{\code{"MEM5"}} -- The Maximum Entropy Mortality Model of order 5;
+  \item{\code{"MEM6"}} -- The Maximum Entropy Mortality Model of order 6;
+}}
 
 \item{verbose}{A logical value. Set \code{verbose = FALSE} to silent 
 the process that take place inside the function and avoid progress messages.}
@@ -31,14 +43,25 @@ the process that take place inside the function and avoid progress messages.}
 Fit Multiple Stochastic Mortality Models
 }
 \examples{
-x  <- 0:100
-y  <- 2005:2016
-D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-MM <- c("MRWD", "HyndmanUllah", "Oeppen")
+x  <- 0:100      # Ages
+y  <- 2005:2016  # Years
+MM <- c("MRWD", "LeeCarter", "HyndmanUllah", "Oeppen", "MEM5") # models
+D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]  # data
+h  <- 16         # forecasting horizon
 
-M <- do.MortalityModels(data = D, x, y, data.in = "dx", models = MM)
+M <- do.MortalityModels(data = D, 
+                        x = x, 
+                        y = y, 
+                        data.in = "dx", 
+                        models = MM)
+
+P <- do.MortalityForecasts(object = M, 
+                           h = h, 
+                           level = 95, 
+                           jumpchoice = "actual")
 
 oex <- get.Observed(M, data.out = "ex")
 fex <- get.Fitted(M, data.out = "ex")
 rex <- get.Residuals(M, data.out = "ex")
+pex <- get.Forecasts(P, data.out = "ex")
 }
