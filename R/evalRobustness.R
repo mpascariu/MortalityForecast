@@ -1,14 +1,18 @@
-# Fri Aug 24 21:20:42 2018 --------- Marius D. Pascariu ---
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Fri Nov 30 10:17:43 2018
+# --------------------------------------------------- #
+
 
 #' Generic for evaluating the robustness of the mortality models
-#' tested with the \code{doBBackTesting} function.
+#' tested with the \code{do.BBackTesting} function.
 #'  
-#' @param object An object of the class \code{doBBackTesting}.
-#' @inheritParams doMortalityModels
+#' @param object An object of the class \code{BBackTesting};
+#' @inheritParams do.MortalityModels
 #' @keywords internal
 #' @author Marius D. Pascariu
-#' @examples 
-#' # For examples go to ?doBBackTesting
+#' @examples # For examples go to ?do.BBackTesting
 #' @keywords internal
 #' @export
 evalRobustness = function(object, ...)
@@ -17,16 +21,15 @@ evalRobustness = function(object, ...)
 
 #' Evaluating the Robustness of the Forcasting Mortality Models
 #' 
-#' @inheritParams evalAccuracy.doBBackTesting
+#' @inheritParams evalAccuracy.BBackTesting
 #' @inheritParams computeRobustness
 #' @seealso 
-#' \code{\link{doBBackTesting}}
-#' \code{\link{evalAccuracy.doBBackTesting}}
+#' \code{\link{do.BBackTesting}}
+#' \code{\link{evalAccuracy.BBackTesting}}
 #' @author Marius D. Pascariu
-#' @examples 
-#' # For examples go to ?doBBackTesting
+#' @examples # For examples go to ?do.BBackTesting
 #' @export  
-evalRobustness.doBBackTesting <- function(object,
+evalRobustness.BBackTesting <- function(object,
                            data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                            measures = c("MD", "MAD", "sMRAD", "MASD"),
                            ...) {

@@ -4,18 +4,18 @@
 # Last update: Tue Nov 27 16:09:51 2018
 # --------------------------------------------------- #
 
-#' Plot method for objects of the class doBackTesting
-#' @param x An object of the class \code{doBackTesting}.
+#' Plot method for objects of the class \code{BackTesting}
+#' @param x An object of the class \code{do.BackTesting}.
 #' @param facet What facets to include? Options: \code{"x", "y"}.
 #' @param which Which \code{x} or which \code{y} to be plotted. Numerical vector.
-#' @inheritParams evalAccuracy.doBackTesting
+#' @inheritParams evalAccuracy.BackTesting
 #' @inheritParams wide2long
 #' @export
-plot.doBackTesting <- function(x, 
-                               data.out, 
-                               facet = c("x", "y"),
-                               which = NULL, 
-                               ...) {
+plot.BackTesting <- function(x, 
+                             data.out, 
+                             facet = c("x", "y"),
+                             which = NULL, 
+                             ...) {
   B  <- x
   x  <- B$input$x
   y1 <- B$input$y.fit

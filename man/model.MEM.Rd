@@ -10,11 +10,11 @@ model.MEM(data, x = NULL, y = NULL, n = 5, verbose = FALSE, ...)
 \item{data}{A data.frame or a matrix containing mortality data 
 with ages \code{x} as row and time \code{y} as column.}
 
-\item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
-Default: \code{NULL}.}
+\item{x}{Numerical vector indicating the ages in input \code{data}. 
+Optional. Default: \code{NULL}.}
 
-\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
-Default: \code{NULL}.}
+\item{y}{Numerical vector indicating the years in input \code{data}. 
+Optional. Default: \code{NULL}.}
 
 \item{n}{The maximum order of the moments to be used.}
 
@@ -78,5 +78,5 @@ plot(P, M, plotType = "normalised_moments")
 \seealso{
 \code{\link{predict.MEM}} 
 \code{\link{plot.MEM}} 
-\code{\link{findMoments}}
+\code{\link{find.moments}}
 }

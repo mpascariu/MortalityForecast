@@ -7,14 +7,13 @@
 #' Get Predicted Values
 #' 
 #' @inherit get.Fitted description
-#' @param object An object of class \code{doForecasts}.
-#' @inheritParams evalAccuracy.doBackTesting
-#' @seealso \code{\link{doForecasts}}
+#' @param object An object of class \code{MortalityForecasts}.
+#' @inheritParams evalAccuracy.BackTesting
+#' @seealso \code{\link{do.MortalityForecasts}}
 #' @author Marius D. Pascariu
 #' @export
 get.Forecasts <- function(object, 
-                          data.out = c("qx", "mx", "dx", "lx", 
-                                       "Lx", "Tx", "ex"),
+                          data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
                           ...) {
   
   data.out <- match.arg(data.out)

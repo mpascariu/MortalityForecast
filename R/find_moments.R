@@ -1,3 +1,10 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Fri Nov 30 10:20:00 2018
+# --------------------------------------------------- #
+
+
 #' Compute Statistical Moments
 #' 
 #' @description Compute raw and central statistical moments of a distribution 
@@ -25,20 +32,20 @@
 #' \item \code{normalized.moments} --- Normalized moments. 
 #' } 
 #' @seealso 
-#' \code{\link{convertMoments}}
+#' \code{\link{convert.moments}}
 #' \code{\link[moments]{all.moments}} 
 #' \code{\link[moments]{raw2central}}
 #' @examples 
 #' x  <- 0:110
 #' y  <- 1960:2016
 #' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' findMoments(data = dx, x = x, y = y, n = 4)
+#' find.moments(data = dx, x = x, y = y, n = 4)
 #' @export
-findMoments <- function(data, 
-                        x, 
-                        y = NULL, 
-                        n, 
-                        na.rm = TRUE) {
+find.moments <- function(data, 
+                         x, 
+                         y = NULL, 
+                         n, 
+                         na.rm = TRUE) {
   
   N  <- ncol(data)
   rM <- matrix(NA, nrow = N, ncol = n + 1)
@@ -60,8 +67,8 @@ findMoments <- function(data,
     rM[i, ] <- moments::all.moments(x = vect, order.max = n, na.rm = na.rm)
   }
   
-  cM <- convertMoments(rM, from = "raw", to = "central")
-  nM <- convertMoments(rM, from = "raw", to = "normalized")
+  cM <- convert.moments(rM, from = "raw", to = "central")
+  nM <- convert.moments(rM, from = "raw", to = "normalized")
   dimnames(cM) <- dimnames(rM)
   
   out <- list(raw.moments = rM, 
@@ -95,19 +102,19 @@ findMoments <- function(data,
 #' RM <- c(1, 68.75099, 4991.724, 371531.9, 28199680,  
 #'         2176435499, 170477697491)
 #' 
-#' CM1 <- convertMoments(RM, from = "raw", to = "central")    # raw to central
-#' NM1 <- convertMoments(RM, from = "raw", to = "normalized") # raw to normalized
+#' CM1 <- convert.moments(RM, from = "raw", to = "central")    # raw to central
+#' NM1 <- convert.moments(RM, from = "raw", to = "normalized") # raw to normalized
 #' 
-#' CM2 <- convertMoments(NM1, from = "normalized", to = "central")
-#' RM2 <- convertMoments(NM1, from = "normalized", to = "raw")
+#' CM2 <- convert.moments(NM1, from = "normalized", to = "central")
+#' RM2 <- convert.moments(NM1, from = "normalized", to = "raw")
 #' 
-#' RM3 <- convertMoments(CM2, from = "central", to = "raw", eta = 68.75099)
-#' NM3 <- convertMoments(CM2, from = "central", to = "normalized", eta = 68.75099)
+#' RM3 <- convert.moments(CM2, from = "central", to = "raw", eta = 68.75099)
+#' NM3 <- convert.moments(CM2, from = "central", to = "normalized", eta = 68.75099)
 #' 
 #' # The resulted error following multiple conversions is negligible
 #' sum(RM - RM3)
 #' @export
-convertMoments <- function(data, 
+convert.moments <- function(data, 
                            from = c("raw", "central", "normalized"), 
                            to = c("raw", "central", "normalized"), 
                            eta = NULL) {
@@ -127,7 +134,7 @@ convertMoments <- function(data,
 
 #' Convert Central Moments to Raw or Normalized moments
 #' @param data Data.frame with central moments.
-#' @inheritParams convertMoments
+#' @inheritParams convert.moments
 #' @keywords internal
 convertCM <- function(data, 
                       to = c("raw", "normalized"), 
@@ -150,7 +157,7 @@ convertCM <- function(data,
 
 #' Convert Normalized Moments to Central or Raw moments
 #' @param data Data.frame with normalized moments.
-#' @inheritParams convertMoments
+#' @inheritParams convert.moments
 #' @keywords internal
 convertNM <- function(data, 
                       to = c("central", "raw")) {
@@ -191,7 +198,7 @@ convertNM <- function(data,
 
 #' Convert Raw Moments to Central or Normalized moments
 #' @param data Data.frame with raw moments.
-#' @inheritParams convertMoments
+#' @inheritParams convert.moments
 #' @keywords internal
 convertRM <- function(data, 
                       to = c("central", "normalized")) {

@@ -10,11 +10,11 @@ find_ages_and_years(data, x, y)
 \item{data}{A data.frame or a matrix containing mortality data 
 with ages \code{x} as row and time \code{y} as column.}
 
-\item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
-Default: \code{NULL}.}
+\item{x}{Numerical vector indicating the ages in input \code{data}. 
+Optional. Default: \code{NULL}.}
 
-\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
-Default: \code{NULL}.}
+\item{y}{Numerical vector indicating the years in input \code{data}. 
+Optional. Default: \code{NULL}.}
 }
 \description{
 Find age and year vectors

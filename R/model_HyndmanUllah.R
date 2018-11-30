@@ -6,7 +6,7 @@
 
 
 #' The Functional Demographic Model
-#' @inheritParams doMortalityModels
+#' @inheritParams do.MortalityModels
 #' @inheritParams demography::fdm
 #' @inherit demography::fdm details
 #' @inherit model.Oeppen return

@@ -22,7 +22,7 @@
 #' Default: \code{NULL}.
 #' @param include.drift Should the Random Walk model include a linear drift 
 #' term? Default: \code{TRUE}.
-#' @inheritParams doMortalityModels
+#' @inheritParams do.MortalityModels
 #' @return An object of class \code{MRW} with components:
 #'  \item{input}{A list with the input data;}
 #'  \item{info}{Short details about the model;}
@@ -116,7 +116,7 @@ model.MRW <- function(data,
 #' Random Walk Model.
 #' 
 #' @param object An object of class \code{MRW}.
-#' @inheritParams doForecasts
+#' @inheritParams do.MortalityForecasts
 #' @return An object of the class \code{predict.MRW} with components:
 #'  \item{call}{An unevaluated function call, that is, an unevaluated 
 #'  expression which consists of the named function applied to the given 

@@ -23,10 +23,10 @@ the values already converted to a life table index (e.g. life expectancy)
 by specifying the requiered format in the argument \code{data.out}.
 }
 \examples{
-# For examples go to ?doMortalityModels
+# For examples go to ?do.MortalityModels
 }
 \seealso{
-\code{\link{doMortalityModels}}
+\code{\link{do.MortalityModels}}
 }
 \author{
 Marius D. Pascariu

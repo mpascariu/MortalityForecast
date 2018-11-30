@@ -7,7 +7,7 @@
 #' The Lee-Carter Mortality Model
 #' 
 #' Fit the Lee-Carter mortality model
-#' @inheritParams doMortalityModels
+#' @inheritParams do.MortalityModels
 #' @inherit model.Oeppen return
 #' @seealso 
 #' \code{\link{predict.LeeCarter}}

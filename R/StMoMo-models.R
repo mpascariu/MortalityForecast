@@ -6,20 +6,20 @@
 
 
 #' Lee-Carter Mortality Model as implemented in StMoMo package
-#' @inheritParams doMortalityModels
+#' @inheritParams do.MortalityModels
 #' @inheritParams StMoMo::lc
-#' @param lx0 lx0
+#' @param radix Radix.
 #' @keywords internal
 LC <- function(data, 
                x, 
                y, 
                link = "logit", 
-               lx0 = 1e5, 
+               radix = 1e5, 
                verbose = FALSE) {
   
   LCfit <- StMoMo::fit(object = lc(link = link), 
-                       Dxt = data * lx0, 
-                       Ext = data * 0 + lx0, 
+                       Dxt = data * radix, 
+                       Ext = data * 0 + radix, 
                        ages = x, 
                        years = y, 
                        ages.fit = x, 
@@ -40,11 +40,11 @@ PLAT <- function(data,
                  x, 
                  y, 
                  link = "log", 
-                 lx0 = 1e5, 
+                 radix = 1e5, 
                  verbose = FALSE) {
   
-  Dx  <- data * lx0
-  Ex  <- Dx * 0 + lx0
+  Dx  <- data * radix
+  Ex  <- Dx * 0 + radix
   wxt <- genWeightMat(ages = x, years = y, clip = 3) # weighting matrix
   
   # Model specification
@@ -67,7 +67,11 @@ PLAT <- function(data,
      kt[1, ] <- kt[1, ] - ci[1]
      kt[2, ] <- kt[2, ] - ci[2]
      
-     out <- list(ax = ax, bx = bx, kt = kt, b0x = b0x, gc = gc)
+     out <- list(ax = ax, 
+                 bx = bx, 
+                 kt = kt, 
+                 b0x = b0x, 
+                 gc = gc)
      return(out)
   }
   
@@ -77,8 +81,14 @@ PLAT <- function(data,
               cohortAgeFun = "1", 
               constFun = constPlat)
   
-  PLATfit <- StMoMo::fit(M, Dxt = Dx, Ext = Ex, ages = x, years = y,
-                         ages.fit = x, wxt = wxt, verbose = verbose)
+  PLATfit <- StMoMo::fit(object = M, 
+                         Dxt = Dx, 
+                         Ext = Ex, 
+                         ages = x, 
+                         years = y,
+                         ages.fit = x, 
+                         wxt = wxt, 
+                         verbose = verbose)
   return(PLATfit)
 }
 

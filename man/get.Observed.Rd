@@ -20,8 +20,8 @@ indices are accepted: \code{"qx", "mx", "dx", "lx"}.}
 \item{data}{A data.frame or a matrix containing mortality data 
 with ages \code{x} as row and time \code{y} as column.}
 
-\item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
-Default: \code{NULL}.}
+\item{x}{Numerical vector indicating the ages in input \code{data}. 
+Optional. Default: \code{NULL}.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }
@@ -32,10 +32,10 @@ the values already converted to a life table index (e.g. life expectancy)
 by specifying the requiered format in the argument \code{data.out}.
 }
 \examples{
-# For examples go to ?doMortalityModels
+# For examples go to ?do.MortalityModels
 }
 \seealso{
-\code{\link{doMortalityModels}}
+\code{\link{do.MortalityModels}}
 }
 \author{
 Marius D. Pascariu

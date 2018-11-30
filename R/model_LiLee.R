@@ -7,7 +7,7 @@
 #' The Li-Lee Mortality Model
 #' 
 #' Fit the Li-Lee mortality model
-#' @inheritParams doMortalityModels
+#' @inheritParams do.MortalityModels
 #' @inheritParams model.OeppenC
 #' @inherit model.OeppenC return
 #' @seealso 

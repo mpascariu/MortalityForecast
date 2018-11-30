@@ -9,10 +9,10 @@
 #' 
 #' @param data A data.frame or a matrix containing mortality data 
 #' with ages \code{x} as row and time \code{y} as column.
-#' @param x Numerical vector indicating the ages in input \code{data}. Optional.
-#' Default: \code{NULL}.
-#' @param y Numerical vector indicating the years in input \code{data}. Optional.
-#' Default: \code{NULL}.
+#' @param x Numerical vector indicating the ages in input \code{data}. 
+#' Optional. Default: \code{NULL}.
+#' @param y Numerical vector indicating the years in input \code{data}. 
+#' Optional. Default: \code{NULL}.
 #' @param data.in Specify the type of input \code{data}. Various life table 
 #' indices are accepted: \code{"qx", "mx", "dx", "lx"}.
 #' @param models Mortality models to be evaluated.
@@ -25,19 +25,19 @@
 #' D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' MM <- c("MRWD", "HyndmanUllah", "Oeppen")
 #' 
-#' M <- doMortalityModels(data = D, x, y, data.in = "dx", models = MM)
+#' M <- do.MortalityModels(data = D, x, y, data.in = "dx", models = MM)
 #' 
 #' oex <- get.Observed(M, data.out = "ex")
 #' fex <- get.Fitted(M, data.out = "ex")
 #' rex <- get.Residuals(M, data.out = "ex")
 #' @export
-doMortalityModels <- function(data, 
-                              x = NULL, 
-                              y = NULL, 
-                              data.in = c("qx", "mx", "dx", "lx"),
-                              models = c("MRWD"),
-                              verbose = TRUE, 
-                              ...) {
+do.MortalityModels <- function(data, 
+                               x = NULL, 
+                               y = NULL, 
+                               data.in = c("qx", "mx", "dx", "lx"),
+                               models = c("MRWD"),
+                               verbose = TRUE, 
+                               ...) {
   
   data.in <- match.arg(data.in)
   input   <- as.list(environment())
@@ -89,9 +89,9 @@ doMortalityModels <- function(data,
 
 
 
-#' Print function for doMortalityModels
+#' Print function for do.MortalityModels
 #' @param x An object of class \code{"MortalityModels"}
-#' @inheritParams doMortalityModels
+#' @inheritParams do.MortalityModels
 #' @keywords internal
 #' @export
 print.MortalityModels <- function(x, ...) {

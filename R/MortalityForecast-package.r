@@ -1,3 +1,8 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Fri Nov 30 10:32:10 2018
+# --------------------------------------------------- #
 
 # MortalityForecast Package
 

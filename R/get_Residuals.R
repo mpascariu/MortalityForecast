@@ -8,10 +8,10 @@
 #' Get Deviance Residuals
 #' @inherit get.Fitted description
 #' @inheritParams get.Fitted
-#' @seealso \code{\link{doMortalityModels}}
+#' @seealso \code{\link{do.MortalityModels}}
 #' @author Marius D. Pascariu
 #' @examples 
-#' # For examples go to ?doMortalityModels
+#' # For examples go to ?do.MortalityModels
 #' @export
 get.Residuals <- function(object,
                           data.out = c("qx", "mx", "dx", "lx", 
@@ -33,7 +33,7 @@ get.Residuals <- function(object,
 #' Summary for get.Residuals
 #' @param object An object of class \code{\link{get.Residuals}}.
 #' @param digits Number of digits to display.
-#' @inheritParams doMortalityModels
+#' @inheritParams do.MortalityModels
 #' @keywords internal
 #' @export
 summary.get.Residuals <- function(object, ..., 

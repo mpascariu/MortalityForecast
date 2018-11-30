@@ -1,36 +1,42 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Fri Nov 30 10:24:59 2018
+# --------------------------------------------------- #
 
 
-#' Generic for Computing Accuracy Measure from the \code{doBackTesting} and 
-#' \code{doBBackTesting} objects
-#' @param object An object of the class \code{doBackTesting} or \code{doBBackTesting}.
-#' @inheritParams doMortalityModels
+#' Generic for Computing Accuracy Measure from the \code{BackTesting} and 
+#' \code{BBackTesting} objects;
+#' @param object An object of the class \code{BackTesting} or 
+#' \code{BBackTesting};
+#' @inheritParams do.MortalityModels
 #' @keywords internal
 #' @author Marius D. Pascariu
 #' @examples 
-#' # For examples go to ?doBackTesting and ?doBBackTesting
+#' # For examples go to ?do.BackTesting and ?do.BBackTesting
 #' @export
 evalAccuracy = function(object, ...)
   UseMethod("evalAccuracy")
 
 
-#' Get Accuracy Measures from \code{doBackTesting}
-#' @param object An object of class \code{doBackTesting}.
+#' Get Accuracy Measures from \code{do.BackTesting}
+#' @param object An object of class \code{do.BackTesting}.
 #' @param data.out Specify the type of data to be returned in output. 
 #' Various life table indices are accepted: 
 #' \code{"qx", "mx", "dx", "lx", "Lx", "Tx", "ex"}.
-#' @inheritParams doMortalityModels
+#' @inheritParams do.MortalityModels
 #' @inheritParams computeAccuracy
 #' @inherit computeAccuracy details references
-#' @seealso \code{\link{doBackTesting}}
+#' @seealso \code{\link{do.BackTesting}}
 #' @author Marius D. Pascariu
 #' @examples 
-#' # For examples go to ?doBackTesting
+#' # For examples go to ?do.BackTesting
 #' @export
-evalAccuracy.doBackTesting <- function(object, 
-                                       data.out = c("qx", "mx", "dx", "lx", 
-                                                    "Lx", "Tx", "ex"),
-                                       measures = NULL,
-                                       ...) {
+evalAccuracy.BackTesting <- function(object, 
+                                     data.out = c("qx", "mx", "dx", "lx", 
+                                                  "Lx", "Tx", "ex"),
+                                     measures = NULL,
+                                     ...) {
   # Data
   x <- object$input$x
   data.in  <- object$input$data.in
@@ -64,20 +70,20 @@ evalAccuracy.doBackTesting <- function(object,
 }
 
 
-#' Get Accuracy Measures from \code{doBBackTesting}
-#' @param object An object of class \code{doBBackTesting}.
-#' @inheritParams evalAccuracy.doBackTesting
-#' @inherit evalAccuracy.doBackTesting details references
-#' @seealso \code{\link{doBBackTesting}}
+#' Get Accuracy Measures from a \code{BBackTesting} object
+#' @param object An object of class \code{BBackTesting}.
+#' @inheritParams evalAccuracy.BackTesting
+#' @inherit evalAccuracy.BackTesting details references
+#' @seealso \code{\link{do.BBackTesting}}
 #' @author Marius D. Pascariu
 #' @examples 
-#' # For examples go to ?doBBackTesting
+#' # For examples go to ?do.BBackTesting
 #' @export
-evalAccuracy.doBBackTesting <- function(object,
-                                        data.out = c("qx", "mx", "dx", "lx", 
-                                                     "Lx", "Tx", "ex"),
-                                        measures = NULL,
-                                        ...) {
+evalAccuracy.BBackTesting <- function(object,
+                                      data.out = c("qx", "mx", "dx", "lx", 
+                                                   "Lx", "Tx", "ex"),
+                                      measures = NULL,
+                                      ...) {
   data.out <- match.arg(data.out)
   ns <- nrow(object$scenarios)  # no. of scenarios
   A  <- tibble()

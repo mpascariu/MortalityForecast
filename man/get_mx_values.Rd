@@ -16,8 +16,8 @@ get_mx_values(object, jumpchoice, y, kt, B.kt = NULL)
 Possibilities: \code{"actual"} (use actual rates from final year) 
 and \code{"fit"} (use fitted rates).}
 
-\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
-Default: \code{NULL}.}
+\item{y}{Numerical vector indicating the years in input \code{data}. 
+Optional. Default: \code{NULL}.}
 
 \item{kt}{Predicted k[t] values in the model;}
 

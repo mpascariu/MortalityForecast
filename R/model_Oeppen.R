@@ -17,7 +17,7 @@
 #' \insertCite{@See @oeppen2008 and @bergeron2017;textual}{MortalityForecast} 
 #' for a detail description and mathematical formulation.
 #' 
-#' @inheritParams doMortalityModels 
+#' @inheritParams do.MortalityModels 
 #' @return The output is a list with the components:
 #'  \item{input}{List with arguments provided in input. Saved for convenience;}
 #'  \item{info}{Short details about the model;}
@@ -196,7 +196,7 @@ Oeppen.input.check <- function(X) {
 #' conditional sum-of-squares. Options to use: conditional-sum-of-squares 
 #' (\code{"CSS-ML"}), maximum likelihood (\code{"ML"}) and \code{"CSS"}.
 #' @param ... Additional arguments to be passed to \code{\link[forecast]{Arima}}
-#' @inheritParams doForecasts
+#' @inheritParams do.MortalityForecasts
 #' @return The output is a list with the components:
 #'  \item{call}{An unevaluated function call, that is, an unevaluated 
 #'  expression which consists of the named function applied to the given 

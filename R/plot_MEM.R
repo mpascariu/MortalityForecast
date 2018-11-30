@@ -75,7 +75,7 @@ ggplotDistribConvergence <- function(mat, x, y, ny, level) {
 #' @param mat Matrix containing the observed or fitted value.
 #' @param ny Number of years to be selected from input data and to be added in the plot.
 #' @param lx0 Adjusting parameter.
-#' @inheritParams doMortalityModels
+#' @inheritParams do.MortalityModels
 #' @examples 
 #' x  <- 0:110
 #' y  <- 1965:2014
@@ -116,8 +116,8 @@ fitted2dens <- function(mat, x, y, ny = 7, lx0 = 300) {
 #' @param y An object of the class \code{\link{model.MEM}}. 
 #' Needed only for ploting moments. See \code{plotType}.
 #' @param plotType The type of the plot. The alternatives are 
-#' \code{"mean", "lower", "upper", "raw_moments", "normalised_moments", "scaled_moments"}. 
-#' Default: \code{"mean"}.
+#' \code{"mean", "lower", "upper", "raw_moments", "normalised_moments", 
+#' "scaled_moments"}. Default: \code{"mean"}.
 #' @inheritParams plot.MEM
 #' @examples
 #' # For examples go to ?predict.MEM
@@ -184,8 +184,8 @@ prepare_ggdata <- function(P, M, plotType) {
   
   fn <- switch(plotType,
                raw_moments = function(Z) Z,
-               normalised_moments = function(Z) convertMoments(Z, "raw", "normalized"),
-               scaled_moments = function(Z) log(abs(convertMoments(Z, "raw", "normalized"))))
+               normalised_moments = function(Z) convert.moments(Z, "raw", "normalized"),
+               scaled_moments = function(Z) log(abs(convert.moments(Z, "raw", "normalized"))))
   
   L1 <- lapply(L, as.data.frame)
   L2 <- lapply(L1, fn)

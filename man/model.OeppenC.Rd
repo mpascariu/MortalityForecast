@@ -13,11 +13,11 @@ with ages \code{x} as row and time \code{y} as column.}
 \item{data.B}{A data.frame or a matrix containing mortality data for the 
 benchmark population. Must be the same format as in \code{data};}
 
-\item{x}{Numerical vector indicating the ages in input \code{data}. Optional.
-Default: \code{NULL}.}
+\item{x}{Numerical vector indicating the ages in input \code{data}. 
+Optional. Default: \code{NULL}.}
 
-\item{y}{Numerical vector indicating the years in input \code{data}. Optional.
-Default: \code{NULL}.}
+\item{y}{Numerical vector indicating the years in input \code{data}. 
+Optional. Default: \code{NULL}.}
 
 \item{verbose}{A logical value. Set \code{verbose = FALSE} to silent 
 the process that take place inside the function and avoid progress messages.}

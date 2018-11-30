@@ -62,7 +62,7 @@ head_tail <- function(x,
 #' @param x vector of ages
 #' @param which.x subset x vector
 #' @param which.y subset y vector
-#' @inheritParams doMortalityModels
+#' @inheritParams do.MortalityModels
 #' @keywords internal
 #' @export
 wide2long <- function(data, 

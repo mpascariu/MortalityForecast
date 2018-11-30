@@ -3,21 +3,21 @@
 \name{evalRobustness}
 \alias{evalRobustness}
 \title{Generic for evaluating the robustness of the mortality models
-tested with the \code{doBBackTesting} function.}
+tested with the \code{do.BBackTesting} function.}
 \usage{
 evalRobustness(object, ...)
 }
 \arguments{
-\item{object}{An object of the class \code{doBBackTesting}.}
+\item{object}{An object of the class \code{BBackTesting};}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }
 \description{
 Generic for evaluating the robustness of the mortality models
-tested with the \code{doBBackTesting} function.
+tested with the \code{do.BBackTesting} function.
 }
 \examples{
-# For examples go to ?doBBackTesting
+# For examples go to ?do.BBackTesting
 }
 \author{
 Marius D. Pascariu

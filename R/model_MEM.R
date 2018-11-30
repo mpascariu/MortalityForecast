@@ -7,7 +7,7 @@
 #' The Maximum-Entropy Mortality Model 
 #' 
 #' @param n The maximum order of the moments to be used.
-#' @inheritParams doMortalityModels
+#' @inheritParams do.MortalityModels
 #' @return The output is an object of class \code{MEM} with 
 #' the components:
 #'  \item{input}{List with arguments provided in input. Saved for convenience;}
@@ -28,7 +28,7 @@
 #' @seealso 
 #' \code{\link{predict.MEM}} 
 #' \code{\link{plot.MEM}} 
-#' \code{\link{findMoments}}
+#' \code{\link{find.moments}}
 #' @examples 
 #' # Data
 #' x  <- 0:110
@@ -78,7 +78,7 @@ model.MEM <- function(data,
   AY  <- find_ages_and_years(data, x, y)
   x   <- AY$x
   y   <- AY$y
-  M   <- findMoments(data, x, y, n)
+  M   <- find.moments(data, x, y, n)
   orM <- M$raw.moments
   nM  <- M$normalized.moments
   nMT <- log(abs(nM))
@@ -86,9 +86,9 @@ model.MEM <- function(data,
   
   V   <- model.MRW(t(nMT), x = NULL, y, include.drift = TRUE)
   fnM <- fnM <- t(exp(fitted(V)) * as.numeric(sg[1,]))       # fitted normalized moments
-  frM <- convertMoments(fnM, from = "normalized", to = "raw") # fitted raw moments
+  frM <- convert.moments(fnM, from = "normalized", to = "raw") # fitted raw moments
   
-  fD  <- findDensity(frM[-1, ], x)$density          # fitted dx
+  fD  <- find.density(frM[-1, ], x)$density          # fitted dx
   fD  <- cbind(NA, fD) 
   oD  <- apply(data, 2, FUN = function(x) x/sum(x)) # observed dx - same scale as fitted dx
   res <- oD - fD                                    # residuals
@@ -184,7 +184,7 @@ print.MEM <- function(x, ...) {
 #' of fitted data points. This argument can be used for example to estimate a 
 #' density between 0 and 130 given the fact that the model was fitted on a 
 #' dataset containing values for 0-100 only.
-#' @inheritParams doForecasts
+#' @inheritParams do.MortalityForecasts
 #' @return The output is a list with the components:
 #'  \item{call}{An unevaluated function call, that is, an unevaluated 
 #'  expression which consists of the named function applied to the given 
@@ -219,15 +219,15 @@ predict.MEM <- function(object,
   L <- W$conf.intervals
   L$mean <- W$predicted.values
   frM <- object$fitted.raw.moments
-  sg <- sign(convertMoments(tail(frM, 1), from = "raw", to = "normalized"))
+  sg <- sign(convert.moments(tail(frM, 1), from = "raw", to = "normalized"))
   
   fn1 <- function(z) {
     nM <- t(exp(z) * as.numeric(sg))
-    rM <- convertMoments(nM, from = "normalized", to = "raw")
+    rM <- convert.moments(nM, from = "normalized", to = "raw")
     return(rM)
   }
   fn2 <- function(z) {
-    px  <- findDensity(z, x = x.h)$density
+    px  <- find.density(z, x = x.h)$density
     out <- correct_jump_off(px, object, jumpchoice, h)
     return(out)
   }

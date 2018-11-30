@@ -15,8 +15,8 @@
 Needed only for ploting moments. See \code{plotType}.}
 
 \item{plotType}{The type of the plot. The alternatives are 
-\code{"mean", "lower", "upper", "raw_moments", "normalised_moments", "scaled_moments"}. 
-Default: \code{"mean"}.}
+\code{"mean", "lower", "upper", "raw_moments", "normalised_moments", 
+"scaled_moments"}. Default: \code{"mean"}.}
 
 \item{ny}{Number of years to be selected from input data and to be added in the plot.}
 

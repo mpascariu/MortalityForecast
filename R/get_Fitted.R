@@ -12,11 +12,10 @@
 #' the values already converted to a life table index (e.g. life expectancy) 
 #' by specifying the requiered format in the argument \code{data.out}.
 #' @param object An object of class \code{MortalityModels}.
-#' @inheritParams evalAccuracy.doBackTesting
-#' @seealso \code{\link{doMortalityModels}}
+#' @inheritParams evalAccuracy.BackTesting
+#' @seealso \code{\link{do.MortalityModels}}
 #' @author Marius D. Pascariu
-#' @examples 
-#' # For examples go to ?doMortalityModels
+#' @examples # For examples go to ?do.MortalityModels
 #' @export
 get.Fitted <- function(object, 
                        data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),

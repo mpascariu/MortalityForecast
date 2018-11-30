@@ -1,3 +1,9 @@
+# --------------------------------------------------- #
+# Author: Marius D. Pascariu
+# License: GNU General Public License v3.0
+# Last update: Fri Nov 30 10:20:24 2018
+# --------------------------------------------------- #
+
 
 #' Estimate density function based on Maximum Entropy method (MaxEnt)
 #' 
@@ -23,16 +29,16 @@
 #' # Raw moments M0 - M7
 #' raw_moments <- c(1, 68.75099, 4991.724, 371531.9, 28199680, 
 #'                  2176435499, 170477697491, 1.353288e+13)
-#' ed <- findDensity(raw_moments, x)
+#' ed <- find.density(raw_moments, x)
 #' 
 #' # Example 2 -- estimat for entire table --
 #' 
 #' x   <- 0:110
 #' y   <- 1965:2016
 #' dx  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
-#' mom <- findMoments(dx, x, y, n = 7)$raw.moments
+#' mom <- find.moments(dx, x, y, n = 7)$raw.moments
 #' 
-#' dx.hat <- findDensity(mom, x)
+#' dx.hat <- find.density(mom, x)
 #' 
 #' # Visual check --
 #' yr = "1990"
@@ -43,7 +49,7 @@
 #' legend("topleft", legend = c("observed", "estimated"), col = 1:2, 
 #'        pch = c(16, NA), lty = c(NA, 1), lwd = 2, bty = "n")
 #' @export
-findDensity <- function(data, 
+find.density <- function(data, 
                         x, 
                         omega = 110, 
                         verbose = FALSE) {
@@ -61,7 +67,7 @@ findDensity <- function(data,
     M <- L <- I <- NULL
     
     for (k in 1:N) { # THIS LOOP
-      maxEnt <- findDensity(data[k, ], x, omega)
+      maxEnt <- find.density(data[k, ], x, omega)
       P[, k] <- maxEnt$density
       M      <- rbind(M, maxEnt$fitted.raw.moments)
       L      <- rbind(L, maxEnt$lambda)
@@ -126,7 +132,7 @@ findDensity <- function(data,
                 iterations = as.numeric(k - 1))
   }
   out$call <- match.call()
-  out <- structure(class = "findDensity", out)
+  out <- structure(class = "find.density", out)
   return(out)
 }
 

@@ -2,22 +2,23 @@
 % Please edit documentation in R/evalAccuracy.R
 \name{evalAccuracy}
 \alias{evalAccuracy}
-\title{Generic for Computing Accuracy Measure from the \code{doBackTesting} and 
-\code{doBBackTesting} objects}
+\title{Generic for Computing Accuracy Measure from the \code{BackTesting} and 
+\code{BBackTesting} objects;}
 \usage{
 evalAccuracy(object, ...)
 }
 \arguments{
-\item{object}{An object of the class \code{doBackTesting} or \code{doBBackTesting}.}
+\item{object}{An object of the class \code{BackTesting} or 
+\code{BBackTesting};}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }
 \description{
-Generic for Computing Accuracy Measure from the \code{doBackTesting} and 
-\code{doBBackTesting} objects
+Generic for Computing Accuracy Measure from the \code{BackTesting} and 
+\code{BBackTesting} objects;
 }
 \examples{
-# For examples go to ?doBackTesting and ?doBBackTesting
+# For examples go to ?do.BackTesting and ?do.BBackTesting
 }
 \author{
 Marius D. Pascariu

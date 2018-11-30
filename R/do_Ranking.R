@@ -3,13 +3,13 @@
 #' Rank models based on the accuracy or robustness results
 #' @param A Table containing accuracy or robustness measures.
 #' @seealso 
-#' \code{\link{doBackTesting}} 
-#' \code{\link{doBBackTesting}}
+#' \code{\link{do.BackTesting}} 
+#' \code{\link{do.BBackTesting}}
 #' @author Marius D. Pascariu
 #' @examples 
-#' # For examples go to ?doBackTesting or ?doBBackTesting
+#' # For examples go to ?do.BackTesting or ?do.BBackTesting
 #' @export
-doRanking <- function(A) {
+do.Ranking <- function(A) {
   
   S  <- unique(A$Scenario)
   ns <- length(S) # no. of scenarios
@@ -28,7 +28,7 @@ doRanking <- function(A) {
     R <- tibble()
     for (s in 1:ns) {
       As <- A[A$Scenario == S[s], ]
-      Rs <- doRanking(As)
+      Rs <- do.Ranking(As)
       R  <- rbind(R, Rs)
     }
   }

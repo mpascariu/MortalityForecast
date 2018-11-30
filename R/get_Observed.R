@@ -7,18 +7,18 @@
 #' Get Observed Values
 #' @inherit get.Fitted description
 #' @inheritParams get.Fitted
-#' @inheritParams doMortalityModels
-#' @seealso \code{\link{doMortalityModels}}
+#' @inheritParams do.MortalityModels
+#' @seealso \code{\link{do.MortalityModels}}
 #' @author Marius D. Pascariu
 #' @examples 
-#' # For examples go to ?doMortalityModels
+#' # For examples go to ?do.MortalityModels
 #' @export
 get.Observed <- function(object = NULL, 
-                        data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                        data.in = NULL,
-                        data = NULL,
-                        x = NULL,
-                        ...) {
+                         data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                         data.in = NULL,
+                         data = NULL,
+                         x = NULL,
+                         ...) {
   
   data     <- data %||% object$input$data
   data.in  <- data.in %||% object$input$data.in

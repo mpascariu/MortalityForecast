@@ -8,7 +8,7 @@ get.Forecasts(object, data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx",
   "ex"), ...)
 }
 \arguments{
-\item{object}{An object of class \code{doForecasts}.}
+\item{object}{An object of class \code{MortalityForecasts}.}
 
 \item{data.out}{Specify the type of data to be returned in output. 
 Various life table indices are accepted: 
@@ -23,7 +23,7 @@ the values already converted to a life table index (e.g. life expectancy)
 by specifying the requiered format in the argument \code{data.out}.
 }
 \seealso{
-\code{\link{doForecasts}}
+\code{\link{do.MortalityForecasts}}
 }
 \author{
 Marius D. Pascariu
