@@ -7,7 +7,8 @@
 #' Perform In-Sample Testing of Mortality Forecasts Over One Time Period
 #' @param data A data.frame or a matrix containing mortality data 
 #' with ages \code{x} as row and time \code{y} as column. This object should
-#' contain the data to be used in fitting (traning) and validation process as well.
+#' contain the data to be used in fitting (training) and validation process 
+#' as well.
 #' @param y.fit Years to be considered in fitting.
 #' @param y.for Years to be forecast.
 #' @inheritParams do.MortalityModels
@@ -36,7 +37,7 @@
 #' 
 #' # Compute accuracy measures
 #' # The measures can be computed for different indicators. Even if it is not 
-#' # impossible to get a diffrent classification and ranking the 
+#' # impossible to get a different classification and ranking the 
 #' # outcome should be in general the same.
 #' evalAccuracy(B, data.out = "mx")
 #' evalAccuracy(B, data.out = "qx")
@@ -96,3 +97,4 @@ do.BackTesting <- function(data,
   out <- structure(class = "BackTesting", out)
   return(out)
 }
+

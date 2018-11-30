@@ -51,13 +51,16 @@ for a detail description and mathematical formulation.
 # Example 1 ----------------------
 # Data
 x  <- 0:100
-y  <- 1980:2014
+y  <- 1980:2016
 dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 
+# If data contains zero's we have to replace them with very small 
+# values in order to avoid errors in fitting. replace.zeros() will do it.
+dx <- replace.zeros(dx)
+
 # Fit model
-M <- model.Oeppen(dx, x, y)
+M <- model.Oeppen(data = dx, x = x, y = y)
 M
-R <- residuals(M)
 
 summary(M)
 coef(M)
@@ -67,11 +70,11 @@ plot(M, plotType = "observed")
 plot(M, plotType = "fitted")
 
 # Plot residuals
+R <- residuals(M)
 plot(R, plotType = "scatter")
 plot(R, plotType = "colourmap")
 plot(R, plotType = "signplot")
 
-# Example 1 ----------------------
 # Perform forecasts
 P  <- predict(M, h = 16)
 P
@@ -81,11 +84,11 @@ plot(P, plotType = "lower")
 plot(P, plotType = "upper")
 
 #' # Example 2 ----------------------
-# One can specify manually the ARIMA order, a drift to be included or not 
+# One can specify manually the ARIMA order, a drift to be included or not, 
 # and the jump choice of the first forecast year.
 P2 <- predict(M, h = 20, 
-              order = c(0,1,0), 
-              include.drift = TRUE, 
+              order = c(0,1,1), 
+              include.drift = FALSE, 
               jumpchoice = "fit")
 
 \dontrun{

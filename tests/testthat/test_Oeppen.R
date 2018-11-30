@@ -9,7 +9,7 @@ library(MortalityForecast)
 # Test model fitting
 x = 0:110
 y = 1960:2016
-D <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
+D <- HMD_male$dx$GBRTENW[paste(x), paste(y)] %>% replace.zeros
 M1 <- model.Oeppen(D, x = x, y = y)
 M2 <- model.Oeppen(D)
 vsn <- 1e-200

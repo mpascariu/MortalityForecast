@@ -3,19 +3,22 @@
 \docType{data}
 \name{HMD_male}
 \alias{HMD_male}
-\title{DATA - Demographic data for male population}
+\alias{HMD_female}
+\title{DATA - Demographic data for various population}
 \format{An object of class \code{list} of length 5.}
 \source{
 \href{https://www.mortality.org}{Human Mortality Database}
 }
 \usage{
 HMD_male
+
+HMD_female
 }
 \description{
-Demographic data for populations between 1950 and 2016 in the following 
-countries: England \& Wales, Denmark, the Netherlands, Sweden, and USA.
-The data is provided in the package for testing purposes only.
-By the time you are using it, the data may be outdated. Download actual 
+Demographic data for female and male populations between 1950 and 2016 
+in the following countries: England \& Wales, Denmark, the Netherlands, 
+Sweden, and USA.vThe data is provided in the package for testing purposes 
+only. By the time you are using it, the data may be outdated. Download actual 
 demographic data free of charge from \insertCite{hmd2018;textual}{MortalityForecast}. 
 Once a username and a password is created on the 
 \href{https://www.mortality.org}{website} the 

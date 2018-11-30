@@ -44,6 +44,46 @@ The output is a list with the components:
 \description{
 The Coherent Oeppen Mortality Model (Oeppen-C)
 }
+\examples{
+# Example 1 ----------------------
+# Data
+x  <- 0:110
+y  <- 1980:2016
+dx_M <- HMD_male$dx$USA[paste(x), paste(y)]
+dx_F <- HMD_female$dx$USA[paste(x), paste(y)]
+
+# Replace zeros 
+dx_M <- replace.zeros(dx_M)
+dx_F <- replace.zeros(dx_F)
+
+# Fit model for US males using US females as benchmark
+M <- model.OeppenC(data = dx_M,
+                   data.B = dx_F,
+                   x = x, y = y)
+M
+
+summary(M)
+coef(M)
+coef(M$benchmark)
+
+# Plot observed and fitted values
+plot(M, plotType = "observed")
+plot(M, plotType = "fitted")
+
+# Plot residuals
+R <- residuals(M)
+plot(R, plotType = "scatter")
+plot(R, plotType = "colourmap")
+plot(R, plotType = "signplot")
+
+# Perform forecasts
+P  <- predict(M, h = 16)
+P
+
+plot(P, plotType = "mean")
+plot(P, plotType = "lower")
+plot(P, plotType = "upper")
+}
 \seealso{
 \code{\link{predict.Oeppen}}
 \code{\link{plot.Oeppen}}

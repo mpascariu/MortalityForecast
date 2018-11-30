@@ -70,7 +70,7 @@ model.MEM <- function(data,
                       ...) {
   
   input <- c(as.list(environment()))
-
+  
   # Info
   modelLN <- "Maximum-Entropy Mortality Model "
   modelSN <- "MEM"
@@ -151,33 +151,7 @@ find_ages_and_years <- function(data, x, y) {
 }
 
 
-# S3 ----------------------------------------------
-#' Residuals of the Maximum-Entropy Mortality Model 
-#' 
-#' Computed deviance residuals for a fitted Maximum-Entropy Mortality Model.
-#' @param object An object of class \code{MEM};
-#' @inheritParams residuals_default
-#' @examples # For examples go to ?model.MEM
-#' @export
-residuals.MEM <- function(object, ...) {
-  residuals_default(object, ...)
-}
-
-
-#' Print function for Maximum-Entropy Mortality Model 
-#' @param x An object of class \code{MEM};
-#' @inheritParams print_default
-#' @keywords internal
-#' @export
-print.MEM <- function(x, ...) {
-  print_default(x, ...)
-  cat("Moments in fit: ", paste0("M", c(0, x$input$n), collapse = " - "))
-  cat("\n")
-}
-
-
-
-#' Predict Maximum-Entropy Mortality Model
+#' Forecast the age-at-death distribution using the Maximum-Entropy Mortality Model
 #' 
 #' @param object An object of class \code{MEM};
 #' @param x.h Numerical vector indicating the ages to be considered in 
@@ -194,7 +168,7 @@ print.MEM <- function(x, ...) {
 #'  \item{info}{Short details about the model;}
 #'  \item{predicted.values}{A list containing the predicted d[x] values given 
 #'  by the estimated model over the forecast horizon \code{h};}
-#'  \item{conf.intervals}{Confidence intervals for the predcted values;}
+#'  \item{conf.intervals}{Confidence intervals for the predicted values;}
 #'  \item{predicted.raw.moments}{Predicted raw moments over the forecast horizon 
 #'  \code{h};}
 #'  \item{random.walk.model}{The estimated multivariate Random Walk model used 
@@ -277,17 +251,30 @@ correct_jump_off <- function(X, object, jumpchoice, h){
   return(X.out)
 }  
 
+# S3 ----------------------------------------------
+#' @rdname residuals.Oeppen
+#' @export
+residuals.MEM <- function(object, ...) {
+  residuals_default(object, ...)
+}
 
-#' Print function for \code{\link{predict.MEM}}
-#' @inherit print_predict_default
-#' @keywords internal
+
+#' @rdname print_default
+#' @export
+print.MEM <- function(x, ...) {
+  print_default(x, ...)
+  cat("Moments in fit: ", paste0("M", c(0, x$input$n), collapse = " - "))
+  cat("\n")
+}
+
+
+#' @rdname print_default
 #' @export
 print.predict.MEM <- function(x, ...) {
   print_predict_default(x, ...)
   cat("Moments in forecast: ", paste0("M", c(0, ncol(x$predicted.raw.moments) - 1), 
-                                        collapse = " - "))
+                                      collapse = " - "))
   cat("\n")
 }
-
 
 

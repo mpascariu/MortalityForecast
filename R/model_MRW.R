@@ -110,10 +110,7 @@ model.MRW <- function(data,
 # S3 ----------------------------------------------
 
 
-#' Forecast a Multivariate Random Walk Model
-#' 
-#' Returns forecasts and other information for a Multivariate 
-#' Random Walk Model.
+#' Forecast age-specific death rates using the a Multivariate Random Walk Model
 #' 
 #' @param object An object of class \code{MRW}.
 #' @inheritParams do.MortalityForecasts
@@ -176,32 +173,21 @@ predict.MRW <- function(object,
 }
 
 
-#' Residuals of a Multivariate Random-Walk Model 
-#' 
-#' Computed deviance residuals for a Multivariate Random-Walk model.
-#' @param object An object of class \code{MRW};
-#' @inheritParams residuals_default
-#' @examples # For examples go to ?model.MRW
+#' @rdname residuals.Oeppen
 #' @export
 residuals.MRW <- function(object, ...) {
   residuals_default(object, ...)
 }
 
 
-#' Print function for MRW method
-#' @param x An object of class \code{MRW}.
-#' @inheritParams print_default
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.MRW <- function(x, ...) {
   print_default(x, ...)
 }
 
 
-#' Print function
-#' @param x An object of class \code{"predict.MRW"};
-#' @inheritParams print_predict_default
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.predict.MRW <- function(x, ...) {
   print_predict_default(x, ...)

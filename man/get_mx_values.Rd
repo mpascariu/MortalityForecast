@@ -4,7 +4,7 @@
 \alias{get_mx_values}
 \title{Get m[x] values and confidence intervals based on k[t] forecast
 In this function we compute the m[x] values based on the extrapolation of
-the k[t] time-series. If necesary an adjustment for the jump-off is 
+the k[t] time-series. If necessary an adjustment for the jump-off is 
 provided.}
 \usage{
 get_mx_values(object, jumpchoice, y, kt, B.kt = NULL)
@@ -26,7 +26,7 @@ Optional. Default: \code{NULL}.}
 \description{
 Get m[x] values and confidence intervals based on k[t] forecast
 In this function we compute the m[x] values based on the extrapolation of
-the k[t] time-series. If necesary an adjustment for the jump-off is 
+the k[t] time-series. If necessary an adjustment for the jump-off is 
 provided.
 }
 \keyword{internal}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_OeppenC.R
 \name{predict.OeppenC}
 \alias{predict.OeppenC}
-\title{#' Forecast the Age at Death Distribution using the Coherent Oeppen model}
+\title{Forecast the age-at-death distribution using the Coherent Oeppen model}
 \usage{
 \method{predict}{OeppenC}(object, h, order = c(0, 1, 0), order.B = c(0,
   1, 0), include.drift = FALSE, include.drift.B = TRUE, level = c(80,
@@ -63,7 +63,7 @@ The output is a list with the components:
  benchmark population.}
 }
 \description{
-#' Forecast the Age at Death Distribution using the Coherent Oeppen model
+Forecast the age-at-death distribution using the Coherent Oeppen model
 }
 \examples{
 # For examples go to ?model.OeppenC

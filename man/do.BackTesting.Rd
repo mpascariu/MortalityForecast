@@ -11,7 +11,8 @@ do.BackTesting(data, x, y.fit, y.for, data.in = c("qx", "mx", "dx",
 \arguments{
 \item{data}{A data.frame or a matrix containing mortality data 
 with ages \code{x} as row and time \code{y} as column. This object should
-contain the data to be used in fitting (traning) and validation process as well.}
+contain the data to be used in fitting (training) and validation process 
+as well.}
 
 \item{x}{Numerical vector indicating the ages in input \code{data}. 
 Optional. Default: \code{NULL}.}
@@ -28,13 +29,16 @@ The following options are available: \itemize{
   \item{\code{"MRW"}} -- The Multivariate Random-Walk (w/o Drift);
   \item{\code{"MRWD"}} -- The Multivariate Random-Walk with Drift;
   \item{\code{"LeeCarter"}} -- The Lee-Carter Mortality Model;
+  \item{\code{"LiLee"}} -- The Li-Lee Mortality Model;
   \item{\code{"HyndmanUllah"}} -- The Hyndman-Ullah Mortality Model;
   \item{\code{"Oeppen"}} -- The Oeppen Mortality Model;
+  \item{\code{"OeppenC"}} -- The Coherent Oeppen Mortality Model;
   \item{\code{"MEM2"}} -- The Maximum Entropy Mortality Model of order 2;
   \item{\code{"MEM3"}} -- The Maximum Entropy Mortality Model of order 3;
   \item{\code{"MEM4"}} -- The Maximum Entropy Mortality Model of order 4;
   \item{\code{"MEM5"}} -- The Maximum Entropy Mortality Model of order 5;
   \item{\code{"MEM6"}} -- The Maximum Entropy Mortality Model of order 6;
+  \item{\code{"MEM7"}} -- The Maximum Entropy Mortality Model of order 7;
 }}
 
 \item{level}{Significance level of the confidence interval.}
@@ -71,7 +75,7 @@ B <- do.BackTesting(data = D, x = x,
 
 # Compute accuracy measures
 # The measures can be computed for different indicators. Even if it is not 
-# impossible to get a diffrent classification and ranking the 
+# impossible to get a different classification and ranking the 
 # outcome should be in general the same.
 evalAccuracy(B, data.out = "mx")
 evalAccuracy(B, data.out = "qx")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{whatsYourName}
 \alias{whatsYourName}
-\title{Return the name of the object as.charater}
+\title{Return the name of the object as.character}
 \usage{
 whatsYourName(x)
 }
@@ -10,6 +10,6 @@ whatsYourName(x)
 \item{x}{Any object.}
 }
 \description{
-Return the name of the object as.charater
+Return the name of the object as.character
 }
 \keyword{internal}

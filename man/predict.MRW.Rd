@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_MRW.R
 \name{predict.MRW}
 \alias{predict.MRW}
-\title{Forecast a Multivariate Random Walk Model}
+\title{Forecast age-specific death rates using the a Multivariate Random Walk Model}
 \source{
 The original implementation of this function was taken from 
 \code{StMoMo} R package.
@@ -32,8 +32,7 @@ An object of the class \code{predict.MRW} with components:
  \item{y}{Numerical vector indicating the years in output.}
 }
 \description{
-Returns forecasts and other information for a Multivariate 
-Random Walk Model.
+Forecast age-specific death rates using the a Multivariate Random Walk Model
 }
 \details{
 \insertNoCite{haberman2011}{MortalityForecast}

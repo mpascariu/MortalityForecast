@@ -39,13 +39,16 @@
 #' # Example 1 ----------------------
 #' # Data
 #' x  <- 0:100
-#' y  <- 1980:2014
+#' y  <- 1980:2016
 #' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' 
+#' # If data contains zero's we have to replace them with very small 
+#' # values in order to avoid errors in fitting. replace.zeros() will do it.
+#' dx <- replace.zeros(dx)
+#' 
 #' # Fit model
-#' M <- model.Oeppen(dx, x, y)
+#' M <- model.Oeppen(data = dx, x = x, y = y)
 #' M
-#' R <- residuals(M)
 #' 
 #' summary(M)
 #' coef(M)
@@ -55,11 +58,11 @@
 #' plot(M, plotType = "fitted")
 #' 
 #' # Plot residuals
+#' R <- residuals(M)
 #' plot(R, plotType = "scatter")
 #' plot(R, plotType = "colourmap")
 #' plot(R, plotType = "signplot")
 #' 
-#' # Example 1 ----------------------
 #' # Perform forecasts
 #' P  <- predict(M, h = 16)
 #' P
@@ -69,11 +72,11 @@
 #' plot(P, plotType = "upper")
 #' 
 #' #' # Example 2 ----------------------
-#' # One can specify manually the ARIMA order, a drift to be included or not 
+#' # One can specify manually the ARIMA order, a drift to be included or not, 
 #' # and the jump choice of the first forecast year.
 #' P2 <- predict(M, h = 20, 
-#'               order = c(0,1,0), 
-#'               include.drift = TRUE, 
+#'               order = c(0,1,1), 
+#'               include.drift = FALSE, 
 #'               jumpchoice = "fit")
 #' 
 #' \dontrun{
@@ -95,8 +98,6 @@ model.Oeppen <- function(data,
   x <- x %||% 1:nrow(data)
   y <- y %||% 1:ncol(data)
   
-  vsn <- sum(data)/ncol(data) * 1e-10 # very small number
-  data[data == 0] <- vsn              # replace zero's with a vsn
   data <- convertFx(x, data, from = "dx", to = "dx", lx0 = 1)
   
   # Info
@@ -106,11 +107,12 @@ model.Oeppen <- function(data,
   info <- list(name = modelLN, name.short = modelSN, formula = modelF)
   
   # Estimate model parameters: a[x], b[x], k[t]
-  dx  <- t(data)
-  ax  <- apply(dx, 2, mean) # general dx pattern
+  dx  <- data %>% t %>% acomp %>% unclass # data close
+  ax  <- geometricmeanCol(dx) # geometric mean
   ax  <- ax/sum(ax)
-  cdx <- sweep(acomp(dx), 2, ax, FUN = "-") # remove ax
-  ccdx <- clr(acomp(cdx)) # Centered log ratio transform
+  cdx <- sweep(dx, 2, ax, "/") # remove ax
+  cdx <- cdx/rowSums(cdx)
+  ccdx <- clr(cdx) # Centered log ratio transform
   
   S  <- svd(ccdx) # Singular Value Decomposition of a Matrix
   kt <- S$d[1] * S$u[, 1]
@@ -122,7 +124,7 @@ model.Oeppen <- function(data,
   
   # Compute fitted values and devinace residuals based on the estimated model
   fv  <- clrInv(c(kt) %*% t(bx)) # Inverse clr
-  fv  <- sweep(fv, 2, ax, FUN = "+")
+  fv  <- sweep(unclass(fv), 2, ax, FUN = "*")
   fdx <- unclass(t(fv/rowSums(fv)))
   odx <- apply(data, 2, FUN = function(x) x/sum(x)) # observed dx - same scale as fitted dx
   resid <- odx - fdx
@@ -143,45 +145,8 @@ model.Oeppen <- function(data,
 }
 
 
-#' Validate input values
-#' @param X A list with input arguments provided in \code{\link{model.Oeppen}} function
-#' @keywords internal
-Oeppen.input.check <- function(X) {
-  # Validate the other arguments
-  with(X, {
-    if (any(data < 0)) {
-      stop("'data' contains negative values. ",
-           "The compositions must always be positive or equal to zero.", 
-           call. = FALSE)
-    }
-    if (any(is.na(data))) {
-      stop("'data' contains NA values. ",
-           "The function does not know how to deal with these yet.", 
-           call. = FALSE)
-    }
-    if (any(is.na(data))) {
-      stop("'data' contains NA values", call. = FALSE)
-    }
-    if (any(is.na(y))) {
-      stop("'y' contains NA values", call. = FALSE)
-    }
-    if (any(is.na(x))) {
-      stop("'x' contains NA values", call. = FALSE)
-    }
-    if ((!is.null(x)) & dim(data)[1] != length(x)) {
-      stop("The length of 'x' is not equal to the number or rows in 'data'.", 
-           call. = FALSE)
-    }
-    if ((!is.null(y)) & dim(data)[2] != length(y)) {
-      stop("The length of 'y' is not equal to the number or columns in 'data'.", 
-           call. = FALSE)
-    }
-  })
-}
 
-
-
-#' Forecast the Age at Death Distribution using the Oeppen model.
+#' Forecast the age-at-death distribution using the Oeppen model.
 #' 
 #' @param object An object of class \code{Oeppen}.
 #' @param order A specification of the non-seasonal part of the ARIMA model: 
@@ -219,8 +184,8 @@ Oeppen.input.check <- function(X) {
 #' @export
 predict.Oeppen <- function(object,
                            h, 
-                           order = NULL, 
-                           include.drift = NULL,
+                           order = c(0,1,0), 
+                           include.drift = TRUE,
                            level = c(80, 95), 
                            jumpchoice = c("actual", "fit"), 
                            method = "ML", 
@@ -284,18 +249,19 @@ get_dx_values <- function(object, jumpchoice, y, kt, B.kt = NULL) {
   
   for (i in 1:ncol(kt)) {
     
-    # This is used only in OeppenC model, and it is basically the trend 
-    # given by the benchmark population
-    if (is.null(B.kt)) { 
+    # This is used only in OeppenC model, and it is basically the trend
+    # given by the benchmark population # --------
+    if (is.null(B.kt)) {
       B.cdx <- 1
+      
     } else {
-      B.bx <- coef(object$B.model)$bx
+      B.bx  <- coef(object$benchmark)$bx
       B.cdx <- clrInv(c(B.kt[, i]) %*% t(B.bx))
-    }
+    } # ------------------------------------------
     
     # Compute predicted d[x] values
     p <- clrInv(c(kt[, i]) %*% t(C$bx)) + B.cdx
-    p <- sweep(p, 2, C$ax, FUN = "+") # predicted dx values
+    p <- sweep(unclass(p), 2, C$ax, FUN = "*") # predicted dx values
     p <- unclass(p/rowSums(p))
     
     # Adjust d[x] for jump-off if needed
@@ -316,31 +282,76 @@ get_dx_values <- function(object, jumpchoice, y, kt, B.kt = NULL) {
 }
 
 
-# S3 ----------------------------------------------
 
-#' Residuals of the Oeppen Mortality Model
-#' @param object An object of class \code{"Oeppen"}
-#' @inheritParams residuals_default
-#' @examples # For examples go to ?model.Oeppen
+#' Validate input values
+#' @param X A list with input arguments provided in \code{\link{model.Oeppen}} function
+#' @keywords internal
+Oeppen.input.check <- function(X) {
+  # Validate the other arguments
+  with(X, {
+    if (any(data == 0)) {
+      stop("'data' contains zero's. ",
+           "Please replace the values equal to zero from input.", 
+           call. = FALSE)
+    }
+    if (any(data < 0)) {
+      stop("'data' contains negative values. ",
+           "The compositions must always be positive or equal to zero.", 
+           call. = FALSE)
+    }
+    if (any(is.na(data))) {
+      stop("'data' contains NA values. ",
+           "The function does not know how to deal with these yet.", 
+           call. = FALSE)
+    }
+    if (any(is.na(data))) {
+      stop("'data' contains NA values", call. = FALSE)
+    }
+    if (any(is.na(y))) {
+      stop("'y' contains NA values", call. = FALSE)
+    }
+    if (any(is.na(x))) {
+      stop("'x' contains NA values", call. = FALSE)
+    }
+    if ((!is.null(x)) & dim(data)[1] != length(x)) {
+      stop("The length of 'x' is not equal to the number or rows in 'data'.", 
+           call. = FALSE)
+    }
+    if ((!is.null(y)) & dim(data)[2] != length(y)) {
+      stop("The length of 'y' is not equal to the number or columns in 'data'.", 
+           call. = FALSE)
+    }
+  })
+}
+
+
+#' Extract Model Residuals
+#' @param object A fitted mortality model
+#' @inheritParams print_default
+#' @seealso 
+#' \code{\link{model.HyndmanUllah}}
+#' \code{\link{model.LeeCarter}}
+#' \code{\link{model.LiLee}}
+#' \code{\link{model.MEM}}
+#' \code{\link{model.MRW}}
+#' \code{\link{model.Oeppen}}
+#' \code{\link{model.OeppenC}}
+#' @examples # See examples in the main functions linked above.
 #' @export
 residuals.Oeppen <- function(object, ...){
   residuals_default(object, ...)
 }
 
 
-#' Print Oeppen
-#' @param x An object of class \code{"Oeppen"}
-#' @inheritParams print_default
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.Oeppen <- function(x, ...) {
   print_default(x, ...)
 }
 
 
-#' Summary Oeppen
-#' @param object An object of class \code{"Oeppen"}.
-#' @inheritParams print.Oeppen
+#' Generic Summary
+#' @inheritParams residuals.Oeppen
 #' @keywords internal
 #' @export
 summary.Oeppen <- function(object, ...) {
@@ -355,10 +366,7 @@ summary.Oeppen <- function(object, ...) {
 }
 
 
-#' Print summary.Oeppen
-#' @param x An object of class \code{"summary.Oeppen"}.
-#' @inheritParams print.Oeppen
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.summary.Oeppen <- function(x, ...){
   cat('\nFit  :', x$info$name)
@@ -372,10 +380,7 @@ print.summary.Oeppen <- function(x, ...){
 }
 
 
-#' Print predict.Oeppen
-#' @param x An object of class \code{"predict.Oeppen"};
-#' @inheritParams print.Oeppen
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.predict.Oeppen <- function(x, ...) {
   print_predict_default(x, ...)
@@ -384,48 +389,4 @@ print.predict.Oeppen <- function(x, ...) {
 }
 
 
-#' ggplot the observed and fitted values of an Oeppen model
-#' 
-#' @inherit plot.MEM details
-#' @inheritParams plot.MEM
-#' @examples 
-#' # For examples go to ?model.Oeppen
-#' @export
-plot.Oeppen <- function(x, plotType = c("fitted", "observed"), 
-                           ny = 7, level = 80, ...){
-  plot.MEM(x, plotType, ny, level, ...)
-}
-
-
-#' ggplot the predicted values of a CoDa-LC mortality model
-#' 
-#' @param x An object of the class \code{\link{predict.Oeppen}}.
-#' @param plotType The type of the plot. The alternatives are 
-#' \code{"mean", "lower", "upper"}. Default: \code{"mean"}.
-#' @inheritParams plot.predict.MEM
-#' @examples 
-#' # For examples go to ?predict.Oeppen
-#' @export
-plot.predict.Oeppen <- function(x, plotType = c("mean", "lower", "upper"), 
-                                   ny = 7, level = 80, ...) 
-{
-  plotType <- match.arg(plotType)
-  if (plotType == "mean") {
-    mat <- x$predicted.values
-    P <- ggplotDistribConvergence(mat, x = x$x, y = x$y, ny, level) + 
-      labs(subtitle = "Forecast Values - Best estimate")
-    
-  } else if (plotType == "lower") {
-    mat <- x$conf.intervals[[1]]
-    P <- ggplotDistribConvergence(mat, x = x$x, y = x$y, ny, level) + 
-      labs(subtitle = "Forecast Values - lower bound")
-    
-  } else if (plotType == "upper") {
-    mat <- x$conf.intervals[[length(x$conf.intervals)/2 + 1]]
-    P <- ggplotDistribConvergence(mat, x = x$x, y = x$y, ny, level) + 
-      labs(subtitle = "Forecast Values - upper bound")
-    
-  } 
-  suppressMessages(print(P))
-}
 

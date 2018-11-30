@@ -109,7 +109,7 @@ wide.list.2.long.df <- function(data,
 }
 
 
-#' Return the name of the object as.charater
+#' Return the name of the object as.character
 #' @param x Any object.
 #' @keywords internal
 #' @export
@@ -158,7 +158,7 @@ replace.zeros <- function(mx, radix = 1e5) {
     L <- as.numeric(p[i, ] == 0) * sdx
     p[i, ] <- p[i, ] + L
   }
-
+  
   z <- sweep(p, 2, colSums(p), FUN = "/")
   out <- sweep(z, 2, colSums(Dx), FUN = "*") / radix
   
@@ -198,8 +198,8 @@ arima.string1 <- function(object, padding = FALSE) {
 
 # S3 - default ---------------------------------
 
-#' Print function for mortality models
-#' @param x A fitted mortality model
+#' Print function for mortality objects
+#' @param x A mortality object;
 #' @param ... Further arguments passed to or from other methods.
 #' @keywords internal
 print_default <- function(x, ...) {
@@ -212,9 +212,7 @@ print_default <- function(x, ...) {
 }
 
 
-#' Default print function for predict methods
-#' @param x An predict object;
-#' @param ... Further arguments passed to or from other methods.
+#' @rdname print_default
 #' @keywords internal
 print_predict_default <- function(x, ...) {
   cat("\nForecast:", x$info$name)
@@ -226,11 +224,12 @@ print_predict_default <- function(x, ...) {
 }
 
 
-#' Residuals function for mortality models
+#' Extract Model Residuals
 #' @param object A fitted mortality model
 #' @inheritParams print_default
 #' @keywords internal
 residuals_default <- function(object, ...){
   structure(class = "residMF", as.matrix(object$residuals))
 }
+
 

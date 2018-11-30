@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_MEM.R
 \name{predict.MEM}
 \alias{predict.MEM}
-\title{Predict Maximum-Entropy Mortality Model}
+\title{Forecast the age-at-death distribution using the Maximum-Entropy Mortality Model}
 \usage{
 \method{predict}{MEM}(object, h, x.h = NULL, level = 95,
   jumpchoice = c("actual", "fit"), verbose = FALSE, ...)
@@ -38,7 +38,7 @@ The output is a list with the components:
  \item{info}{Short details about the model;}
  \item{predicted.values}{A list containing the predicted d[x] values given 
  by the estimated model over the forecast horizon \code{h};}
- \item{conf.intervals}{Confidence intervals for the predcted values;}
+ \item{conf.intervals}{Confidence intervals for the predicted values;}
  \item{predicted.raw.moments}{Predicted raw moments over the forecast horizon 
  \code{h};}
  \item{random.walk.model}{The estimated multivariate Random Walk model used 
@@ -47,7 +47,7 @@ The output is a list with the components:
  \item{y}{Vector of years used in prediction.}
 }
 \description{
-Predict Maximum-Entropy Mortality Model
+Forecast the age-at-death distribution using the Maximum-Entropy Mortality Model
 }
 \details{
 \insertNoCite{pascariu_phd2018}{MortalityForecast}

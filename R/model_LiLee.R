@@ -168,30 +168,21 @@ predict.LiLee <- function(object,
 
 # S3 ----------------------------------------------
 
-#' Residuals of the Li-Lee Mortality Model
-#' @param object An object of class \code{"LeeCarter2"}
-#' @inheritParams residuals_default
-#' @examples # For examples go to ?model.LiLee
+#' @rdname residuals.Oeppen
 #' @export
 residuals.LiLee <- function(object, ...){
   residuals_default(object, ...)
 }
 
 
-#' Print Li-Lee model
-#' @param x An object of class \code{"LeeCarter2"}
-#' @inheritParams print_default
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.LiLee <- function(x, ...) {
   print_default(x, ...)
 }
 
 
-#' Summary LiLee
-#' @param object An object of class \code{"LeeCarter2"}.
-#' @inheritParams print.LiLee
-#' @keywords internal
+#' @rdname summary.Oeppen
 #' @export
 summary.LiLee <- function(object, ...) {
   axbx <- data.frame(ax = object$coefficients$ax, 
@@ -205,10 +196,7 @@ summary.LiLee <- function(object, ...) {
 }
 
 
-#' Print summary.LiLee
-#' @param x An object of class \code{"summary.LiLee"}.
-#' @inheritParams print.LiLee
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.summary.LiLee <- function(x, ...){
   cat('\nFit  :', x$info$name)
@@ -222,10 +210,7 @@ print.summary.LiLee <- function(x, ...){
 }
 
 
-#' Print function
-#' @param x An object of class \code{"predict.LiLee"};
-#' @inheritParams print_predict_default
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.predict.LiLee <- function(x, ...) {
   print_predict_default(x, ...)

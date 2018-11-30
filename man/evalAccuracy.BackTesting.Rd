@@ -2,19 +2,19 @@
 % Please edit documentation in R/evalAccuracy.R
 \name{evalAccuracy.BackTesting}
 \alias{evalAccuracy.BackTesting}
-\title{Get Accuracy Measures from \code{do.BackTesting}}
+\title{Get Accuracy Measures from \code{BackTesting}}
 \usage{
 \method{evalAccuracy}{BackTesting}(object, data.out = c("qx", "mx", "dx",
   "lx", "Lx", "Tx", "ex"), measures = NULL, ...)
 }
 \arguments{
-\item{object}{An object of class \code{do.BackTesting}.}
+\item{object}{An object of class \code{BackTesting}.}
 
 \item{data.out}{Specify the type of data to be returned in output. 
 Various life table indices are accepted: 
 \code{"qx", "mx", "dx", "lx", "Lx", "Tx", "ex"}.}
 
-\item{measures}{What accurracy measure to compute? Various alternatives are 
+\item{measures}{What accuracy measure to compute? Various alternatives are 
 available, \itemize{
  \item{Mean error measures: } \code{"ME", "MAE", "MAPE", "sMAPE", "sMRAE", "MASE"};
  \item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "sMdRAE", "MdASE"};
@@ -25,7 +25,7 @@ available, \itemize{
 \item{...}{Arguments to be passed to or from other methods.}
 }
 \description{
-Get Accuracy Measures from \code{do.BackTesting}
+Get Accuracy Measures from \code{BackTesting}
 }
 \details{
 See \insertCite{hyndman2006;textual}{MortalityForecast} for a 

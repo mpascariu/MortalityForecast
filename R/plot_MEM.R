@@ -1,12 +1,15 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Mon Nov 19 14:14:07 2018
+# Last update: Fri Nov 30 22:35:56 2018
 # --------------------------------------------------- #
 
 
-#' ggplot the observed and fitted values of a Maximum-Entropy Mortality Model 
+#' Plot the Observed and Fitted Age-at-Death Distribution
 #' 
+#' Plot the observed and fitted age-at-death distribution returned by a 
+#' \code{Oeppen, OeppenC} or \code{MEM} model.
+#' @param x A fitted mortality model.
 #' @param plotType The type of the plot. The alternatives are 
 #' \code{"fitted"}, \code{"observed"}. Default: \code{"fitted"}.
 #' @inheritParams plot.residMF
@@ -15,9 +18,11 @@
 #' Default: 80.
 #' @details Note: the output is a ggplot2 object. Therefore, one can add or 
 #' modify the components of the figure.
-#' @seealso \code{\link{model.MEM}}
-#' @examples 
-#' # For examples go to ?model.MEM
+#' @seealso 
+#' \code{\link{model.Oeppen}}
+#' \code{\link{model.OeppenC}}
+#' \code{\link{model.MEM}}
+#' @examples # For examples go to ?model.Oeppen or ?model.OeppenC or ?model.MEM
 #' @export   
 plot.MEM <- function(x, 
                      plotType = c("fitted", "observed"), 
@@ -110,17 +115,18 @@ fitted2dens <- function(mat, x, y, ny = 7, lx0 = 300) {
 
 
 
-#' ggplot the predicted values of a Maximum-Entropy Mortality Model
+#' Plot the Predicted Age-at-Death Distribution
 #' 
 #' @param x An object of the class \code{\link{predict.MEM}}.
 #' @param y An object of the class \code{\link{model.MEM}}. 
-#' Needed only for ploting moments. See \code{plotType}.
+#' Needed only for plotting moments. See \code{plotType}.
 #' @param plotType The type of the plot. The alternatives are 
 #' \code{"mean", "lower", "upper", "raw_moments", "normalised_moments", 
 #' "scaled_moments"}. Default: \code{"mean"}.
 #' @inheritParams plot.MEM
-#' @examples
-#' # For examples go to ?predict.MEM
+#' @seealso 
+#' \code{\link{model.MEM}}
+#' @examples # For examples go to ?model.MEM
 #' @export
 plot.predict.MEM <- function(x, 
                              y = NULL,
@@ -209,8 +215,6 @@ prepare_ggdata <- function(P, M, plotType) {
   H$year = as.numeric(H$year)
   return(H)
 }
-
-
 
 
 

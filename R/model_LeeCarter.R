@@ -65,7 +65,7 @@ model.LeeCarter <- function(data,
   # Variability
   var <- cumsum(S$d^2 / sum(S$d^2))[1]
   
-  # Compute fitted values and devinace residuals based on the estimated model
+  # Compute fitted values and deviance residuals based on the estimated model
   fv <- sweep(c(bx) %*% t(kt), 1, ax, FUN = "+") # Fitted values
   fv <- exp(fv) # fitted mx
   dimnames(fv) <- list(x, y)
@@ -100,14 +100,14 @@ model.LeeCarter <- function(data,
 #' @examples # For examples go to ?model.LeeCarter
 #' @export
 predict.LeeCarter <- function(object, 
-                               h, 
-                               order = c(0, 1, 0), 
-                               include.drift = TRUE,
-                               level = c(80, 95),
-                               jumpchoice = c("actual", "fit"),
-                               method = "ML",
-                               verbose = TRUE, ...){
-
+                              h, 
+                              order = c(0, 1, 0), 
+                              include.drift = TRUE,
+                              level = c(80, 95),
+                              jumpchoice = c("actual", "fit"),
+                              method = "ML",
+                              verbose = TRUE, ...){
+  
   # Timeline
   bop <- max(object$y) + 1
   eop <- bop + h - 1
@@ -157,7 +157,7 @@ predict.LeeCarter <- function(object,
 
 #' Get m[x] values and confidence intervals based on k[t] forecast
 #' In this function we compute the m[x] values based on the extrapolation of
-#' the k[t] time-series. If necesary an adjustment for the jump-off is 
+#' the k[t] time-series. If necessary an adjustment for the jump-off is 
 #' provided.
 #' @inheritParams predict.LeeCarter 
 #' @inheritParams model.LeeCarter
@@ -170,7 +170,7 @@ get_mx_values <- function(object, jumpchoice, y, kt, B.kt = NULL){
   OV <- object$observed.values
   N  <- ncol(OV)
   P  <- NULL
-    
+  
   for (i in 1:ncol(kt)) {
     
     # This is used only in LiLee model, and it is basically the trend 
@@ -205,32 +205,21 @@ get_mx_values <- function(object, jumpchoice, y, kt, B.kt = NULL){
 
 
 # S3 ----------------------------------------------
-
-
-#' Residuals of the Lee-Carter Mortality Model
-#' @param object An object of class \code{"LeeCarter"}
-#' @inheritParams residuals_default
-#' @examples # For examples go to ?model.LeeCarter
+#' @rdname residuals.Oeppen
 #' @export
 residuals.LeeCarter <- function(object, ...){
   residuals_default(object, ...)
 }
 
 
-#' Print Lee-Carter model
-#' @param x An object of class \code{"LeeCarter"}
-#' @inheritParams print_default
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.LeeCarter <- function(x, ...) {
   print_default(x, ...)
 }
 
 
-#' Summary LeeCarter
-#' @param object An object of class \code{"LeeCarter"}.
-#' @inheritParams print.LeeCarter
-#' @keywords internal
+#' @rdname summary.Oeppen
 #' @export
 summary.LeeCarter <- function(object, ...) {
   axbx <- data.frame(ax = object$coefficients$ax, 
@@ -244,10 +233,7 @@ summary.LeeCarter <- function(object, ...) {
 }
 
 
-#' Print summary.LeeCarter
-#' @param x An object of class \code{"summary.LeeCarter"}.
-#' @inheritParams print.LeeCarter
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.summary.LeeCarter <- function(x, ...){
   cat('\nFit  :', x$info$name)
@@ -261,13 +247,11 @@ print.summary.LeeCarter <- function(x, ...){
 }
 
 
-#' Print function
-#' @param x An object of class \code{"predict.LeeCarter"};
-#' @inheritParams print_predict_default
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.predict.LeeCarter <- function(x, ...) {
   print_predict_default(x, ...)
   cat('k[t]-ARIMA method:', arima.string1(x$kt.arima, padding = TRUE))
   cat('\n')
 }
+

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_MEM.R
 \name{plot.predict.MEM}
 \alias{plot.predict.MEM}
-\title{ggplot the predicted values of a Maximum-Entropy Mortality Model}
+\title{Plot the Predicted Age-at-Death Distribution}
 \usage{
 \method{plot}{predict.MEM}(x, y = NULL, plotType = c("mean", "lower",
   "upper", "raw_moments", "normalised_moments", "scaled_moments"),
@@ -12,7 +12,7 @@
 \item{x}{An object of the class \code{\link{predict.MEM}}.}
 
 \item{y}{An object of the class \code{\link{model.MEM}}. 
-Needed only for ploting moments. See \code{plotType}.}
+Needed only for plotting moments. See \code{plotType}.}
 
 \item{plotType}{The type of the plot. The alternatives are 
 \code{"mean", "lower", "upper", "raw_moments", "normalised_moments", 
@@ -27,8 +27,11 @@ Default: 80.}
 functions. This can be used to control the appearance of the plots.}
 }
 \description{
-ggplot the predicted values of a Maximum-Entropy Mortality Model
+Plot the Predicted Age-at-Death Distribution
 }
 \examples{
-# For examples go to ?predict.MEM
+# For examples go to ?model.MEM
+}
+\seealso{
+\code{\link{model.MEM}}
 }

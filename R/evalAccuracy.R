@@ -19,8 +19,8 @@ evalAccuracy = function(object, ...)
   UseMethod("evalAccuracy")
 
 
-#' Get Accuracy Measures from \code{do.BackTesting}
-#' @param object An object of class \code{do.BackTesting}.
+#' Get Accuracy Measures from \code{BackTesting}
+#' @param object An object of class \code{BackTesting}.
 #' @param data.out Specify the type of data to be returned in output. 
 #' Various life table indices are accepted: 
 #' \code{"qx", "mx", "dx", "lx", "Lx", "Tx", "ex"}.
@@ -50,7 +50,7 @@ evalAccuracy.BackTesting <- function(object,
                   to = data.out, 
                   lx0 = 1, ...)
   # Get the forecast results in the same format
-  # H is a list of matrices, each matrix coresponding to 1 model
+  # H is a list of matrices, each matrix corresponding to 1 model
   H  <- get.Forecasts(object$Forecast, data.out) # forecast data
   B  <- H[[1]]                                  # Benchmark model
   Mn <- object$input$models                     # Model names
@@ -126,8 +126,8 @@ evalAccuracy.BBackTesting <- function(object,
 #' 
 #' @param u Validation dataset.
 #' @param u.hat Out-sample forecast data.
-#' @param b Benchmark forecast data. Usualy a naive or Random-Walk w drift forecast.
-#' @param measures What accurracy measure to compute? Various alternatives are 
+#' @param b Benchmark forecast data. Usually a naive or Random-Walk w drift forecast.
+#' @param measures What accuracy measure to compute? Various alternatives are 
 #' available, \itemize{
 #'  \item{Mean error measures: } \code{"ME", "MAE", "MAPE", "sMAPE", "sMRAE", "MASE"};
 #'  \item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "sMdRAE", "MdASE"};
@@ -157,7 +157,7 @@ computeAccuracy <- function(u,
   if (is.null(ya)) ya <- colnames(u)
   L1 <- rownames(u) %in% xa
   L2 <- colnames(u) %in% ya
-    
+  
   u.hat <- as.matrix(u.hat[L1, L2])
   u <- as.matrix(u[L1, L2])
   b <- as.matrix(b[L1, L2])
@@ -210,7 +210,7 @@ computeAccuracy <- function(u,
   # ---------------------------------------------------------------
   # IV. Measures based on relative errors
   # An alternative way of scaling is to divide each error by
-  # the error obtaned using another standard method of forecasting (benchmark method).
+  # the error obtained using another standard method of forecasting (benchmark method).
   
   bE  <- u - b       # benchmark errors
   bAE <- abs(bE)
@@ -250,6 +250,7 @@ computeAccuracy <- function(u,
   out <- as.matrix(out)
   return(out)
 }
+
 
 
 

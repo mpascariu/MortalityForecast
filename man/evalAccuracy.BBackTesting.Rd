@@ -14,7 +14,7 @@
 Various life table indices are accepted: 
 \code{"qx", "mx", "dx", "lx", "Lx", "Tx", "ex"}.}
 
-\item{measures}{What accurracy measure to compute? Various alternatives are 
+\item{measures}{What accuracy measure to compute? Various alternatives are 
 available, \itemize{
  \item{Mean error measures: } \code{"ME", "MAE", "MAPE", "sMAPE", "sMRAE", "MASE"};
  \item{Median error measures: } \code{"MdE", "MdAE", "MdAPE", "sMdAPE", "sMdRAE", "MdASE"};

@@ -2,11 +2,11 @@
 % Please edit documentation in R/model_Oeppen.R
 \name{predict.Oeppen}
 \alias{predict.Oeppen}
-\title{Forecast the Age at Death Distribution using the Oeppen model.}
+\title{Forecast the age-at-death distribution using the Oeppen model.}
 \usage{
-\method{predict}{Oeppen}(object, h, order = NULL, include.drift = NULL,
-  level = c(80, 95), jumpchoice = c("actual", "fit"), method = "ML",
-  verbose = TRUE, ...)
+\method{predict}{Oeppen}(object, h, order = c(0, 1, 0),
+  include.drift = TRUE, level = c(80, 95), jumpchoice = c("actual",
+  "fit"), method = "ML", verbose = TRUE, ...)
 }
 \arguments{
 \item{object}{An object of class \code{Oeppen}.}
@@ -53,7 +53,7 @@ The output is a list with the components:
  \item{y}{Vector of years used in prediction.}
 }
 \description{
-Forecast the Age at Death Distribution using the Oeppen model.
+Forecast the age-at-death distribution using the Oeppen model.
 }
 \details{
 \insertNoCite{@See @oeppen2008 and @bergeron2017;textual}{MortalityForecast}

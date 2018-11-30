@@ -110,30 +110,21 @@ predict.HyndmanUllah <- function(object,
 }
 
 
-#' Residuals of the Hyndman-Ullah Mortality Model
-#' @param object An object of class \code{"HyndmanUllah"}
-#' @inheritParams residuals_default
-#' @examples # For examples go to ?model.HyndmanUllah
+#' @rdname residuals.Oeppen
 #' @export
 residuals.HyndmanUllah <- function(object, ...){
   residuals_default(object, ...)
 }
 
 
-#' Print Hyndman-Ullah model
-#' @param x An object of class \code{"HyndmanUllah"}
-#' @inheritParams print_default
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.HyndmanUllah <- function(x, ...) {
   print_default(x, ...)
 }
 
 
-#' Print function
-#' @param x An object of class \code{"predict.HyndmanUllah"};
-#' @inheritParams print_predict_default
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.predict.HyndmanUllah <- function(x, ...) {
   print_predict_default(x, ...)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{residuals_default}
 \alias{residuals_default}
-\title{Residuals function for mortality models}
+\title{Extract Model Residuals}
 \usage{
 residuals_default(object, ...)
 }
@@ -12,6 +12,6 @@ residuals_default(object, ...)
 \item{...}{Further arguments passed to or from other methods.}
 }
 \description{
-Residuals function for mortality models
+Extract Model Residuals
 }
 \keyword{internal}

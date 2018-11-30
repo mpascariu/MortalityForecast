@@ -1,7 +1,7 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Fri Nov 23 16:47:19 2018
+# Last update: Fri Nov 30 22:12:07 2018
 # --------------------------------------------------- #
 
 
@@ -25,6 +25,45 @@
 #'  \item{y}{Vector of years used in the fitting;} 
 #'  \item{benchmark}{An object of class \code{LeeCarter} containing the fitted
 #'  model for the benchmark population.} 
+#' @examples 
+#' # Example 1 ----------------------
+#' # Data
+#' x  <- 0:110
+#' y  <- 1980:2016
+#' dx_M <- HMD_male$dx$USA[paste(x), paste(y)]
+#' dx_F <- HMD_female$dx$USA[paste(x), paste(y)]
+#' 
+#' # Replace zeros 
+#' dx_M <- replace.zeros(dx_M)
+#' dx_F <- replace.zeros(dx_F)
+#' 
+#' # Fit model for US males using US females as benchmark
+#' M <- model.OeppenC(data = dx_M,
+#'                    data.B = dx_F,
+#'                    x = x, y = y)
+#' M
+#' 
+#' summary(M)
+#' coef(M)
+#' coef(M$benchmark)
+#' 
+#' # Plot observed and fitted values
+#' plot(M, plotType = "observed")
+#' plot(M, plotType = "fitted")
+#' 
+#' # Plot residuals
+#' R <- residuals(M)
+#' plot(R, plotType = "scatter")
+#' plot(R, plotType = "colourmap")
+#' plot(R, plotType = "signplot")
+#' 
+#' # Perform forecasts
+#' P  <- predict(M, h = 16)
+#' P
+#' 
+#' plot(P, plotType = "mean")
+#' plot(P, plotType = "lower")
+#' plot(P, plotType = "upper")
 #' @seealso 
 #' \code{\link{predict.Oeppen}}
 #' \code{\link{plot.Oeppen}}
@@ -41,8 +80,6 @@ model.OeppenC <- function(data,
   x <- x %||% 1:nrow(data)
   y <- y %||% 1:ncol(data)
   
-  vsn <- sum(data)/ncol(data) * 1e-10 # very small number
-  data[data == 0] <- vsn              # replace zero's with a vsn
   data <- convertFx(x, data, from = "dx", to = "dx", lx0 = 1)
   
   # Info
@@ -56,12 +93,13 @@ model.OeppenC <- function(data,
   B.cdx <- with(coef(B), clrInv(c(kt) %*% t(bx)))
   
   # Estimate model parameters: a[x], b[x], k[t]
-  dx  <- t(data)
-  ax  <- apply(dx, 2, mean) # general dx pattern
-  ax  <- ax/sum(ax)
-  A.cdx <- sweep(acomp(dx), 2, ax, FUN = "-") # remove ax
+  dx    <- data %>% t %>% acomp %>% unclass # data close
+  ax    <- geometricmeanCol(dx) # geometric mean # general dx pattern
+  ax    <- ax/sum(ax)
+  A.cdx <- sweep(dx, 2, ax, FUN = "/") # remove ax
   cdx   <- A.cdx - B.cdx
-  ccdx  <- clr(acomp(cdx)) # Centered log ratio transform
+  cdx   <- cdx/rowSums(cdx)
+  ccdx  <- clr(cdx) # Centered log ratio transform
   
   S  <- svd(ccdx) # Singular Value Decomposition of a Matrix
   kt <- S$d[1] * S$u[, 1]
@@ -73,7 +111,7 @@ model.OeppenC <- function(data,
   
   # Compute fitted values and devinace residuals based on the estimated model
   fv  <- clrInv(c(kt) %*% t(bx)) + B.cdx # Inverse clr
-  fv  <- sweep(fv, 2, ax, FUN = "+")
+  fv  <- sweep(unclass(fv), 2, ax, FUN = "*")
   fdx <- unclass(t(fv/rowSums(fv)))
   odx <- apply(data, 2, FUN = function(x) x/sum(x)) # observed dx - same scale
   resid <- odx - fdx
@@ -96,7 +134,8 @@ model.OeppenC <- function(data,
 
 
 
-#' #' Forecast the Age at Death Distribution using the Coherent Oeppen model
+#' Forecast the age-at-death distribution using the Coherent Oeppen model
+#' 
 #' @param object An object of class \code{Oeppen};
 #' @param order.B The ARIMA order for the benchmark population model;
 #' @param include.drift.B Logical. Should we include a linear drift 
@@ -135,8 +174,14 @@ predict.OeppenC <- function(object,
   
   # Benchmark Oeppen forecast
   B <- object$benchmark
-  B.pred <- predict(object = B, h, order.B, include.drift.B, level, 
-                    jumpchoice, method, verbose = FALSE)
+  B.pred <- predict(object = B, 
+                    h = h, 
+                    order = order.B, 
+                    include.drift = include.drift.B, 
+                    level = level, 
+                    jumpchoice = jumpchoice, 
+                    method = method, 
+                    verbose = FALSE)
   
   # Timeline
   bop <- max(object$y) + 1
@@ -184,30 +229,22 @@ predict.OeppenC <- function(object,
 
 
 # S3 ----------------------------------------------
-#' Residuals of the Coherent Oeppen Mortality Model
-#' @param object An object of class \code{"OeppenC"}
-#' @inheritParams residuals_default
-#' @examples # For examples go to ?model.OeppenC
+
+#' @rdname residuals.Oeppen
 #' @export
 residuals.OeppenC <- function(object, ...){
   residuals_default(object, ...)
 }
 
 
-#' Print Coherent Oeppen
-#' @param x An object of class \code{"OeppenC"}
-#' @inheritParams print_default
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.OeppenC <- function(x, ...) {
   print_default(x, ...)
 }
 
 
-#' Summary Coherent Oeppen
-#' @param object An object of class \code{"OeppenC"}.
-#' @inheritParams print.Oeppen
-#' @keywords internal
+#' @rdname summary.Oeppen
 #' @export
 summary.OeppenC <- function(object, ...) {
   axbx <- data.frame(ax = object$coefficients$ax, 
@@ -221,10 +258,7 @@ summary.OeppenC <- function(object, ...) {
 }
 
 
-#' Print summary.OeppenC
-#' @param x An object of class \code{"summary.OeppenC"}.
-#' @inheritParams print.OeppenC
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.summary.OeppenC <- function(x, ...){
   cat('\nFit  :', x$info$name)
@@ -238,10 +272,7 @@ print.summary.OeppenC <- function(x, ...){
 }
 
 
-#' Print predict.OeppenC
-#' @param x An object of class \code{"predict.OeppenC"};
-#' @inheritParams print.OeppenC
-#' @keywords internal
+#' @rdname print_default
 #' @export
 print.predict.OeppenC <- function(x, ...) {
   print_predict_default(x, ...)

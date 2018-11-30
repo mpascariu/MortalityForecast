@@ -19,7 +19,7 @@ evalRobustness = function(object, ...)
   UseMethod("evalRobustness")
 
 
-#' Evaluating the Robustness of the Forcasting Mortality Models
+#' Evaluating the Robustness of the Forecasting Mortality Models
 #' 
 #' @inheritParams evalAccuracy.BBackTesting
 #' @inheritParams computeRobustness
@@ -30,9 +30,9 @@ evalRobustness = function(object, ...)
 #' @examples # For examples go to ?do.BBackTesting
 #' @export  
 evalRobustness.BBackTesting <- function(object,
-                           data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
-                           measures = c("MD", "MAD", "sMRAD", "MASD"),
-                           ...) {
+                                        data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+                                        measures = c("MD", "MAD", "sMRAD", "MASD"),
+                                        ...) {
   
   data.out <- match.arg(data.out)
   O <- object$results
@@ -95,7 +95,7 @@ evalRobustness.BBackTesting <- function(object,
 computeRobustness <- function(F1, F2, B1, B2, ND,
                               measures,
                               na.rm = TRUE) {
-  # Identify the common years in the 2 forcasts
+  # Identify the common years in the 2 forecasts
   y1 <- colnames(F1)
   y2 <- colnames(F2)
   y  <- y1[y1 %in% y2]
@@ -150,3 +150,4 @@ computeNaiveDelta <- function(object, data.out) {
   C <- (B[, -1] / B[, -ncol(B)] - 1) * 100
   return(C)
 }
+

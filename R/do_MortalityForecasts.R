@@ -1,8 +1,9 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Tue Nov 27 15:03:45 2018
+# Last update: Fri Nov 30 18:16:43 2018
 # --------------------------------------------------- #
+
 
 #' Perform Multiple Forecast of Mortality Using Various Models
 #' 
