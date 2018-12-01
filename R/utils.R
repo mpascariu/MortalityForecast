@@ -227,6 +227,7 @@ print_predict_default <- function(x, ...) {
 #' @param object A fitted mortality model
 #' @inheritParams print_default
 #' @keywords internal
+#' @export
 residuals_default <- function(object, ...){
   structure(class = "residMF", as.matrix(object$residuals))
 }

@@ -16,6 +16,7 @@
 #' @importFrom demography demogdata fdm lca
 #' @importFrom forecast forecast Arima arimaorder auto.arima
 #' @importFrom stats predict fitted median coef lm na.omit quantile cov qnorm
+#' lowess
 #' @importFrom tidyr gather
 #' @importFrom tibble as.tibble tibble add_column
 #' @importFrom utils head tail

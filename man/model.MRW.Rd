@@ -8,7 +8,8 @@ The original implementation of this function was taken from
 \code{StMoMo} R package.
 }
 \usage{
-model.MRW(data, x = NULL, y = NULL, include.drift = TRUE, ...)
+model.MRW(data, x = NULL, y = NULL, include.drift = TRUE,
+  lowess.smooth = TRUE, ...)
 }
 \arguments{
 \item{data}{Numeric matrix with a multivariate time series.
@@ -24,6 +25,11 @@ Default: \code{NULL}.}
 
 \item{include.drift}{Should the Random Walk model include a linear drift 
 term? Default: \code{TRUE}.}
+
+\item{lowess.smooth}{Logical. Should the estimatated vector of drift 
+parameters be smoothed using a lowess function? Default: \code{TRUE}. 
+This helps avoiding highly divergent trends between time-series
+when the model is used to do predictions.}
 
 \item{...}{Arguments to be passed to or from other methods.}
 }

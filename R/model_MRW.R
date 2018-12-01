@@ -22,6 +22,10 @@
 #' Default: \code{NULL}.
 #' @param include.drift Should the Random Walk model include a linear drift 
 #' term? Default: \code{TRUE}.
+#' @param lowess.smooth Logical. Should the estimatated vector of drift 
+#' parameters be smoothed using a lowess function? Default: \code{TRUE}. 
+#' This helps avoiding highly divergent trends between time-series
+#' when the model is used to do predictions.
 #' @inheritParams do.MortalityModels
 #' @return An object of class \code{MRW} with components:
 #'  \item{input}{A list with the input data;}
@@ -59,7 +63,8 @@
 model.MRW <- function(data, 
                       x = NULL, 
                       y = NULL, 
-                      include.drift = TRUE, 
+                      include.drift = TRUE,
+                      lowess.smooth = TRUE,
                       ...) {
   
   # Save the input
@@ -82,13 +87,14 @@ model.MRW <- function(data,
   nx <- nrow(data)
   
   # Drift
-  d <- t(colMeans(diff(t(data)), na.rm = TRUE))
-  if (!include.drift) d = d * 0
+  d <- data %>% t %>% diff %>% colMeans(na.rm = TRUE) %>% as.numeric
+  if (lowess.smooth)  d <- lowess(d)$y
+  if (!include.drift) d <- d * 0
   
   # Fit the model
   fit  <- cbind(array(NA, c(nx, 1)), data[, -ny] + array(d, c(nx, ny - 1)))
   res  <- data - fit
-  sigma <- cov(t(res), use = "complete.obs")
+  sigma <- res %>% t %>% cov(use = "complete.obs")
   dimnames(fit) <- dimnames(res) <- dimnames(data)
   
   # Exit

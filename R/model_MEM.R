@@ -1,7 +1,7 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Sat Dec  1 15:04:54 2018
+# Last update: Sat Dec  1 18:10:35 2018
 # --------------------------------------------------- #
 
 
@@ -87,8 +87,12 @@ model.MEM <- function(data,
   nMT <- log(abs(nM))
   sg  <- sign(nM)
   
-  V   <- model.MRW(t(nMT), x = NULL, y, include.drift = TRUE)
-  fnM <- fnM <- t(exp(fitted(V)) * as.numeric(sg[1,]))       # fitted normalized moments
+  V   <- model.MRW(data = t(nMT), 
+                   x = NULL, 
+                   y = y, 
+                   include.drift = TRUE, 
+                   lowess.smooth = FALSE)
+  fnM <- fnM <- t(exp(fitted(V)) * as.numeric(sg[1,]))         # fitted normalized moments
   frM <- convert.moments(fnM, from = "normalized", to = "raw") # fitted raw moments
   
   fD  <- find.density(frM[-1, ], x)$density          # fitted dx
