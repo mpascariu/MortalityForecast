@@ -114,7 +114,7 @@ Fe0[1,,]
 
 
 # To get the forecasts for male popualtion just run again this script using 
-# male data in line 31.
+# male data in line 35.
 
 
 
