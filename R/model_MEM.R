@@ -193,29 +193,41 @@ predict.MEM <- function(object,
   x.h <- x.h %||% object$x
   
   # Predict ts model
-  W <- predict(object$random.walk.model, h, level)
+  W <- predict(object$random.walk.model, h + 1, level)
   L <- W$conf.intervals
   L$mean <- W$predicted.values
-  frM <- object$fitted.raw.moments
-  sg <- sign(convert.moments(tail(frM, 1), from = "raw", to = "normalized"))
+  sg  <- object$fitted.raw.moments %>% tail(1) %>% 
+    convert.moments(from = "raw", to = "normalized") %>% sign %>% as.numeric
   
-  fn1 <- function(z) {
-    nM <- t(exp(z) * as.numeric(sg))
-    rM <- convert.moments(nM, from = "normalized", to = "raw")
-    return(rM)
-  }
-  fn2 <- function(z) {
-    px  <- find.density(z, x = x.h)$density
-    out <- correct_jump_off(px, object, jumpchoice, h)
-    return(out)
+  compute_rM <- function(X) {  # Compute raw moments
+    t(exp(X) * sg) %>% convert.moments(from = "normalized", to = "raw")
   }
   
-  rM <- lapply(L, fn1)
-  px <- lapply(rM, fn2)
+  compute_pdf <- function(rM) {
+    px <- find.density(rM, x = x.h)$density    # estimate distribution
+    
+    if (jumpchoice == "actual") {
+      ov <- object$observed.values %>% t %>% tail(1) %>% t %>% c
+      n <- seq_along(ov)
+      J <- rep(1, length(x.h))
+      J[n] <- ov / px[n, 1]                          # jumpoff adjustment
+      px <- sweep(px, 1, J, FUN = "*")               # adjust
+      px <- apply(px, 2, FUN = function(z) z/sum(z)) # close composition
+    }
+    
+    px <- px[, -1]
+    dimnames(px) <- list(x.h, y.h)
+    return(px)
+  }
+  
+  rM <- lapply(L, compute_rM)
+  px <- lapply(rM, compute_pdf)
   
   # Output preparation
-  N <- length(px)
-  CI  <- list(predicted.values = px[-N], predicted.raw.moments = rM[-N])
+  N  <- length(px)
+  CI <- list(predicted.values = px[-N], 
+             predicted.raw.moments = rM[-N])
+  
   out <- list(call = match.call(),
               info = object$info,
               predicted.values = px[[N]], 
@@ -228,28 +240,6 @@ predict.MEM <- function(object,
   return(out)
 }
 
-
-#' Jump-off correction
-#' @param X matrix of fitted values
-#' @inheritParams predict.MEM
-#' @keywords internal
-#' @export
-correct_jump_off <- function(X, object, jumpchoice, h){
-  if (jumpchoice == 'actual') {
-    n   <- ncol(fitted(object))
-    JO  <- with(object, observed.values[, n] / fitted.values[, n]) # jump-off vector
-    foo <- function(x) x/sum(x)
-    m   <- 40
-    L   <- ifelse(h >= m, m, h)
-    JM  <- X * 0 + 1  # jump-off matrix
-    for (i in 1:length(JO)) JM[i, 1:L] = seq(JO[i], 1, length.out = m)[1:L] 
-    
-    X.out <- apply(X * JM, 2, FUN = foo)
-  } else {
-    X.out <- X
-  }
-  return(X.out)
-}  
 
 # S3 ----------------------------------------------
 #' @rdname residuals.Oeppen

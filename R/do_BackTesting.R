@@ -18,42 +18,58 @@
 #' \code{\link{do.BBackTesting}}
 #' \code{\link{evalAccuracy.BackTesting}}
 #' @examples 
+#' library(MortalityForecast)
+#' library(magrittr)
 #' 
-#' x = 0:98              # Ages
-#' y1 = 1980:2000        # Training period
-#' y2 = 2001:2016        # Validation period
-#' y  = c(y1, y2)
-#' h = max(y2) - max(y1) # Forecasting horizon
+#' x  <- 0:100            # Ages
+#' y1 <- 1980:2000        # Training period
+#' y2 <- 2001:2016        # Validation period
+#' y  <- c(y1, y2)        # entire period
+#' K <- "GBRTENW"         # Country to be analysed
 #' 
-#' D <- HMD_male$dx$GBRTENW[paste(x), paste(y)] # DATA
+#' # Mortality data for country: K
+#' mx.country <- HMD_male$mx[[K]][paste(x), paste(y)] %>% replace.zeros
+#' 
+#' # Create a mortality data for a benchmark population
+#' # to be used in "LiLee" and "OeppenC" models
+#' average_mx <- function(w) prod(w, na.rm = TRUE)^(1/(length(w)))
+#' 
+#' Mx <- HMD_male$mx %>% 
+#'   lapply(as.matrix) %>% 
+#'   lapply(replace.zeros) %>% 
+#'   simplify2array() %>% 
+#'   apply(., 1:2, FUN = average_mx) %>% 
+#'   as.data.frame()
+#' 
+#' mx.benchmark <- Mx[paste(x), paste(y)]
 #' 
 #' # Select various mortality models
-#' MM <- c("MRWD", "Oeppen", "MEM6")
+#' MM <- c("MRWD", "LeeCarter", "LiLee", "HyndmanUllah", 
+#'         "Oeppen", "OeppenC", "MEM5", "MEM6")
 #' # Fit & Forecast the models 
-#' B <- do.BackTesting(data = D, x = x,
-#'                     y.fit = y1, y.for = y2,
-#'                     data.in = "dx",
+#' B <- do.BackTesting(data = mx.country,
+#'                     data.B = mx.benchmark,
+#'                     x = x,
+#'                     y.fit = y1, 
+#'                     y.for = y2,
+#'                     data.in = "mx",
 #'                     models = MM)
 #' 
-#' # Compute accuracy measures
-#' # The measures can be computed for different indicators. Even if it is not 
-#' # impossible to get a different classification and ranking the 
-#' # outcome should be in general the same.
-#' evalAccuracy(B, data.out = "mx")
-#' evalAccuracy(B, data.out = "qx")
-#' evalAccuracy(B, data.out = "dx")
-#' 
-#' # Rank the model's performance.
+#' # Compute accuracy measures for resulted life exectancies
 #' A <- evalAccuracy(B, data.out = "ex")
 #' A
+#' # Rank the model's performance.
 #' R <- do.Ranking(A)
 #' R
+#' R[, c(1:3, 20)]
 #' 
 #' # Visualize the results
-#' plot(B, data.out = "mx", facet = "x")
-#' plot(B, data.out = "mx", facet = "y") 
+#' plot(B, data.out = "ex", facet = "x", 
+#'      which = c(0, 20, 40, 60, 75, 90))
+#' plot(B, data.out = "mx", facet = "y", which = 2016) 
 #' @export
 do.BackTesting <- function(data, 
+                           data.B = NULL,
                            x, 
                            y.fit, 
                            y.for, 
@@ -71,9 +87,12 @@ do.BackTesting <- function(data,
   
   D <- list(training.set = data[paste(x), paste(y.fit)], 
             validation.set = data[paste(x), paste(y.for)])
+  B <- list(training.set = data.B[paste(x), paste(y.fit)], 
+            validation.set = data.B[paste(x), paste(y.for)])
   
   # Fit
-  M <- do.MortalityModels(data = D[[1]], 
+  M <- do.MortalityModels(data = D[[1]],
+                          data.B = B[[1]],
                           x = x, 
                           y = y.fit, 
                           data.in = data.in, 

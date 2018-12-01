@@ -31,7 +31,7 @@ get.Forecasts <- function(object,
     } else if (Mn[i] %in% c("MRW", "MRWD")) {
       mx <- exp(M$predicted.values)
       
-    } else if (Mn[i] %in% c("LeeCarter", "HyndmanUllah")) {
+    } else if (Mn[i] %in% c("LeeCarter", "HyndmanUllah", "LiLee")) {
       mx <- M$predicted.values
       
     } else {

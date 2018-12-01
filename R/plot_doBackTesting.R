@@ -92,6 +92,7 @@ plot_y_facets <- function(O, H, x, y1, y2, which) {
   }
   
   H <- wide.list.2.long.df(data = H, x = x, y = y2, which.y = which)
+  H$Name <- change_model_factor_levels(H$Name)
   O <- wide2long(data = O, x = x, y = c(y1, y2), which.y = which)
   O$DATA <- "Validation Set"
   
@@ -118,8 +119,10 @@ change_model_factor_levels <- function(vect) {
   X <- suppressWarnings(forcats::fct_recode(vect, 
                                             "M.Random-Walk w Drift" = "MRWD", 
                                             "Lee-Carter" = "LeeCarter", 
+                                            "Li-Lee" = "LiLee", 
                                             "Hyndman-Ullah" = "HyndmanUllah", 
                                             "Oeppen" = "Oeppen",
+                                            "Oeppen-C" = "OeppenC",
                                             "MEM-2" = "MEM2",
                                             "MEM-3" = "MEM3",
                                             "MEM-4" = "MEM4",
