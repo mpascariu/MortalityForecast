@@ -55,11 +55,7 @@ get.Fitted <- function(object,
 }
 
 
-#' Summary for get.Fitted
-#' @param object An object of class \code{\link{get.Fitted}}.
-#' @inheritParams summary.get.Residuals
-#' @keywords internal
-#' @export
+#' @rdname summary.get.Residuals
 summary.get.Fitted <- function(object, ..., digits = NULL) {
   digits <- digits %||% max(4L, getOption("digits") - 2L)
   summary.get.Residuals(object, ..., digits)

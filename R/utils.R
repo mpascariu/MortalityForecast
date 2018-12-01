@@ -213,7 +213,6 @@ print_default <- function(x, ...) {
 
 
 #' @rdname print_default
-#' @keywords internal
 print_predict_default <- function(x, ...) {
   cat("\nForecast:", x$info$name)
   cat("\nModel   :", x$info$formula)

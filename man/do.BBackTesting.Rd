@@ -2,7 +2,7 @@
 % Please edit documentation in R/do_BBackTesting.R
 \name{do.BBackTesting}
 \alias{do.BBackTesting}
-\title{Perform In-Sample Testing of Mortality Forecasts Over Multiple Time Periods}
+\title{Perform Out-of-Sample Testing of Mortality Forecasts Over Multiple Time Periods}
 \usage{
 do.BBackTesting(data, x, y, data.in = c("qx", "mx", "dx", "lx"), models,
   strategy = c(f = 20, h = 20, s = 2), level = 95,
@@ -55,7 +55,7 @@ the process that take place inside the function and avoid progress messages.}
 \item{...}{Arguments to be passed to or from other methods.}
 }
 \description{
-Perform In-Sample Testing of Mortality Forecasts Over Multiple Time Periods
+Perform Out-of-Sample Testing of Mortality Forecasts Over Multiple Time Periods
 }
 \examples{
 x  <- 0:95

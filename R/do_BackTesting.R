@@ -4,7 +4,7 @@
 # Last update: Tue Nov 27 15:04:19 2018
 # --------------------------------------------------- #
 
-#' Perform In-Sample Testing of Mortality Forecasts Over One Time Period
+#' Perform Out-of-Sample Testing of Mortality Forecasts Over One Time Period
 #' @param data A data.frame or a matrix containing mortality data 
 #' with ages \code{x} as row and time \code{y} as column. This object should
 #' contain the data to be used in fitting (training) and validation process 

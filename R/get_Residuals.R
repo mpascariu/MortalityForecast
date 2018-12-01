@@ -30,7 +30,7 @@ get.Residuals <- function(object,
 }
 
 
-#' Summary for get.Residuals
+#' Generic Summary
 #' @param object An object of class \code{\link{get.Residuals}}.
 #' @param digits Number of digits to display.
 #' @inheritParams do.MortalityModels

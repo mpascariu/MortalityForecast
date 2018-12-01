@@ -1,8 +1,9 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Mon Nov 19 13:59:24 2018
+# Last update: Sat Dec  1 15:04:54 2018
 # --------------------------------------------------- #
+
 
 #' The Maximum-Entropy Mortality Model 
 #' 

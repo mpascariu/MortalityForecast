@@ -4,7 +4,7 @@
 # Last update: Tue Nov 27 16:16:04 2018
 # --------------------------------------------------- #
 
-#' Perform In-Sample Testing of Mortality Forecasts Over Multiple Time Periods
+#' Perform Out-of-Sample Testing of Mortality Forecasts Over Multiple Time Periods
 #' @inheritParams do.MortalityModels
 #' @inheritParams do.BackTesting
 #' @inheritParams build.scenarios

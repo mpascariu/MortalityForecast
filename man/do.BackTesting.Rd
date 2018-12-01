@@ -2,7 +2,7 @@
 % Please edit documentation in R/do_BackTesting.R
 \name{do.BackTesting}
 \alias{do.BackTesting}
-\title{Perform In-Sample Testing of Mortality Forecasts Over One Time Period}
+\title{Perform Out-of-Sample Testing of Mortality Forecasts Over One Time Period}
 \usage{
 do.BackTesting(data, data.B = NULL, x, y.fit, y.for, data.in = c("qx",
   "mx", "dx", "lx"), models, level = 95, jumpchoice = c("actual",
@@ -58,7 +58,7 @@ the process that take place inside the function and avoid progress messages.}
 \item{...}{Arguments to be passed to or from other methods.}
 }
 \description{
-Perform In-Sample Testing of Mortality Forecasts Over One Time Period
+Perform Out-of-Sample Testing of Mortality Forecasts Over One Time Period
 }
 \examples{
 library(MortalityForecast)
