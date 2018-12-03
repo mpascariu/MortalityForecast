@@ -1,8 +1,10 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Sat Dec  1 17:33:19 2018
+# Last update: Mon Dec  3 15:05:08 2018
 # --------------------------------------------------- #
+remove(list = ls())
+
 
 # Goal: Forecast mortality for Danish population 120 years in to the future
 # Method: Using 6 extrapolative models. Use age 0-95 to fit model. Get old-age
@@ -19,16 +21,16 @@ library(tidyverse)
 
 # Input
 x  <- 0:95            # Ages
-y  <- 1960:2016       # Years
+y  <- 1990:2016       # Years
 K  <- "DNK"           # Country to be analysed
 h  <- 120             # Forecasting horizon
 
 MM <- c("MRWD",      # Multivariate Random Walk w Drift model
         "LeeCarter", # (0,1,0)
-        "LiLee",     # (0,1,0) - (0,1,0)
+        "LiLee",     # (0,1,0) - (1,0,0)
         "HyndmanUllah", 
         "Oeppen",    # (0,1,0)
-        "OeppenC")   # (0,1,0) - (0,1,0)
+        "OeppenC")   # (0,1,0) - (1,0,0)
 
 # Mortality data for country: K
 mx.country <- HMD_female$mx[[K]][paste(x), paste(y)] %>% replace.zeros
@@ -63,9 +65,15 @@ M <- do.MortalityModels(data = mx.country,
 P <- do.MortalityForecasts(object = M, 
                            h = h, 
                            level = 95, 
-                           jumpchoice = "actual")
+                           jumpchoice = "actual",
+                           order = c(0,1,0),    # LC, Oeppen
+                           order.B = c(0,1,0),  # LL, OeppenC - benchmark
+                           order.D = c(1,0,0),  # LL, OeppenC - deviation
+                           include.drift = T,
+                           include.drift.B = T,
+                           include.drift.D = F)
 
-omx <- get.Observed(M, data.out = "mx")
+omx <- get.Observed(M, data.out = "mx") # Observed m[x]
 fmx <- get.Forecasts(P, data.out = "mx") # Forecast m[x]
 
 # ------------------------------------------
@@ -108,10 +116,10 @@ Oex <- convertFx(x = 0:120, data = Omx, from = "mx", to = "ex")
 Fmx <- lapply(fmx, FUN = function(w) extra_mortality(mx = w, x = x))
 Fex <- lapply(Fmx, FUN = function(w) convertFx(x = 0:120, data = w, from = "mx", to = "ex"))
   
-# Check forecast e[0] by model
+# Check forecast e[x] by model
 Fe0 <- Fex %>% lapply(as.matrix) %>% simplify2array()
-Fe0[1,,]
-
+Fe0[1,,] # e[0]
+Fe0[66,,] # e[65]
 
 # To get the forecasts for male popualtion just run again this script using 
 # male data in line 35.

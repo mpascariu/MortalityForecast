@@ -1,8 +1,9 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Mon Nov 19 13:58:32 2018
+# Last update: Mon Dec  3 14:49:22 2018
 # --------------------------------------------------- #
+
 
 #' The Li-Lee Mortality Model
 #' 
@@ -97,10 +98,10 @@ model.LiLee <- function(data,
 #' @export
 predict.LiLee <- function(object,
                           h,
-                          order = c(0,1,0),
                           order.B = c(0,1,0),
-                          include.drift = FALSE,
                           include.drift.B = TRUE,
+                          order.D = c(1,0,0),
+                          include.drift.D = FALSE,
                           level = c(80, 95),
                           jumpchoice = c("actual", "fit"),
                           method = "ML",
@@ -129,8 +130,8 @@ predict.LiLee <- function(object,
   
   # Estimate/fit k[t] time-series model
   kt.arima <- forecast::Arima(y = C$kt, 
-                              order = order %||% A$order, 
-                              include.drift = include.drift %||% A$drift,
+                              order = order.D %||% A$order, 
+                              include.drift = include.drift.D %||% A$drift,
                               include.constant = FALSE,
                               method = method)
   
@@ -214,6 +215,8 @@ print.summary.LiLee <- function(x, ...){
 #' @export
 print.predict.LiLee <- function(x, ...) {
   print_predict_default(x, ...)
-  cat('k[t]-ARIMA method:', arima.string1(x$kt.arima, padding = TRUE))
+  cat('k[t]- Benchmark ARIMA:', 
+      arima.string1(x$benchmark$kt.arima, padding = TRUE), '\n')
+  cat('k[t]- Deviation ARIMA:', arima.string1(x$kt.arima, padding = TRUE))
   cat('\n')
 }

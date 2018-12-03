@@ -1,7 +1,7 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Fri Nov 30 22:12:07 2018
+# Last update: Mon Dec  3 14:49:36 2018
 # --------------------------------------------------- #
 
 
@@ -137,9 +137,18 @@ model.OeppenC <- function(data,
 #' Forecast the age-at-death distribution using the Coherent Oeppen model
 #' 
 #' @param object An object of class \code{Oeppen};
-#' @param order.B The ARIMA order for the benchmark population model;
+#' @param order.B The ARIMA order for the benchmark population model. This is
+#' A specification of the non-seasonal part of the ARIMA model: the three 
+#' components (p, d, q) are the AR order, the degree of differencing, and 
+#' the MA order. If \code{order.B = NULL}, the ARIMA order will be estimated 
+#' automatically using the KPPS algorithm;
 #' @param include.drift.B Logical. Should we include a linear drift 
 #' term in the ARIMA of benchmark population model?
+#' @param order.D The ARIMA order driving the deviation from the benchmark 
+#' population model. If \code{order = NULL}, this will be estimated 
+#' automatically.
+#' @param include.drift.D Logical. Should we include a linear drift 
+#' term in the ARIMA driving the deviation from the benchmark?
 #' @inheritParams predict.Oeppen
 #' @return The output is a list with the components:
 #'  \item{call}{An unevaluated function call, that is, an unevaluated 
@@ -162,10 +171,10 @@ model.OeppenC <- function(data,
 #' @export
 predict.OeppenC <- function(object,
                             h,
-                            order = c(0,1,0),
                             order.B = c(0,1,0),
-                            include.drift = FALSE,
                             include.drift.B = TRUE,
+                            order.D = c(1,0,0),
+                            include.drift.D = FALSE,
                             level = c(80, 95),
                             jumpchoice = c("actual", "fit"),
                             method = "ML",
@@ -194,8 +203,8 @@ predict.OeppenC <- function(object,
   
   # forecast kt; ax and bx are time independent.
   kt.arima <- forecast::Arima(y = C$kt, 
-                              order = order %||% A$order, 
-                              include.drift = include.drift %||% A$drift,
+                              order = order.D %||% A$order, 
+                              include.drift = include.drift.D %||% A$drift,
                               method = method)
   
   # Forecast k[t] using the time-series model
@@ -276,6 +285,12 @@ print.summary.OeppenC <- function(x, ...){
 #' @export
 print.predict.OeppenC <- function(x, ...) {
   print_predict_default(x, ...)
-  cat('k[t]-ARIMA method:', arima.string1(x$kt.arima, padding = TRUE))
+  cat('k[t]- Benchmark ARIMA:', 
+      arima.string1(x$benchmark$kt.arima, padding = TRUE), '\n')
+  cat('k[t]- Deviation ARIMA:', arima.string1(x$kt.arima, padding = TRUE))
   cat('\n')
 }
+
+
+
+
