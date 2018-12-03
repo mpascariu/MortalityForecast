@@ -1,7 +1,7 @@
 # --------------------------------------------------- #
 # Author: Marius D. Pascariu
 # License: GNU General Public License v3.0
-# Last update: Sat Dec  1 11:19:52 2018
+# Last update: Mon Dec  3 13:43:17 2018
 # --------------------------------------------------- #
 remove(list = ls())
 
@@ -16,7 +16,7 @@ cntr <- c("DNK", "GBRTENW", "NLD", "SWE", "USA")
 
 format_data <- function(data, 
                         x = 0:110, 
-                        y = 1950:2016) {
+                        y = 1933:2016) {
   
   M <- D <- list()
   for (k in seq_along(cntr)) {

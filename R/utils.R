@@ -132,9 +132,12 @@ find_arima <- function(a) {
 #' Replace zero's in input matrix
 #' 
 #' If a matrix or data.frame contains death-rates equal to zero,
-#' they will be replaced with positive values using the multiplicative 
-#' replacement strategy.
+#' they will be replaced with positive values.
 #' @param mx Matrix of death rates
+#' @param method Method of replacement: \itemize{
+#'  \item{"min"} -- Replace with minimum observed value in the input dataset;
+#'  \item{"mult"} -- Replace using the multiplicative replacement strategy.
+#' }
 #' @param radix radix. Default: 1e5.
 #' @examples 
 #' x  <- 0:25
@@ -148,20 +151,28 @@ find_arima <- function(a) {
 #' sum(mx) == sum(new.mx)
 #' (mx - new.mx)/mx * 100
 #' @export
-replace.zeros <- function(mx, radix = 1e5) {
-  Dx <- mx * radix
+replace.zeros <- function(mx, method = c("min", "mult"), radix = 1e5) {
+  method <- match.arg(method)
   
-  p <- sweep(Dx, 2, colSums(Dx), FUN = "/")
-  
-  for(i in 1:nrow(p)){
-    sdx <- 0.5 / sum(Dx[i, ], na.rm = TRUE)
-    L <- as.numeric(p[i, ] == 0) * sdx
-    p[i, ] <- p[i, ] + L
+  if (method == "min") {
+    mx[mx==0] <- min(mx[mx > 0], na.rm = TRUE)/2
+    out <- mx
   }
   
-  z <- sweep(p, 2, colSums(p), FUN = "/")
-  out <- sweep(z, 2, colSums(Dx), FUN = "*") / radix
+  if (method == "mult") {
+    Dx <- mx * radix
+    p <- sweep(Dx, 2, colSums(Dx), FUN = "/")
   
+    for(i in 1:nrow(p)){
+      sdx <- 0.5 / sum(Dx[i, ], na.rm = TRUE)
+      L <- as.numeric(p[i, ] == 0) * sdx
+      p[i, ] <- p[i, ] + L
+    }
+  
+    z <- sweep(p, 2, colSums(p), FUN = "/")
+    out <- sweep(z, 2, colSums(Dx), FUN = "*") / radix
+  }
+
   return(out)
 }
 

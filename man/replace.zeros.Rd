@@ -4,17 +4,21 @@
 \alias{replace.zeros}
 \title{Replace zero's in input matrix}
 \usage{
-replace.zeros(mx, radix = 1e+05)
+replace.zeros(mx, method = c("min", "mult"), radix = 1e+05)
 }
 \arguments{
 \item{mx}{Matrix of death rates}
+
+\item{method}{Method of replacement: \itemize{
+ \item{"min"} -- Replace with minimum observed value in the input dataset;
+ \item{"mult"} -- Replace using the multiplicative replacement strategy.
+}}
 
 \item{radix}{radix. Default: 1e5.}
 }
 \description{
 If a matrix or data.frame contains death-rates equal to zero,
-they will be replaced with positive values using the multiplicative 
-replacement strategy.
+they will be replaced with positive values.
 }
 \examples{
 x  <- 0:25
