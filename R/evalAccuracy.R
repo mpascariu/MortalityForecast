@@ -48,25 +48,25 @@ evalAccuracy.BackTesting <- function(object,
                   data = validation.set, 
                   from = data.in, 
                   to = data.out, 
-                  lx0 = 1, ...)
+                  lx0 = 1)
   # Get the forecast results in the same format
   # H is a list of matrices, each matrix corresponding to 1 model
   H  <- get.Forecasts(object$Forecast, data.out) # forecast data
-  B  <- H[[1]]                                  # Benchmark model
-  Mn <- object$input$models                     # Model names
+  B  <- H[[1]]                                   # Benchmark model
+  Mn <- object$input$models                      # Model names
   
   # Compute the accuracy measures for all models/forecasts
-  fn <- function(X) computeAccuracy(O, X, B, measures)
-  A  <- lapply(H, fn)  # this is a list too w accuracy measures
-  z  <- NULL
+  fn <- function(X) computeAccuracy(u = O, 
+                                    u.hat = X, 
+                                    b = B, 
+                                    measures = measures, 
+                                    ...)
+  A <- do.call("rbind", lapply(H, fn))  # table accuracy measures
   
   # Create a tibble and exit
-  for (i in 1:length(A)) {
-    z <- rbind(z, A[[i]]) 
-  }
-  zt  <- add_column(as.tibble(z), Scenario = "Total", Model = Mn, 
-                    LifeTableIndex = data.out, .before = TRUE)
-  zt
+  z  <- add_column(as.tibble(A), Scenario = "Total", Model = Mn, 
+                   LifeTableIndex = data.out, .before = TRUE)
+  z
 }
 
 
@@ -91,7 +91,10 @@ evalAccuracy.BBackTesting <- function(object,
   N  <- -c(1:3)
   
   for (s in 1:ns) {
-    As <- evalAccuracy(object = object$results[[s]], data.out, measures, ...)
+    As <- evalAccuracy(object = object$results[[s]], 
+                       data.out = data.out, 
+                       measures = measures, 
+                       ...)
     As$Scenario <- s
     A  <- rbind(A, As)
     AA <- AA + As[, N]/ns  # compute mean values over all scenarios
@@ -162,37 +165,60 @@ computeAccuracy <- function(u,
   u <- as.matrix(u[L1, L2])
   b <- as.matrix(b[L1, L2])
   N <- na.rm
-  # ---------------------------------------------------------------
-  # I. Scale-dependent measures
-  E  <- u - u.hat # errors
-  AE <- abs(E)    # absolute errors
   
+  M <- measures
+  M <- M %||% c("ME","MAE", "MAPE","sMAPE","sMRAE","MASE",
+                "MdE","MdAE","MdAPE","sMdAPE","sMdRAE","MdASE",
+                "MSE","RMSE","RMSPE","RMdSPE")
+  
+  ME = MAE = MAPE = sMAPE = sMRAE = MASE <- NA
+  MdE = MdAE = MdAPE = sMdAPE = sMdRAE = MdASE <- NA
+  MSE = RMSE = RMSPE = RMdSPE <- NA
+  # ---------------------------------------------------------------
+  # Element wise errors
+  E  <- u - u.hat         # errors
+  AE <- abs(E)            # absolute errors
+  
+  if (any(c("RMSPE", "RMdSPE", "MAPE", "MdAPE") %in% M)) {
+    PE  <- E[u > 0]/u[u > 0] # Percentage error
+    PEs <- (100 * PE)^2      # Square Percentage Errors
+    APE <- abs(PE)           # Absolute percentage errors
+  }
+  if (any(c("sMAPE", "sMdAPE") %in% M)) {
+    sAPE <- 200 * AE/(u + u.hat) # symmetric absolute percentage errors
+  }
+  if (any(c("sMRAE", "sMdRAE") %in% M)) {
+    bE  <- u - b                 # benchmark errors
+    bAE <- abs(bE)               # absolute benchmark errors
+    sRAE <- 200 * AE/(AE + bAE)  # symmetric relative absolute errors.
+  }
+  
+  # I. Scale-dependent measures
   # 1.Mean Error
-  ME  <- mean(E, na.rm = N)
+  if ("ME" %in% M) ME <- mean(E, na.rm = N)
   # 2.Median Error
-  MdE <- median(E, na.rm = N)
+  if ("MdE" %in% M) MdE <- median(E, na.rm = N)
   # 3.Mean Square Error
-  MSE  <- mean(E^2, na.rm = N)
+  if (any(c("RMSE","MSE") %in% M)) MSE <- mean(E^2, na.rm = N)
   # 4.Root Mean Square Error
-  RMSE <- sqrt(MSE)
+  if ("RMSE" %in% M) RMSE <- sqrt(MSE)
   # 5.Mean Absolute Error
-  MAE  <- mean(AE, na.rm = N)
+  if ("MAE" %in% M) MAE <- mean(AE, na.rm = N)
   # 6.Median Absolute Error
-  MdAE <- median(AE, na.rm = N)
+  if ("MdAE" %in% M) MdAE <- median(AE, na.rm = N)
   
   # ---------------------------------------------------------------
   # II. Measures based on percentage Error
-  PE <- E[u > 0]/u[u > 0] # percentage error
-  APE <- abs(PE)
   # 7.Mean Absolute Percentage Error
-  MAPE <- mean(100 * APE, na.rm = N)
+  
+  if ("MAPE" %in% M) MAPE <- mean(100 * APE, na.rm = N)
   # 8.Median Absolute Percentage Error
-  MdAPE <- median(100 * APE, na.rm = N)
+  if ("MdAPE" %in% M) MdAPE <- median(100 * APE, na.rm = N)
+  
   # 9.Root Mean Square Percentage Erorr
-  PEs <- (100 * PE)^2
-  RMSPE <- sqrt(mean(PEs, na.rm = N))
+  if ("RMSPE" %in% M) RMSPE <- sqrt(mean(PEs, na.rm = N))
   # 10.Root Median Square Percentage Error
-  RMdSPE <- sqrt(median(PEs, na.rm = N))
+  if ("RMdSPE" %in% M) RMdSPE <- sqrt(median(PEs, na.rm = N))
   
   # ----------------------------------------------
   # III. Symmetric errors
@@ -202,25 +228,19 @@ computeAccuracy <- function(u,
   # measures (Makridakis, 1993).
   
   # 11.Symmetric Mean Absolute Percentage Error
-  sape <- 200 * AE/(u + u.hat)
-  sMAPE <- mean(sape, na.rm = N)
+  if ("sMAPE" %in% M) sMAPE <- mean(sAPE, na.rm = N)
   # 12.Symmetric Median Absolute Percentage Error
-  sMdAPE <- median(sape, na.rm = N)
+  if ("sMdAPE" %in% M) sMdAPE <- median(sAPE, na.rm = N)
   
   # ---------------------------------------------------------------
   # IV. Measures based on relative errors
   # An alternative way of scaling is to divide each error by
   # the error obtained using another standard method of forecasting (benchmark method).
   
-  bE  <- u - b       # benchmark errors
-  bAE <- abs(bE)
-  # RAE <- AE/bAE      # relative absolute errors.
-  sRAE <- 200 * AE/(AE + bAE)  # relative absolute errors.
-  
-  # 13.Mean Relative Absolute Error
-  sMRAE <- mean(sRAE, na.rm = N)
-  # 14.Median Relative Absolute Error
-  sMdRAE <- median(sRAE, na.rm = N)
+  # 13. Symmetric Mean Relative Absolute Error
+  if ("sMRAE" %in% M) sMRAE <- mean(sRAE, na.rm = N)
+  # 14. Symmetric Median Relative Absolute Error
+  if ("sMdRAE" %in% M) sMdRAE <- median(sRAE, na.rm = N)
   
   # 15.Geometric Mean Relative Absolute Error
   # geometric mean function for positive values
@@ -229,14 +249,18 @@ computeAccuracy <- function(u,
   
   # ---------------------------------------------------------------
   # V. Scaled measures
-  meanT <- function(z) mean(z, na.rm = TRUE) # mean() function
-  scale <- apply(abs(t(diff(t(u)))), 1, meanT)  # compute a scale factor for each time series
-  SE    <- sweep(E, 1, scale, FUN = "/")     # scaled errors
-  ASE   <- abs(SE)
+  ASE <- function(FUN = c("mean", "median")) {
+    meanT <- function(z) mean(z, na.rm = TRUE)   # mean() function
+    scale <- apply(abs(t(diff(t(u)))), 1, meanT) # compute a scale factor for each time series
+    SE    <- sweep(E, 1, scale, FUN = "/")       # scaled errors
+    aSE   <- abs(SE)
+    f <- get(FUN)
+    f(aSE, na.rm = N)
+  }
   # 16.Mean Absolute Scaled Error
-  MASE <- mean(ASE, na.rm = N)
+  if ("MASE" %in% M) MASE <- ASE("mean")
   # 17.Median Absolute Scaled Error
-  MdASE <- median(ASE, na.rm = N)
+  if ("MdASE" %in% M) MdASE <- ASE("median")
   
   # ---------------------------------------------------------------
   # Absolute errors and square errors tell the same thing. Because we do not 
@@ -245,9 +269,9 @@ computeAccuracy <- function(u,
   out <- data.frame(ME,   MAE,  MAPE,  sMAPE,  sMRAE,  MASE, # means
                     MdE, MdAE, MdAPE, sMdAPE, sMdRAE, MdASE, # medians
                     MSE, RMSE, RMSPE, RMdSPE)                # squared errors
-  
-  if(!is.null(measures)) out <- out[, measures]
+  out <- out[, M]
   out <- as.matrix(out)
+  colnames(out) <- M
   return(out)
 }
 

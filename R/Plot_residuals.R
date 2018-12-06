@@ -65,7 +65,6 @@ plot.residMF <- function(x,
                          pch = 20, 
                          col = NULL, 
                          ...) {
-  
   plotType <- match.arg(plotType)
   oldpar   <- par(no.readonly = TRUE)
   L        <- dim(x)

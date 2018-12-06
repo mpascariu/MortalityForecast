@@ -72,14 +72,15 @@ wide2long <- function(data,
                       which.y = NULL, 
                       ...) {
   
-  if (is.null(x)) x = 1:nrow(data)
-  if (is.null(y)) y = 1:ncol(data)
-  if (is.null(which.x)) which.x = x
-  if (is.null(which.y)) which.y = y
+  x <- x %||% 1:nrow(data)
+  y <- y %||% 1:ncol(data)
+  which.x <- which.x %||% x
+  which.y <- which.y %||% y
   
-  D <- gather(data, key = "y")
-  D$x <- x
+  D <- data %>% as.data.frame %>% gather(key = "y")
   D$y <- as.numeric(D$y)
+  D$x <- x
+  
   out <- D[D$x %in% which.x & D$y %in% which.y, ]
   return(out)
 }

@@ -130,8 +130,12 @@ fitted2dens <- function(mat, x, y, ny = 7, lx0 = 300) {
 #' @export
 plot.predict.MEM <- function(x, 
                              y = NULL,
-                             plotType = c("mean", "lower", "upper", "raw_moments", 
-                                          "normalised_moments", "scaled_moments"), 
+                             plotType = c("mean", 
+                                          "lower", 
+                                          "upper", 
+                                          "raw_moments", 
+                                          "normalised_moments", 
+                                          "scaled_moments"), 
                              ny = 7, 
                              level = 80, 
                              ...) 

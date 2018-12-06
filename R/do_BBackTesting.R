@@ -112,7 +112,7 @@ do.BBackTesting <- function(data,
 #' @export
 build.scenarios <- function(y, strategy = c(f = 20, h = 20, s = 2)) {
   # Build scenarios -  method 1
-  S <- strategy
+  S <- as.numeric(strategy)
   bop_fit <- rev(seq(from = max(y) - S[1] - S[2] + 1, 
                      to = min(y), 
                      by = -1 * S[3]))
