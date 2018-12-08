@@ -18,7 +18,7 @@
 #' y  <- 1970:2016
 #' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 #' 
-#' BB <- do.BBackTesting(data = dx, x, y,
+#' BB <- do.BBackTesting(data = dx, x = x, y = y,
 #'                       data.in = "dx", 
 #'                       models = c("MRWD", "HyndmanUllah"),
 #'                       strategy = c(20, 20, 3))
@@ -30,6 +30,7 @@
 #' R
 #' @export
 do.BBackTesting <- function(data, 
+                            data.B = NULL,
                             x, 
                             y,
                             data.in = c("qx", "mx", "dx", "lx"),
@@ -54,7 +55,8 @@ do.BBackTesting <- function(data,
     yh <- S[[k, "forecast"]]
     y_ <- c(yf, yh)
     if (verbose) cat(paste0("\nTest scenario ", k, "/", nc, ": "))
-    Bk <- do.BackTesting(data = data[, paste(y_)], 
+    Bk <- do.BackTesting(data = data[, paste(y_)],
+                         data.B = data.B[, paste(y_)],
                          x = x, 
                          y.fit = yf, 
                          y.for = yh, 

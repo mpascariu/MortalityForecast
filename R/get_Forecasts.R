@@ -21,6 +21,7 @@ get.Forecasts <- function(object,
   x  <- object$x
   y  <- object$y  
   
+  
   MX <- list()
   for (i in 1:length(Mn)) {
     M <- with(object, get(Mn[i]))
@@ -35,8 +36,10 @@ get.Forecasts <- function(object,
       mx <- M$predicted.values
       
     } else {
+      if ("x.h" %in% names(list(...))) x <- list(...)$x.h # this is for MEM models only
+      
       dx <- M$predicted.values
-      mx <- convertFx(x, dx, from = "dx", to = "mx", lx0 = 1)
+      mx <- convertFx(x = x, data = dx, from = "dx", to = "mx", lx0 = 1)
     }
     MX[[i]] <- mx
   }

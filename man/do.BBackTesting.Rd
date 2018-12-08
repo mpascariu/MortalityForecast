@@ -4,13 +4,18 @@
 \alias{do.BBackTesting}
 \title{Perform Out-of-Sample Testing of Mortality Forecasts Over Multiple Time Periods}
 \usage{
-do.BBackTesting(data, x, y, data.in = c("qx", "mx", "dx", "lx"), models,
-  strategy = c(f = 20, h = 20, s = 2), level = 95,
+do.BBackTesting(data, data.B = NULL, x, y, data.in = c("qx", "mx",
+  "dx", "lx"), models, strategy = c(f = 20, h = 20, s = 2), level = 95,
   jumpchoice = c("actual", "fit"), verbose = TRUE, ...)
 }
 \arguments{
 \item{data}{A data.frame or a matrix containing mortality data 
 with ages \code{x} as row and time \code{y} as column.}
+
+\item{data.B}{A data.frame or a matrix containing mortality data for 
+the benchmark population. This dataset is needed only in the coherent 
+mortality models (e.g. \code{LiLee, OeppenC}). Must be the same format as 
+in data;}
 
 \item{x}{Numerical vector indicating the ages in input \code{data}. 
 Optional. Default: \code{NULL}.}
@@ -62,7 +67,7 @@ x  <- 0:95
 y  <- 1970:2016
 dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
 
-BB <- do.BBackTesting(data = dx, x, y,
+BB <- do.BBackTesting(data = dx, x = x, y = y,
                       data.in = "dx", 
                       models = c("MRWD", "HyndmanUllah"),
                       strategy = c(20, 20, 3))
