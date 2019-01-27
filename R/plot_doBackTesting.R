@@ -43,10 +43,10 @@ plot.BackTesting <- function(x,
   
   # ggplot method
   if (facet == "y") {
-    P = plot_y_facets(O, H, x, y1, y2, which)
+    P <- plot_y_facets(O, H, x, y1, y2, which)
     
   } else {
-    P = plot_x_facets(O, H, x, y1, y2, which)
+    P <- plot_x_facets(O, H, x, y1, y2, which)
   }
   
   out = P + ylab(y_lab) +
@@ -76,7 +76,7 @@ plot_x_facets <- function(O, H, x, y1, y2, which) {
   P <- ggplot(H) + 
     facet_wrap(~ x, scales = "free_y", nrow = 2) +
     geom_point(data = O, aes(x = y, y = value, fill = DATA), shape = 21) +
-    geom_line(aes(x = y, y = value, color = Name, linetype = Name)) +
+    geom_line(aes(x = y, y = value, color = Name, linetype = Name), size = .7) +
     scale_fill_manual(values = 1:2) +
     xlab("Time period (Years)") 
   P
@@ -98,8 +98,9 @@ plot_y_facets <- function(O, H, x, y1, y2, which) {
   
   P <- ggplot(H) + 
     facet_wrap(~ y, scales = "free_y", nrow = 2) +
-    geom_point(data = O, aes(x = x, y = value, fill = DATA), shape = 21, alpha = 0.3) +
-    geom_line(aes(x = x, y = value, color = Name, linetype = Name)) +
+    geom_point(data = O, aes(x = x, y = value, fill = DATA), 
+               shape = 21, alpha = 0.3) +
+    geom_line(aes(x = x, y = value, color = Name, linetype = Name), size = .7) +
     scale_fill_manual(values = 2) +
     xlab("Age (x)") + 
     scale_y_continuous(trans = 'log10')
@@ -121,6 +122,7 @@ change_model_factor_levels <- function(vect) {
                                             "Lee-Carter" = "LeeCarter", 
                                             "Li-Lee" = "LiLee", 
                                             "Hyndman-Ullah" = "HyndmanUllah", 
+                                            "Renshaw-Haberman" = "RenshawHaberman", 
                                             "Oeppen" = "Oeppen",
                                             "Oeppen-C" = "OeppenC",
                                             "MEM-2" = "MEM2",

@@ -18,7 +18,6 @@
 #' \code{\link{do.BBackTesting}}
 #' \code{\link{evalAccuracy.BackTesting}}
 #' @examples 
-#' library(MortalityForecast)
 #' library(magrittr)
 #' 
 #' x  <- 0:100            # Ages

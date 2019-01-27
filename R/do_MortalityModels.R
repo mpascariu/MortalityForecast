@@ -1,9 +1,8 @@
 # --------------------------------------------------- #
-# Author: Marius D. Pascariu
+# Author: Marius D. PASCARIU
 # License: GNU General Public License v3.0
-# Last update: Fri Nov 30 18:16:53 2018
+# Last update: Mon Jan 21 17:22:44 2019 
 # --------------------------------------------------- #
-
 
 #' Fit Multiple Stochastic Mortality Models
 #' 
@@ -26,6 +25,7 @@
 #'   \item{\code{"LeeCarter"}} -- The Lee-Carter Mortality Model;
 #'   \item{\code{"LiLee"}} -- The Li-Lee Mortality Model;
 #'   \item{\code{"HyndmanUllah"}} -- The Hyndman-Ullah Mortality Model;
+#'   \item{\code{"RenshawHaberman"}} -- The Renshaw-Haberman Mortality Model;
 #'   \item{\code{"Oeppen"}} -- The Oeppen Mortality Model;
 #'   \item{\code{"OeppenC"}} -- The Coherent Oeppen Mortality Model;
 #'   \item{\code{"MEM2"}} -- The Maximum Entropy Mortality Model of order 2;
@@ -43,7 +43,7 @@
 #' y  <- 2005:2016  # Years
 #' h  <- 16         # forecasting horizon
 #' MM <- c("MRWD", "LeeCarter", "LiLee", "HyndmanUllah", 
-#'         "Oeppen", "OeppenC", "MEM5") # mortality models
+#'         "Oeppen", "OeppenC", "MEM5", "RenshawHaberman") # mortality models
 #' D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]  # data
 #' B  <- HMD_female$dx$GBRTENW[paste(x), paste(y)]  # benchmark population
 #' 
@@ -80,10 +80,12 @@ do.MortalityModels <- function(data,
                                ...) {
   
   data.in <- match.arg(data.in)
-  input   <- as.list(environment())
-  call    <- match.call()
+  input <- as.list(environment())
+  call  <- match.call()
+  M     <- which_model_is_in(models)
   x <- x %||% 1:nrow(data)
   y <- y %||% 1:ncol(data)
+  
   
   ## SINGLE POPULATION MODELS
   # ------------------------------------------
@@ -91,44 +93,43 @@ do.MortalityModels <- function(data,
   dx.data <- convertFx(x, data, from = data.in, to = "dx", lx0 = 1, ...)
 
   # The Naive model - Multivariate Random-Walk
-  if ("MRW" %in% models) {
+  if (M["MRW"]) {
     MRW <- model.MRW(data = log(mx.data), x = x, y = y, include.drift = FALSE)
   }
   # Random Walk with drift
-  if ("MRWD" %in% models) {
+  if (M["MRWD"]) {
     MRWD <- model.MRW(data = log(mx.data), x = x, y = y, include.drift = TRUE)
   }
   # Lee-Carter (1992)
-  if ("LC" %in% models) {
-    LC <- LC(data = mx.data, x = x, y = y, link = "log", verbose = FALSE)
-  }
-  if ("LeeCarter" %in% models) {
+  if (M["LeeCarter"]) {
     LeeCarter <- model.LeeCarter(data = mx.data, x = x, y = y, verbose = FALSE)
   }
   # Hyndman-Ullah (1992)
-  if ("HyndmanUllah" %in% models) {
+  if (M["HyndmanUllah"]) {
     HyndmanUllah <- model.HyndmanUllah(data = mx.data, x = x, y = y, 
                                        verbose = FALSE)
   }
-  # Plat (2009)
-  if ("PLAT" %in% models) PLAT <- PLAT(data = mx.data, x = x, y = y, 
-                                       verbose = FALSE)
+  # Renshaw-Haberman (2006)
+  if (M["RenshawHaberman"]) {
+    RenshawHaberman <- model.RenshawHaberman(data = mx.data, x = x, y = y, 
+                                             verbose = FALSE)
+  }
   # Oeppen (2008)
-  if ("Oeppen" %in% models) Oeppen <- model.Oeppen(data = dx.data, x = x, y = y, 
-                                                   verbose = FALSE)
-  # Maximum Entropy Mortality Models - PLC (2018)
-  if ("MEM2" %in% models)  MEM2 <- model.MEM(data = dx.data, x = x, y = y, 
-                                             n = 2, verbose = FALSE)
-  if ("MEM3" %in% models)  MEM3 <- model.MEM(data = dx.data, x = x, y = y, 
-                                             n = 3, verbose = FALSE)
-  if ("MEM4" %in% models)  MEM4 <- model.MEM(data = dx.data, x = x, y = y, 
-                                             n = 4, verbose = FALSE)
-  if ("MEM5" %in% models)  MEM5 <- model.MEM(data = dx.data, x = x, y = y, 
-                                             n = 5, verbose = FALSE)
-  if ("MEM6" %in% models)  MEM6 <- model.MEM(data = dx.data, x = x, y = y, 
-                                             n = 6, verbose = FALSE)
-  if ("MEM7" %in% models)  MEM7 <- model.MEM(data = dx.data, x = x, y = y, 
-                                             n = 7, verbose = FALSE)
+  if (M["Oeppen"]) Oeppen <- model.Oeppen(data = dx.data, x = x, y = y, 
+                                                 verbose = FALSE)
+  # Maximum Entropy Mortality Models - PLC (2019)
+  if (M["MEM2"]) MEM2 <- model.MEM(data = dx.data, x = x, y = y, 
+                                          n = 2, verbose = FALSE)
+  if (M["MEM3"]) MEM3 <- model.MEM(data = dx.data, x = x, y = y, 
+                                          n = 3, verbose = FALSE)
+  if (M["MEM4"]) MEM4 <- model.MEM(data = dx.data, x = x, y = y, 
+                                          n = 4, verbose = FALSE)
+  if (M["MEM5"]) MEM5 <- model.MEM(data = dx.data, x = x, y = y, 
+                                          n = 5, verbose = FALSE)
+  if (M["MEM6"]) MEM6 <- model.MEM(data = dx.data, x = x, y = y, 
+                                          n = 6, verbose = FALSE)
+  if (M["MEM7"]) MEM7 <- model.MEM(data = dx.data, x = x, y = y, 
+                                          n = 7, verbose = FALSE)
   
   ## COHERENT MODELS
   # ------------------------------------------
@@ -136,23 +137,47 @@ do.MortalityModels <- function(data,
     mx.data.B <- convertFx(x, data.B, from = data.in, to = "mx", lx0 = 1, ...)
     dx.data.B <- convertFx(x, data.B, from = data.in, to = "dx", lx0 = 1, ...)
   
-    if ("LiLee" %in% models) {
+    if (M["LiLee"]) {
       LiLee <- model.LiLee(data = mx.data, data.B = mx.data.B, 
                            x = x, y = y, verbose = FALSE)
     }
-    if ("OeppenC" %in% models) {
+    if (M["OeppenC"]) {
       OeppenC <- model.OeppenC(data = dx.data, data.B = dx.data.B, 
                                x = x, y = y, verbose = FALSE)
     }
     remove(data.B, dx.data.B, mx.data.B)
   }
   
-  remove(data, data.in, models, dx.data, mx.data)
+  remove(data, data.in, models, dx.data, mx.data, M)
   out <- as.list(environment())
   out <- structure(class = "MortalityModels", out)
   return(out)
 }
 
+
+#' Determine which model is included in input
+#' @param X Models in input
+#' @param M All models
+#' @keywords internal
+which_model_is_in <- function(X,
+                              M = c("MRW", 
+                                    "MRWD", 
+                                    "LeeCarter", 
+                                    "HyndmanUllah", 
+                                    "RenshawHaberman", 
+                                    "Oeppen",
+                                    "MEM2", 
+                                    "MEM3", 
+                                    "MEM4", 
+                                    "MEM5", 
+                                    "MEM6", 
+                                    "MEM7",
+                                    "LiLee", 
+                                    "OeppenC")) {
+   out <- M %in% X
+   names(out) <- M
+   return(out)
+}
 
 
 #' Print function for do.MortalityModels

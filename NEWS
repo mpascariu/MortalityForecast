@@ -1,2 +1,14 @@
-version 1.0.0:
-- First stable version (on CRAN).
+version 0.8.0:
+- Implement parallel computation for do.BBacktesting(); 
+
+version 0.7.8:
+- Import the Renshaw-Haberman model from StMoMo package and make it work with all the functions of the package.
+
+version 0.7.7:
+Version of the package that contains working implementations of the: 
+- The Lee-Carter model; 
+- The Hyndman-Ullah; 
+- The Li-Lee (LC coherent); 
+- The Multivariate Random Walk w Drift; 
+- The Compositional Data Lee-Carter (Oeppen);
+- The Coherent Oeppen. 

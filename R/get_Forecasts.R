@@ -1,9 +1,9 @@
 # --------------------------------------------------- #
-# Author: Marius D. Pascariu
+# Author: Marius D. PASCARIU
 # License: GNU General Public License v3.0
-# Last update: Tue Nov 27 16:14:24 2018
+# Last update: Mon Jan 21 17:22:23 2019 
 # --------------------------------------------------- #
-
+# 
 #' Get Predicted Values
 #' 
 #' @inherit get.Fitted description
@@ -21,7 +21,6 @@ get.Forecasts <- function(object,
   x  <- object$x
   y  <- object$y  
   
-  
   MX <- list()
   for (i in 1:length(Mn)) {
     M <- with(object, get(Mn[i]))
@@ -32,7 +31,8 @@ get.Forecasts <- function(object,
     } else if (Mn[i] %in% c("MRW", "MRWD")) {
       mx <- exp(M$predicted.values)
       
-    } else if (Mn[i] %in% c("LeeCarter", "HyndmanUllah", "LiLee")) {
+    } else if (Mn[i] %in% c("LeeCarter", "HyndmanUllah", "LiLee", 
+                            "RenshawHaberman")) {
       mx <- M$predicted.values
       
     } else {

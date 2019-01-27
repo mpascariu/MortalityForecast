@@ -45,7 +45,7 @@
 #' When \code{plotType = "signplot"} a two dimensional black and white map of 
 #' the residuals is plotted with dark grey representing negative residuals and 
 #' light grey representing positive residuals. This is produced using 
-#' function \code{\link[graphics]{image.default}}. 
+#' function \code{\link[graphics]{image}}. 
 #'   
 #' @source 
 #' The code for producing the residual plots is inspired from the one published 
@@ -65,6 +65,7 @@ plot.residMF <- function(x,
                          pch = 20, 
                          col = NULL, 
                          ...) {
+  
   plotType <- match.arg(plotType)
   oldpar   <- par(no.readonly = TRUE)
   L        <- dim(x)

@@ -33,6 +33,7 @@ The following options are available: \itemize{
   \item{\code{"LeeCarter"}} -- The Lee-Carter Mortality Model;
   \item{\code{"LiLee"}} -- The Li-Lee Mortality Model;
   \item{\code{"HyndmanUllah"}} -- The Hyndman-Ullah Mortality Model;
+  \item{\code{"RenshawHaberman"}} -- The Renshaw-Haberman Mortality Model;
   \item{\code{"Oeppen"}} -- The Oeppen Mortality Model;
   \item{\code{"OeppenC"}} -- The Coherent Oeppen Mortality Model;
   \item{\code{"MEM2"}} -- The Maximum Entropy Mortality Model of order 2;
@@ -56,7 +57,7 @@ x  <- 0:100      # Ages
 y  <- 2005:2016  # Years
 h  <- 16         # forecasting horizon
 MM <- c("MRWD", "LeeCarter", "LiLee", "HyndmanUllah", 
-        "Oeppen", "OeppenC", "MEM5") # mortality models
+        "Oeppen", "OeppenC", "MEM5", "RenshawHaberman") # mortality models
 D  <- HMD_male$dx$GBRTENW[paste(x), paste(y)]  # data
 B  <- HMD_female$dx$GBRTENW[paste(x), paste(y)]  # benchmark population
 

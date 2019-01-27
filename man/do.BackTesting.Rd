@@ -36,6 +36,7 @@ The following options are available: \itemize{
   \item{\code{"LeeCarter"}} -- The Lee-Carter Mortality Model;
   \item{\code{"LiLee"}} -- The Li-Lee Mortality Model;
   \item{\code{"HyndmanUllah"}} -- The Hyndman-Ullah Mortality Model;
+  \item{\code{"RenshawHaberman"}} -- The Renshaw-Haberman Mortality Model;
   \item{\code{"Oeppen"}} -- The Oeppen Mortality Model;
   \item{\code{"OeppenC"}} -- The Coherent Oeppen Mortality Model;
   \item{\code{"MEM2"}} -- The Maximum Entropy Mortality Model of order 2;
@@ -61,7 +62,6 @@ the process that take place inside the function and avoid progress messages.}
 Perform Out-of-Sample Testing of Mortality Forecasts Over One Time Period
 }
 \examples{
-library(MortalityForecast)
 library(magrittr)
 
 x  <- 0:100            # Ages

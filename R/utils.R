@@ -47,8 +47,8 @@ head_tail <- function(x,
       }
     }
     out <- if (ellipsis) rbind(h, ... = dots, t) else rbind(h, t)
-  }
-  else {
+    
+  } else {
     h   <- head(x, hlength)
     t   <- tail(x, tlength)
     out <- if (ellipsis) rbind(h, "...       ...", t) else as.matrix(rbind(h, t))
@@ -156,7 +156,7 @@ replace.zeros <- function(mx, method = c("min", "mult"), radix = 1e5) {
   method <- match.arg(method)
   
   if (method == "min") {
-    mx[mx==0] <- min(mx[mx > 0], na.rm = TRUE)/2
+    mx[mx == 0] <- min(mx[mx > 0], na.rm = TRUE)/2
     out <- mx
   }
   
@@ -164,7 +164,7 @@ replace.zeros <- function(mx, method = c("min", "mult"), radix = 1e5) {
     Dx <- mx * radix
     p <- sweep(Dx, 2, colSums(Dx), FUN = "/")
   
-    for(i in 1:nrow(p)){
+    for (i in 1:nrow(p)) {
       sdx <- 0.5 / sum(Dx[i, ], na.rm = TRUE)
       L <- as.numeric(p[i, ] == 0) * sdx
       p[i, ] <- p[i, ] + L
@@ -190,18 +190,20 @@ arima.string1 <- function(object, padding = FALSE) {
   if (order[7] > 1 & sum(order[4:6]) > 0) 
     result <- paste0(result, "(", order[4], ",", order[5], 
                      ",", order[6], ")[", order[7], "]")
+  
   if (!is.null(object$xreg)) {
     if (NCOL(object$xreg) == 1 & is.element("drift", nc)) 
       result <- paste(result, "with drift        ")
     else result <- paste("Regression with", result, "errors")
-  }
-  else {
+    
+  } else {
     if (is.element("constant", nc) | is.element("intercept", nc)) 
       result <- paste(result, "with non-zero mean")
     else if (order[2] == 0 & order[5] == 0) 
       result <- paste(result, "with zero mean    ")
     else result <- paste(result, "                  ")
   }
+  
   if (!padding) 
     result <- gsub("[ ]*$", "", result)
   return(result)

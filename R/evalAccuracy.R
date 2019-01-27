@@ -61,7 +61,8 @@ evalAccuracy.BackTesting <- function(object,
                                     b = B, 
                                     measures = measures, 
                                     ...)
-  A <- do.call("rbind", lapply(H, fn))  # table accuracy measures
+  # Table accuracy measures
+  A <- do.call("rbind", lapply(H, fn))  
   
   # Create a tibble and exit
   z  <- add_column(as.tibble(A), Scenario = "Total", Model = Mn, 

@@ -1,7 +1,7 @@
 # --------------------------------------------------- #
-# Author: Marius D. Pascariu
+# Author: Marius D. PASCARIU
 # License: GNU General Public License v3.0
-# Last update: Tue Nov 27 16:16:04 2018
+# Last update: Tue Jan 22 10:03:41 2019 
 # --------------------------------------------------- #
 
 #' Perform Out-of-Sample Testing of Mortality Forecasts Over Multiple Time Periods
@@ -17,11 +17,13 @@
 #' x  <- 0:95
 #' y  <- 1970:2016
 #' dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
+#' M  <- c("MRWD", "LeeCarter", "HyndmanUllah",
+#'         "Oeppen", "MEM4", "MEM5")
 #' 
 #' BB <- do.BBackTesting(data = dx, x = x, y = y,
 #'                       data.in = "dx", 
-#'                       models = c("MRWD", "HyndmanUllah"),
-#'                       strategy = c(20, 20, 3))
+#'                       models = M,
+#'                       strategy = c(20, 20, 1))
 #' 
 #' A <- evalAccuracy(BB, data.out = "ex")
 #' A
@@ -47,29 +49,34 @@ do.BBackTesting <- function(data,
   call  <- match.call()
   S     <- build.scenarios(y, strategy)
   
-  # Do Back-testing
+  # Do Back-testing in parallel -----------------------------
   nc <- nrow(S) # no. of cases
-  B  <- list()
-  for (k in 1:nc) {
-    yf <- S[[k, "fit"]]
-    yh <- S[[k, "forecast"]]
-    y_ <- c(yf, yh)
-    if (verbose) cat(paste0("\nTest scenario ", k, "/", nc, ": "))
-    Bk <- do.BackTesting(data = data[, paste(y_)],
-                         data.B = data.B[, paste(y_)],
-                         x = x, 
-                         y.fit = yf, 
-                         y.for = yh, 
-                         data.in = data.in,
-                         models = models, 
-                         level = level, 
-                         jumpchoice = jumpchoice, 
-                         verbose = FALSE, 
-                         ...)
-    B[[k]] <- Bk
-    remove(k, yf, yh, y_, Bk)
+  w  <- num_workers(res = nc)
+  cl <- makeCluster(w)
+  # clusterEvalQ(cl = cl,library(MortalityForecast)) # needed only if the code 
+  # is runned outside the package
+  registerDoParallel(cl, cores = w)
+  
+  i <- NULL # hack R CMD Check note
+  B <- foreach(i = seq_len(nc)) %dopar% {
+    yf <- S[[i, "fit"]]
+    yh <- S[[i, "forecast"]]
+    Y <- c(yf, yh)
+    do.BackTesting(data = data[, paste(Y)],
+                   data.B = data.B[, paste(Y)],
+                   x = x, 
+                   y.fit = yf, 
+                   y.for = yh, 
+                   data.in = data.in,
+                   models = models, 
+                   level = level, 
+                   jumpchoice = jumpchoice, 
+                   verbose = FALSE)
   }
+  stopCluster(cl)
   names(B) <- paste0("S", 1:nc)
+  
+  # Exit -----------------------------------------------------
   out <- list(input = input, 
               call = call, 
               scenarios = S, 
@@ -130,4 +137,29 @@ build.scenarios <- function(y, strategy = c(f = 20, h = 20, s = 2)) {
   )
   
   return(out)
+}
+
+
+#' Determine the number of cores to be used
+#' @param n.cores Number of cores to be used in parallel computing;
+#' @param res Restrict the number of cores. If there are only 2 operations to 
+#' performe even if more cores are available 2 cores are used.
+#' @keywords internal
+num_workers <- function(n.cores = NULL, res = NULL) {
+  if (is.null(n.cores)) {
+    
+    chk <- Sys.getenv("_R_CHECK_LIMIT_CORES_", "")
+    if (nzchar(chk) && chk == "TRUE") {
+      # use 2 cores in CRAN/Travis/AppVeyor checks because those are the rules
+      n.cores <- 2L
+    } else {
+      # use all cores in devtools::test()
+      n.cores <- detectCores()
+    }
+  }
+  
+  if (is.null(res)) res <- 64L
+  
+  X <- as.integer(min(n.cores, res))
+  return(X)
 }

@@ -1,9 +1,8 @@
 # --------------------------------------------------- #
-# Author: Marius D. Pascariu
+# Author: Marius D. PASCARIU
 # License: GNU General Public License v3.0
-# Last update: Thu Nov 29 14:25:29 2018
+# Last update: Mon Jan 21 17:22:03 2019 
 # --------------------------------------------------- #
-
 
 #' Get Fitted Values
 #' 
@@ -32,7 +31,8 @@ get.Fitted <- function(object,
     if (Mn[i] %in% c("MRW", "MRWD", "LC", "PLAT")) {
       mx <- exp(fitted(M))
       
-    } else if (Mn[i] %in% c("LeeCarter", "LiLee", "HyndmanUllah")) {
+    } else if (Mn[i] %in% c("LeeCarter", "LiLee", "HyndmanUllah", 
+                            "RenshawHaberman")) {
       mx <- fitted(M)
       
     } else {

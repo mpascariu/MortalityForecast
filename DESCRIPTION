@@ -1,7 +1,7 @@
 Package: MortalityForecast
 Type: Package
 Title: Standard Tools to Compare and Evaluate Various Mortality Forecasting Methods
-Version: 0.7.7
+Version: 0.8.0
 Authors@R: c(
   person("Marius D.", "Pascariu", role = c("aut", "cre", "cph"), email = "rpascariu@outlook.com"),
   person("Marie-Pier", "Bergeron-Boucher", role = "ctb"),
@@ -27,7 +27,10 @@ Imports:
   fields (>= 8.2), 
   RColorBrewer (>= 1.1-2),
   pbapply (>= 1.3-4),
-  Rdpack (>= 0.9-0)
+  Rdpack (>= 0.9-0),
+  parallel (>= 3.5.1),
+  doParallel (>= 1.0.14),
+  foreach (>= 1.4.4)
 Suggests:
   knitr (>= 1.20),
   rmarkdown (>= 1.10),
@@ -37,5 +40,5 @@ RdMacros:
   Rdpack
 URL: https://github.com/mpascariu/MortalityForecast
 BugReports: https://github.com/mpascariu/MortalityForecast/issues
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr

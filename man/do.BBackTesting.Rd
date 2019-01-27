@@ -33,6 +33,7 @@ The following options are available: \itemize{
   \item{\code{"LeeCarter"}} -- The Lee-Carter Mortality Model;
   \item{\code{"LiLee"}} -- The Li-Lee Mortality Model;
   \item{\code{"HyndmanUllah"}} -- The Hyndman-Ullah Mortality Model;
+  \item{\code{"RenshawHaberman"}} -- The Renshaw-Haberman Mortality Model;
   \item{\code{"Oeppen"}} -- The Oeppen Mortality Model;
   \item{\code{"OeppenC"}} -- The Coherent Oeppen Mortality Model;
   \item{\code{"MEM2"}} -- The Maximum Entropy Mortality Model of order 2;
@@ -66,11 +67,13 @@ Perform Out-of-Sample Testing of Mortality Forecasts Over Multiple Time Periods
 x  <- 0:95
 y  <- 1970:2016
 dx <- HMD_male$dx$GBRTENW[paste(x), paste(y)]
+M  <- c("MRWD", "LeeCarter", "HyndmanUllah",
+        "Oeppen", "MEM4", "MEM5")
 
 BB <- do.BBackTesting(data = dx, x = x, y = y,
                       data.in = "dx", 
-                      models = c("MRWD", "HyndmanUllah"),
-                      strategy = c(20, 20, 3))
+                      models = M,
+                      strategy = c(20, 20, 1))
 
 A <- evalAccuracy(BB, data.out = "ex")
 A
