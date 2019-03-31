@@ -1,6 +1,6 @@
 # The Maximum Entropy Mortality Model: Forecasting mortality using statistical moments
 
-This repository contains the source code (R & Tex) used in performing the analisys, writing and compiling the manuscript.
+This repository contains the source code (R & Tex) used in performing the analysis, writing and compiling the manuscript.
 
 ## Authors 
 Marius D. Pascariu, Adam Lenart & Vladimir Canudas-Romo
