@@ -1,0 +1,355 @@
+\documentclass[T0_MEM]{subfiles}
+\begin{document}
+
+
+\begin{titlepage}
+Corresponding Author: Marius D. Pascariu\\
+The Faculty of Business and Social Sciences\\
+University of Southern Denmark\\
+J.B. Winslows Vej 9B, 5000 Odense, Denmark\\
+E-mail: mpascariu@health.sdu.dk\\
+
+	\centering
+	{\quad\par\vspace{1cm}}
+	{\huge\bfseries The Maximum Entropy Mortality Model\par}
+	{\large Forecasting mortality using statistical moments\par}
+	\vspace{1cm}
+	{\Large Marius D. Pascariu\par}
+	{\itshape Interdisciplinary Center on Population Dynamics, Faculty of Business and Social Sciences, University of Southern Denmark, Odense, Denmark\\
+	Longevity \& Morbidity R\&D Center, SCOR Global Life SE, Paris, France\\}
+	\vspace{0.2cm}
+	{\Large Adam Lenart\par}
+	{\itshape Institute of Public Health, University of Southern Denmark, Odense, Denmark\\}
+	\vspace{0.2cm}
+	{\Large Vladimir Canudas-Romo\par}
+	{\itshape School of Demography, The Australian National University, Canberra, Australia\\}
+	\vfill
+
+% Bottom of the page
+	{\large 26 March 2019\par}
+	\vspace{0.2cm}
+\end{titlepage}
+
+\section*{Abstract}
+
+The age-at-death distribution is a representation of the mortality experience in a population. Although it proves to be highly informative it is often neglected when it comes to the practice of past or future mortality assessment. We propose an innovative method to mortality modeling and forecasting by making use of the location and shape measures of a density function i.e. statistical moments. Time series methods for extrapolating a limited number of moments are used and then the reconstruction of the future age-at-death distribution is performed. The predictive power of the method seems to be net superior when compared to the results obtained using classical approaches to extrapolating age-specific-death-rates, and the accuracy of the point forecast (MASE) is improved
+on average by 33\% respective to the state-of-the-art, the Lee--Carter model. The method is tested using data from the Human Mortality Database and implemented in a publicly available \texttt{R} package.
+
+\subsection*{Keywords:}
+mortality forecasting; density estimation; statistical moments; maximum entropy
+
+\section{Introduction}\label{sec:Intro}
+
+The mortality experience of a population is well described by its hazard rates, and the age-pattern that has been well exploited in numerous methods of mortality modeling \citep{gompertz1825, makeham1867, siler1983, heligman1980} and forecasting \citep{lee1992, li2005, haberman2014}. The main reasons why hazard rates have been used predominantly in modeling and forecasting is that they readily represent the change in the risk of death over age and time. In addition the five components of the pattern of human mortality (infant, child, youth, adult and old age mortality) can be identified clearly in a graphical representation of the hazard curve; and a variety of time series models can be employed to extrapolate the identified trends over time.
+
+Surprisingly few mortality methods acknowledge that the probability density function of the distribution of deaths can be equally informative when compared to the hazard indices: and more than that it can give an immediate indication on key measure of longevity like how long a population lives on average and the degree of variability of ages at death. By employing statistical knowledge about the shape of the distribution, and how the level of mortality at a certain age is fully dependent on the levels of mortality at all the other ages, brings enormous advantages. When hazard rates are investigated no conclusion can be made about mean age-at-death, or the inequality experienced by the population when it comes to death, or what is the prevalence of extraordinary long life spans (the outliers in old age mortality) or even summary statistics related to the mortality experience. For example, Figure \ref{fig:ObservedDx} illustrates the transition in the age-at-death distribution for men living in England and Wales. We learn that in 1960 the population experienced a pronounced infant mortality level up to the age of 5, and the fact that it takes about 53 years in order for the first 10\% of men to die. In 1960, only 10\% of the male population had the chance of living beyond the age of 85. Analyzing the same distribution in 2016 we can see that infant mortality dropped to almost insignificant levels (an inspection on the logarithmic scale would still show differences over ages), and that it takes about 63 years to eliminate the first 10\% of the male population through death. We also learn that more that 50\% of men are surviving to age 85, and more than 10\% of the population will surpass the age of 93.
+
+\begin{center}\texttt{[Figure \ref{fig:ObservedDx} near here]} %\\
+% \scriptsize The numbering of figures and tables will be updated automatically when they will be placed in the text}
+\end{center}
+
+The first attempt to describe the mortality pattern by analyzing the age-at-distribution was made by \cite{pearson1897}, building on Lexis' work (\citeyear{lexis1879}), where different functions were being used to capture the components of the pattern of human mortality. Pearson used a skewed function, arguing that the skewness of old age mortality depends on the incidence of premature mortality. More recently \cite{dellaportas2001} uses death counts to fit the Heligman--Pollard model with Bayesian methods, and \cite{mazzuco2018} models mortality by fitting a half-normal and a skew-bimodal-normal distribution to the observed empirical age-at-death density function.
+
+Despite being well suited to portray the dynamics of mortality patterns and to study longevity and lifespan variability, age-at-death distributions have generally been neglected in forecasting practice. The life table distribution of deaths, or $f(x)$\footnote{The commonly accepted life table notation for the age-at-death distribution is $d(x)$. However we will use the $f(x)$ notation in order to maintain consistency with the notation used in statistics for densities.}, is constrained ensuring that its elements add to the radix of the population, usually $l_0 = 1$, thus having $\sum_{x} f(x) = 1$. Time series extrapolations of its trends are likely to violate this assumption making burdensome the use of the same extrapolative methods as in the case of hazard rates. Notable attempts at forecasting the age-at-death distribution were made by \cite{oeppen2008} and \cite{bergeron2017} by adapting the Lee--Carter model to the Compositional Data Analysis framework \citep{aitchison1982}. While this approach solves the problem of respecting the unit sum constraint, it also requires changing the coordinate system from a Euclidean space to an Aitchison simplex (\citeyear{aitchison1986}) which might hinder the interpretation of the results. Another novel idea is introduced by \cite{basellini2019} by modeling the shifting and compression dynamics of the adult mortality distribution around the modal age at death with a 3-parameter function, parameters that can be extrapolated using standard time series models.
+
+Inspired by the idea of forecasting mortality, given the information offered by the age-at-death distribution, we propose a novel approach to forecasting age-specific mortality levels by making use of statistical moments i.e. the shape measures of a density. By employing the knowledge about the shape of the distribution mentioned earlier, and how the level of mortality at a certain age is fully dependent on the levels of mortality at all the other ages, brings an enormous advantage to the extrapolation methods based on death frequencies over the methods based on hazard or mortality rates extrapolation. One statistical moment describes one characteristic of the distribution it belongs to. For example, in the case of the distribution of deaths of a population the first moments correspond to: (i) the mean age at death or life expectancy; (ii) the variance which offers information about the inequality of the age at death; (iii) the skewness which states how concentrated the mortality is around young or old ages, and (iv) the kurtosis which indicates the weight of the tails or the presence of outliers (extreme old age) in the distribution. Beyond moments higher than the fourth the interpretation is limited, however these are relevant in the case of more complex distribution (multi-modal densities) which helps in fine-tuning the observed irregularities. Thus, for a distribution, the collection of all the moments uniquely determines its density function. In order to gain a perfect understanding of the underlying density function, one needs to have information about all the moments up to infinity. However a limited number of moments like mean, variance, skewness and kurtosis can already offer a good approximation of the shape of the probability density function of the underlying distribution of deaths, and therefore a good understanding of the levels of mortality experienced by a population at different ages.
+
+The method proposed here considers the \emph{finite moment problem} where a positive density,
+$f(x)$, is sought from knowledge of a limited number of its power moments. We assess the
+evolution of several observed moments of the age-at-death distribution in order to forecast
+them by employing multivariate time series models; and we reconstruct the forecast
+distribution using the maximum entropy approach \citep{mead1984} that relies on the average rate at which information is produced by a stochastic source of data or density function i.e. \emph{information entropy}. Reconstructing the density function from a set of predicted moments has the advantage of allowing accelerating/decelerating rates of mortality improvement over age and time. It also eliminates the necessity of altering the coordinate system as in \cite{oeppen2008}. We will refer to this method as the \emph{maximum entropy mortality} model (MEM).
+
+The purpose of this study is to:
+\begin{itemize}
+  \item demonstrate that extrapolation methods based on death frequencies can be advantageous to methods based on mortality rates. We are also interested in showing that accurate forecasts of age-specific mortality levels can be obtained using statistical moments and the information provided by the age-at-death distribution;
+  \item compare the MEM against other well established mortality models and determine its newly added value;
+  \item validate the MEM predictions against a benchmark, that is, a simplistic trend extrapolation of the age-specific death rates (na\"ive model) in order to justify the increase in complexity of the proposed method. This objective is justified and inspired by \cite{bohk2018}, a study where 20 major fertility forecasting methods are evaluated. The main findings show that across multiple measures of fertility forecast accuracy only four methods consistently outperform the na\"ive model.
+\end{itemize}
+
+
+\section{Methods}\label{sec:methods}
+
+In this section we introduce our method of modeling and forecasting mortality and the
+main concepts required to understand its estimation procedure.
+
+\subsection{Statistical Moments}\label{sec:Moments}
+
+The statistical moments are defined as the expected value of the $n$-th power of a random variable $x$. The $n$-th moment, $\mu_n$, for a continuous density function, $f(x)$, about a value $c$ can be defined as:
+
+\begin{equation}\label{eq:moments}
+\mu_n = \int_{a}^{\omega} (x - c)^n f(x) dx, \quad \textrm{where} \quad n = 0, 1, 2 \dots,
+\end{equation}
+where $a$ and $\omega$ refers to the range of the distribution. If variable $c$ denotes the mean it is said that $\mu_n$ is the $n$-th moment about the mean or the $n$-th \emph{central moment}. The moments can be computed about zero as well, in which case the moment is called a \emph{raw} or \emph{crude moment}. The \emph{normalized moment} of a probability distribution is a central moment that is standardized. The normalization is typically a division by an expression of the standard deviation, $\sigma$, which renders the moment scale invariant. This has the advantage that such normalized moments differ only in other properties than variability, facilitating e.g. comparison of the shape of different probability distributions. Then the normalized moment of degree $n$ of a central moment is
+
+\begin{equation}\label{eq:Nmoment}
+\tilde{\mu}_n = \mu_n / \sigma^n.
+\end{equation}
+
+Both the raw and the normalized moments are used in this study. While the normalized moments are a good choice to serve as indices in time series extrapolation (as we will see in section \ref{sec:MEM}), the raw moments are more efficient in the estimation of the underlying density functions (section \ref{sec:MaxEnt}). If one type of moments is known, all the others can be derived from these without losing their properties.
+
+\subsection{Information Entropy}\label{sec:entropy}
+
+The concept of information entropy was introduced by \cite{shannon1948} in an effort to mathematically formalize the process of communication in computer science (between two devices). The word \emph{information}, here, is used in a special sense and must not be confused with \emph{meaning}. The information is seen as a measure of the numbers of the possible outcomes generated by a probabilistic process and it is defined as the logarithm of this value. \cite{warren1949} reveals that the quantity which uniquely meets the natural requirements that one sets up for \emph{information} turns out to be exactly that which is known in thermodynamics as \emph{entropy} and which is a measure of the degree of randomness.
+
+To explore the numerical values of the entropy measure $H$, let us assume that the individuals in a population can die in one of the following two states: childhood (C) and adulthood (A). The associate probabilities would be $f(C)$ for the first state and $f(A) = 1 - f(C)$ for the second. It follows that:
+
+\begin{equation}
+H = - \left[ f(C) \log f(C) + f(A) \log f(A) \right]
+\quad \textrm{or} \quad
+H = - \sum_{i = C}^{A} f(i)\log f(i).
+\end{equation}
+
+Since the logarithm of a number smaller that 1 is a negative value, the minus sign in the equation is added for convenience only, so that $H$ is always positive. It turns out that the information entropy has its largest value, when the events of dying in childhood and adulthood are equally probable; that is when $f(C) = f(A) = 0.5$. Just as soon as one outcome becomes more probable than the other (e.g. adult mortality greater than childhood mortality) the value of $H$ decreases. When one outcome is very probable ($f(A)$ almost one and $f(C)$ almost zero, say) the value of $H$ is approaching zero, creating a situation in which the stochastic process of dying in different states becomes less random and the outcome almost certain. Therefore, information entropy is also a measure that can show the level of inequality experienced by individuals represented in a distribution such as age-at-death. A small value of the entropy indicates that everyone dies around the same ages, i.e. the population is characterized by a small degree of inequality in terms of age-at-death. If $H$ is large one can say that the inequality is pronounced.
+
+To generalize, the entropy of a random variable $x$ with probability distribution function $f(x)$ is the negative logarithm of the density function for the value, and can be written as:
+
+\begin{equation}\label{eq:Entropy}
+H = -\int f(x)\log_b f(x)dx,
+\end{equation}
+
+and
+\begin{equation}\label{eq:entropy}
+H = E\left[ I(x)\right] = E\left[ -\log_b f(x)\right],
+\end{equation}
+where $E$ is the expected value operator, $I$ is the information content of $x$ and $b$ is the base of the logarithms used.
+
+\subsection{The finite moment problem}\label{sec:MaxEnt}
+
+The problem of reconstructing a distribution from a given number of moments is not straightforward. It is known in the mathematical literature as the \emph{finite moment problem}. The method has been extensively studied from a theoretical perspective and has practical applications in thermodynamics and quantum-physics. It can be regarded as a finite dimensional version of the Hausdorff moment problem \citep{hausdorff1921, shohat1943}. Various methods for solving this problem have been proposed in the last decades, by making use of orthogonal polynomials \citep{chihara1978}, splines \citep{john2007}, or other numerical strategies \citep{frontini1990}. All the procedures aim at constructing specific sequences of functions $f_N(x)$ which eventually converge to the true distribution $f(x)$ as the number of moments $N$, used in estimation, approaches infinity
+
+\begin{equation}\label{eq:moment_est}
+\hat{\mu}_n = \int_{a}^{\omega} x^n f_N(x) dx, \quad n = 0, 1, 2 \dots, N.
+\end{equation}
+
+Equation (\ref{eq:moment_est}) should be seen as a system of $N+1$ equations, where the moments $\hat{\mu}_0, \dots, \hat{\mu}_N$ come from the $f_N(x)$ density.
+
+Taking advantage of the regularity of human mortality the reconstruction of a density function can be realized using a small number of moments, usually 3--6. And, a good fit of the true density is achieved by imposing a prior restriction of the class on functions where the solution is sought.
+
+Here we follow the maximum entropy reconstruction (\emph{MaxEnt}) and the algorithm developed by \cite{mead1984} as a definite procedure for the construction of a sequence of approximations to the true density. This method is based on the information entropy given by the density function. As a strategy for finding the local maxima of the entropy functional $\mathcal{L} = \mathcal{L}(f)$, we employ the method of Lagrange multipliers, $\lambda_n$ for the $n$-th moment:
+
+\begin{equation}\label{eq:Lagrange}
+\mathcal{L} = H + \sum_{n=0}^{N} \lambda_n \left[\hat{\mu}_n - \mu_n \right].
+\end{equation}
+
+The entropy, as defined in equation \ref{eq:Entropy}, is maximized under the condition that the first $N + 1$ moments, $\hat{\mu}_n$, are equal to the true moments $\mu_n$, where $n$ takes values between $0$ and $N$. Functional variation of $\mathcal{L}$ with respect to the unknown density $f(x)$ yields
+
+\begin{equation}\label{eq:fN_Lagrange}
+\frac{\delta\mathcal{L}}{\delta f(x)} =  0 \Longrightarrow
+f = f_N(x) = \exp\left(-\lambda_0 - \sum_{n=1}^{N} \lambda_n x^n\right),
+\end{equation}
+
+and the $n-$th raw moment
+
+\begin{equation}\label{eq:mN_Lagrange}
+\mu_n = \int_{a}^{\omega} x^n \exp\left(-\lambda_0 - \sum_{n=1}^{N} \lambda_n x^n\right) dx.
+\end{equation}
+
+Considering the availability of the first $N + 1$ moments, the equations (\ref{eq:fN_Lagrange}) and (\ref{eq:mN_Lagrange}) (that are closely related to equation \ref{eq:moment_est}) should be viewed as a non-linear system of $N + 1$ equations for the unknown Lagrange multipliers $\lambda_0, \lambda_1, \dots, \lambda_N$. If we assume that the density $f(x)$ is normalized such that the first moment is always equal to 1 ($\mu_0 = 1$, i.e. respecting the unit sum constraint) the first equation in (\ref{eq:mN_Lagrange}) then reads
+
+\begin{equation}
+\mu_0 =
+\int_{a}^{\omega} x^0 f_N(x) dx =
+\int_{a}^{\omega} \exp\left(-\lambda_0 - \sum_{n=1}^{N} \lambda_n x^n\right) dx = 1
+\end{equation}
+
+and results in the first Lagrange multiplier, $\lambda_0$, being expressed in terms of the remaining Lagrange multipliers:
+
+\begin{equation}
+\int_{a}^{\omega} \exp\left(-\sum_{n=1}^{N} \lambda_n x^n\right) = e^{\lambda_0}.
+\end{equation}
+
+The system of equations then reduces to
+
+\begin{equation}
+\mu_n = \frac{\int_{a}^{\omega} x^n \exp\left(-\sum_{n=1}^{N} \lambda_n x^n\right)}{
+\int_{a}^{\omega} \exp\left(-\sum_{n=1}^{N} \lambda_n x^n\right)},
+\quad n = 0, 1, 2 \dots, N.
+\end{equation}
+
+For a numerical solution, one introduces $\Gamma = \Gamma(\lambda_1, \lambda_2, \dots, \lambda_N)$ through the Legendre transformation
+
+\begin{equation}
+\Gamma = \ln (e^{\lambda_0}) + \sum_{n=1}^{N} \mu_n \lambda_n,
+\end{equation}
+
+where the $\mu_n$'s are the true statistical moments of the underlying density. The stationary points of the potential $\Gamma$ are solutions to the equations
+
+\begin{equation}
+\frac{\delta\Gamma}{\delta\lambda_n} = 0 \Longrightarrow \mu_n , \quad n = 0, 1, 2 \dots, N,
+\end{equation}
+
+which is the solution to the finite moment problem. The convexity of $\Gamma$ guarantees that if a stationary point is found for some finite values of $\lambda_1, \lambda_2, \dots, \lambda_N$ it must be a unique absolute minimum. A more detailed description and analytic demonstration of the method and also alternative algorithms for solving the finite moment problem can be found in \cite{mead1984}.
+
+\begin{center}\texttt{[Figure \ref{fig:P_coverage} near here]}\end{center}
+
+Figure \ref{fig:P_coverage} shows the observed and reconstructed distribution of deaths using different numbers of observed statistical moments for the male population living in the USA in 1990. This distribution of deaths is a good study case because it is characterized by a pronounced level of mortality in the first year of life, an accident hump around age 20 and an exponential increase in adult and old age mortality. More recent distributions exhibit less pronounced local maxima or modes, therefore making them easier to estimate. Knowing only the first two moments, mean and variance, is not sufficient to obtain a good reconstruction of the underlying distribution. The obtained coverage, i.e. the common surface of the observed and estimated distributions, would be around 80\%. However, the more moments we employ in the estimation procedure the bigger the coverage becomes. The results indicate that six moments are enough to obtain a coverage above 96\% where  the infant and adult mortality is captured adequately. We note here that above a large enough coverage level, the measure does not necessarily indicate a more accurate approximation of the true distribution, but better identification of the main body of the distribution.
+
+\subsection{The Maximum Entropy Mortality model}\label{sec:MEM}
+
+The idea behind our forecasting method is simple. The future age-specific levels of mortality for a population are determined by extrapolating a limited number of statistical moments given by the available life table age-at-death distributions. The extrapolation is realized with multivariate time series models. The age-at-death distribution is estimated at any point in time from the predicted moments using the $MaxEnt$ algorithm (introduced in section \ref{sec:MaxEnt}).
+
+Prior to generating future realizations, the moments of ordinal 3 and higher are normalized, and the logarithmic transformation is applied to the absolute values of all observed moments. This ensures that the relevant shape measures remain positive on any forecasting horizon (e.g. the mean and the variance of the distribution). The period index of interest to be used in forecasting, with first order differences, can be defined from the empirical central moments, $\tilde{\mu}_{n,t}$ in equation (\ref{eq:Nmoment}), as follows:
+
+\begin{equation}
+  y_{n,t} = \log{\abs{\tilde{\mu}_{n,t}}} - \log{\abs{\tilde{\mu}_{n,t-1}}}.
+\end{equation}
+
+We are using a multivariate random-walk, with a vector of drift parameters $\theta_n$, to drive the dynamics of the multiple period indices, so that
+
+\begin{equation}
+  y_{n,t} = \theta_n + y_{n,t-1} + \varepsilon_{n,t} \quad
+  \textrm{with} \quad t = 1, 2, ..., \tau \quad
+  \textrm{and} \quad n = 1, 2, ..., N,
+\end{equation}
+
+where $\varepsilon_{n,t} \sim \mathbf{N}(0, \Omega)$, with $\Omega = CC'$. $C$ represents the Cholesky factorization matrix of the variance-covariance matrix $\Omega$. The parameters $\theta_n$ and $\Omega$ are estimated by ordinary least squares (OLS). A similar model is used by \cite{haberman2011} to generate trajectories of the multiple period indices in various mortality models.
+
+Once the $y_{n,t}$ forecasts are obtained one can compute the statistical moments, estimate the distribution of deaths at time $t$ using $MaxEnt$, and derive any other life table indicator by applying standard life table calculations \citep{preston2001}.
+
+\begin{center}\texttt{[Figure \ref{fig:Moments} near here]}\end{center}
+
+
+\subsection{Prediction intervals}\label{sec:PI}
+We simulate prediction intervals for the indices of interest using an algorithm, which makes full allowance for the forecast error generated by the multivariate random-walk model.
+
+Algorithm:\\
+$M$ simulations are performed on a forecasting horizon $J$.\\
+For simulation $m = 1, 2, \dots, M$\\
+1. randomly sample a variable $z_{m}^{*}$ from the multivariate normal distribution $\mathbf{N}(0, \mathbf{I})$;\\
+For $j = 1, 2, \dots, J$\\
+2. compute $y_{n,t+j}^{*} = y_{n,t+j} + j\hat{\theta}_n + \sqrt{j}\hat{C}z_{m}^{*}$\\
+3. compute statistical moments $\mu_{t+j, n, m}^{*}$\\
+4. estimate the density using the $MaxEnt$ algorithm and determine $d_{x, t+j, m}^{*}$.
+
+
+
+\section{Case study: England and Wales 1960--2016 male mortality experience, ages 0-95}
+
+\subsection{The data}
+The data source used in this article is the Human Mortality Database (\citeyear{hmd2018}), which contains historical mortality data for 43 different countries and territories. HMD constitutes a reliable data source because it includes high-quality historical mortality data that was subject to a uniform set of procedures, guaranteeing the cross-national comparability of the information.
+
+In order to test and illustrate the performance of the method, we fit the model using life
+table death counts for the male population in England and Wales between 1960 and 2016.
+Additional results for various countries are presented in Appendix B.
+
+
+\subsection{Model Comparison}
+In addition to the MEM model the following mortality models are evaluated and used to forecast mortality:
+
+\begin{itemize}
+  \item The multivariate random-walk with drift model:\\
+  \begin{equation}
+  \log(m_{x,t}) = \theta_x + \log(m_{x, t-1}) + \varepsilon_{x,t}.
+  \end{equation}
+  This model represents a simple linear extrapolation of the logarithm of the age-specific death rates, $m_x$, based on the first and the last observed values in the multivariate time series.
+
+  \item The \cite{lee1992} mortality model: \\
+  \begin{equation}
+  \log(m_{x, t}) = \alpha_x + \beta_x k_t + \varepsilon_{x,t},
+  \end{equation}
+  which is a numerical algorithm to estimate the age-specific effects $\alpha_x$ and $\beta_x$ and employs the singular value decomposition (SVD) to derive a univariate time series vector $k_t$, that becomes the main leading indicator of future mortality.
+
+  \item The \cite{hyndman2007} functional mortality model: \\
+  \begin{equation}
+  \log(m_{x, t}) = \alpha_x + \sum_{k=1}^{K} \beta_{x,k} \phi_{t,k} + e_{x,t} + \sigma_{t, x} \varepsilon_{x,t}
+  \end{equation}
+  This model is an extension of the Lee--Carter model where the sum term allows for smooth functions of age and $\sigma_{t, x}$ allows the amount of noise to become age-specific.
+
+  \item The \cite{renshaw2006} model -- a cohort-based extension of the Lee--Carter model: \\
+  \begin{equation}
+  \log(m_{x, t}) = \alpha_x + \beta^{(1)}_{x} k_t + \beta^{(0)}_{x} \gamma_{t-x} + \varepsilon_{x,t},
+  \end{equation}
+
+The model incorporates a cohort effect $\gamma_{t-x}$ to the Lee--Carter predictor to better capture discontinuities in mortality trends. We are using the simplified and more stable version of the model where $\beta^{(0)}_{x} = 1$ at all ages, as suggested in \cite{haberman2011}.
+
+  \item The \cite{oeppen2008} model -- the compositional-data mortality model:\\
+  \begin{equation}
+  clr(f_{x, t}) = \alpha_x + \beta_x k_t + \varepsilon_{x,t}
+  \end{equation}
+  Again, a variant of the Lee--Carter model where the index of interest to be modeled is the life table age-at-death distribution $f(x)$, subject to a $clr$ transformation (instead of a logarithmic one).
+
+For all models $\varepsilon_{x,t}$ are independent and identically distributed random variables (\texttt{iid}) normally distributed with mean zero.
+
+\end{itemize}
+
+Thus, six models are evaluated. Four of them are targeting the log-transformed death rates, $\log m_x$, and the other two (Oeppen and MEM) are focusing on modeling the age-specific frequencies of the age-at-death distribution or mortality data in compositional format. We mention that the random-walk model is chosen because of its simplicity, the Lee--Carter and Hyndman--Ullah methods are included in comparison because of their popularity and acceptance in the demographic and actuarial literature. The Renshaw--Haberman is a good example of how the projections can be improved by controlling for cohort effects and finally the Oeppen model is selected because of its similarity with the $MEM$ model (mainly, the $f(x)$ focus). Discussing the advantages and the features of the models used in comparison is beyond the scope of this article. For more details about the models the readers are referred to the original articles.
+
+The analysis is performed using the \texttt{R} programming language \citep{team2018r}. The Lee--Carter and the Hyndman--Ullah models are fitted and forecasted using the \texttt{demography} R package (\citeyear{demography2017}) and the Renshaw-Haberman implementation is adopted from the \texttt{StMoMo} software (\citeyear{villegas2015}). The source code of the other three models can be downloaded and installed in form of an \texttt{R} software package from the authors' \href{https://github.com/mpascariu}{GitHub} repository.
+
+\subsection{Evaluation and predictive power measurements}
+
+We assess the performance of the proposed MEM method and the other five mortality models based on forecasts of life expectancy at all ages\footnote{Because the five mortality extrapolation methods are modeling different life table indicators ($m_x$ vs. $f_x$), in order to perform a fair comparison one needs to make sure that the life table computation guarantees the transitivity between the indicators. That is, given a certain mortality level the same values of life expectancy (indicator evaluated in this article) are obtained regardless of whether the life table construction starts from $m_x$, $q_x$, $l_x$ or $f_x$. In this article the goal is achieved by using the life table methods implemented in the \texttt{MortalityLaws} R package (\citeyear{MortalityLaws160}).} as compared to the observed life expectancies. All the models are fitted and evaluated over the 0--95 age-range. Since a perfect fit of the data can always be obtained by using a model with enough parameters, and due to the fact that a good fit does not guarantee good forecasting performance \citep{hyndman2018}, we will not evaluate the models based on their ability to fit the historical data. The models are evaluated based on the out-of-sample forecasting performance over the observed data, where we refer to \emph{sample} as the data-set used in fitting. The predictive power is our ultimate goal, translated into a high degree of accuracy of forecast trajectories.
+
+For each scenario and model we are computing a matrix of accuracy errors. The overall accuracy of the forecast for a specific model--scenario is the average of all the values in the corresponding matrix. For a given population multiple scenarios of equal dimension (see section \ref{sec:fc_strategy}) are explored in order to account for the robustness of the models. The aggregation is done by averaging the results over all scenarios for each model/accuracy-measure/country.
+
+Many accuracy measures have been published. See \cite{hyndman2006} for a comprehensive review of the most common accuracy measures used in forecasting literature. Only six of them are considered here:
+
+\begin{itemize}
+  \item ME -- Mean Error;
+  \item MAE -- Mean Absolute Error;
+  \item MAPE -- Mean Absolute Percentage Error;
+  \item sMAPE -- Symmetric Mean Absolute Percentage Error;
+  \item sMRAE -- Symmetric Mean Relative Absolute Error;
+  \item MASE -- Mean Absolute Scaled Error.
+\end{itemize}
+
+The sMRAE and MASE are accuracy measures computed relative to a benchmark model. In the case of sMRAE the reference model in our study is the multivariate random-walk with drift, because we consider this model to be the simplest reliable method to extrapolate age specific death-rates. The MASE measure assesses the accuracy of a forecast with reference to a simple 1-step random-walk model (without drift). For all the presented accuracy measures, except ME, a smaller value is preferred over a larger one. A model performs better in terms of ME, compared to another model, if the obtained value is closer to zero i.e. the smallest value in absolute terms. Because the six measures are evaluating the accuracy by analyzing different aspects of the realized forecasts, it is possible but not mandatory to obtain a different classification of the model performance, depending on the considered measure. We computed a general classification (GC) of the resulted accuracy performance of the analyzed models by considering the median classification over the six measures for each model. The best performing model is marked with: rank (1). A detailed description of the accuracy assessment process is provided in Appendix A.
+
+\subsection{Out--of--sample forecasting strategy}\label{sec:fc_strategy}
+
+The period between 1960 and 2016 is long enough and relevant at the same time for assessing the predictive power of the estimated models. A typical testing scenario would use sub-periods of 20 years of data to fit/train the models, and subsequent periods of 20 years of data to forecast and validate the results. Multiple testing scenarios are defined by rolling forward the training/validation windows in steps of 1 year. This strategy will be called: \emph{20-20-1}. Therefore, considering our timeline, in the first scenario we will use data from 1960 to 1979 for fitting the models. The resulting models will be used to predict mortality for the period between 1980 and 1999, and validate the forecasts against the observed values in the same period. We will refer to this as the \emph{1960--1979--1999} scenario. By moving the evaluation windows 1 year forward, the second scenario would be \emph{1961--1980--2000}. And so on until the last scenario: \emph{1977--1996--2016}. In total 18 scenarios have been defined, containing equal fitting and forecasting period lengths, making possible in this way the aggregation (by averaging) and comparison of the accuracy results over all scenarios in addition to the specific scenario results.
+
+\subsection{Results}\label{sec:res}
+
+Across multiple measures of forecast accuracy computed based on the mortality experience of the male population living in England and Wales, we find that the predictive power of the $MEM$ method stands out when compared to the other models. The back-testing of the male mortality in England and Wales indicates that only the Renshaw--Haberman model returns slightly more accurate results. Table \ref{tbl:res_GBRTENW} displays a summary of the aggregated measures over 18 defined scenarios. We also learn that the differences between the multivariate random-walk with drift, Lee--Carter and Hyndman--Ullah models are insignificant in the case of this population; that the Oeppen method consistently offers better results among the Lee--Carter type models, obtaining the third position among the best-performing models in this study.
+
+\begin{center}\texttt{[Table \ref{tbl:res_GBRTENW} near here]}\end{center}
+
+When the models are tested over the mortality experience of multiple populations using the same strategy we discovered a similar patter, namely, in the majority of the cases the methods based of age-at-death distribution (MEM and Oeppen) would be ranked as the best performing models. The performance of the Renshaw--Haberman model is interesting to observe, because in some countries like the Netherlands, Sweden and England and Wales it is able to capture the cohort effects and successfully extrapolate them into the future predicting adequately the true mortality experience. However, the same strategy applied in France, Sweden or the USA completely places the model on the last position in the general classification and the reliance on observed cohort effects can create more damage to an improvement of the forecasts. The results are shown in Table \ref{tbl:rank_countries} and Appendix B.
+
+\begin{center}\texttt{[Table \ref{tbl:rank_countries} near here]}\end{center}
+
+The projected trajectories given by these methods can be inspected across different life table indicators, which are equivalent in the sense that they represent the same level of mortality. In Figure \ref{fig:Forecast_ex} we show the resulting mean trends in life expectancy at age 0, 25, 45, 65, 75 and 85; and in Figure \ref{fig:Forecast_mx} the trends in central death rate at the same ages are represented. It is noticeable that the MEM can cope with different levels of mortality improvement over age and time. This is the main reason why the model is able to return significantly better forecasts.
+
+\begin{center}\texttt{[Figure \ref{fig:Forecast_ex} near here]}\end{center}
+
+\begin{center}\texttt{[Figure \ref{fig:Forecast_mx} near here]}\end{center}
+
+
+
+\subsection{How many moments to use in MEM forecasting?}
+
+In general, the number of statistical moments to be considered in the MEM model depends on the regularity of the age-at-death distribution in the population of interest. The more moments employed, the more accurate the estimation of the underlying distribution becomes. However, the cost of using a larger number of moments is paid in processing speed and the likelihood of convergence of the MaxEnt algorithm. For seven or more moments a more complex time series model for moment extrapolation might be required.
+
+We tested the MEM models of order 2--6, that is models that are estimated based on the first 2, 3 until 6 moments (plus $\mu_0$). The testing was carried out in the same manner and over the same scenarios as in section \ref{sec:res}. From the results in table \ref{tbl:res_MEM} we learn that only the MEM-2 is disqualified by the benchmark model, all the other variants of the MEM return significantly better results.
+
+\begin{center}\texttt{[Table \ref{tbl:res_MEM} near here]}\end{center}
+
+
+
+\section{Conclusion \& Discussion}\label{sec:conclusion}
+
+The maximum entropy mortality model represents a new approach to modeling age-specific mortality levels. Nevertheless, its novelty refers only to the authors' idea of defining an algorithm to forecast mortality using well established methods and concepts like \emph{statistical moments}, \emph{information entropy}, the \emph{finite moment problem} and the \emph{multivariate random-walk with drift} introduced decades or centuries ago. All these individually have an important application in multiple scientific fields.
+
+The main advantage of the MEM is that the possible forecast age-specific trends are no longer based on the assumption of constant changes in mortality as in the Lee--Carter model. A different speed of improvement can be predicted across ages by taking into account the observed dynamics of the distribution of deaths and the changes in its shape and location. This makes possible the identification of the \emph{location} of the longevity risk across the $age$-axis. The model has the required features to predict the different rates of change in life expectancy at different ages, e.g. by maintaining a linear increase in life expectancy at birth and at the same time inducing accelerating rates for ages above 65. This result is consistent with the observed trends in the past and across many developed countries. The method was not designed to capture cohort effects, instead our approach is purely statistical. However, the results presented here show that MEM can capture cohort effects more accurately than most of the other models. This is partially due to the approach of modeling mortality in a compositional framework and focusing on the death distributions (i.e. if a life is saved at age $x$ it must be placed back in the death-distribution at later age, say $x + t$).
+
+Even if it is not shown here, the model introduced in this article is flexible enough in the sense that different covariates, influencing the mortality dynamics, can be considered in order to further improve the predictions. Examples of such covariates are information on the prevalence of smoking or obesity but also the trends in life expectancy at birth and modal age at death. This can be done by extending the time series model used in extrapolation (the multivariate random-walk with drift) by attaching extra cause-specific parameters. Similarly, a wide range of multivariate autoregressive time series models can be used to capture the coherent trends given by the observed empirical statistical moments, however this is subject to the requirements imposed by the available data.
+
+Including higher order moments in the prediction can sometimes increase the importance of relatively small effects seen in the age-at-death distribution such as the accident hump for males or infant mortality. In countries with a low level of mortality, four moments can return pertinent results but in countries that still exhibit a pronounced multi-modal distribution of deaths a larger number of moments might be required. The coverage proportion, introduced in the article, is a very good measure for studying the model’s ability to estimate the shape of the true distribution, but it has an important drawback: two errors of the same magnitude at different ends of the distribution will be assigned the same weight in the measure. This is a drawback because underestimating or overestimating the force of mortality at younger ages has a higher impact on the general level of mortality of a population than underestimating or overestimating the force of mortality at an older age. If we investigate the evolution of longevity by looking at life expectancy we can see that relying solely on information given by the mean age at death and life span disparity in order to generate forecasts is an endeavor doomed to failure (as showed in table \ref{tbl:res_MEM}). The model would mostly return pronounced pessimistic or overoptimistic results across ages without a correspondence to reality. A real improvement can be noticed if 4--6 moments are used.
+
+Other possible extensions of the MEM method worth exploring in the future are the use of an optimal weighting scheme which decreases the importance of higher order moments or the use of various smoothing methods that can be applied to the data prior to computing the observed moments and fitting the model.
+
+An important finding revealed in this study is the superiority of the age-at-death distribution based extrapolation methods, like the MEM and \cite{oeppen2008} over the death rate-based extrapolation methods.
+
+
+\section*{Reproducible research}
+The presented model and algorithm is implemented using the \texttt{R} programming language \citep{team2018r} and can be downloaded and installed in form of an \texttt{R} software package from authors GitHub repository (\url{https://github.com/mpascariu/MortalityForecast}). The results and figures for the countries presented in the article can be reproduced using the code and data saved in the \texttt{MortalityForecast} package -- version 0.8.0.
+
+\section*{Acknowledgements}
+The authors thank researchers at the Interdisciplinary Center on Population Dynamics, University of Southern Denmark, for their helpful comments and for many useful discussions which have helped improve this work. The first author wrote parts of this paper while visiting the School of Demography at the Australian National University; he thanks them for their kind disposition.
+
+\section*{Funding}
+This work is conducted within the "Modelling and Forecasting Age-Specific Death at Older Age", Project [No. 95-103-31186], under the management of the University of Southern Denmark, Institute of Public Health with the generous financial support of the SCOR Corporate Foundation for Science. The authors thank the funding institution. Researchers operated independently from the funders on this work, and the funding organizations had no role in the study design, data collection, analysis, interpretation, writing of the report or the decision to submit it for publication.
+
+\end{document}

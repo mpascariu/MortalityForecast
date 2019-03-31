@@ -1,0 +1,66 @@
+
+\documentclass[12pt]{article}
+
+\usepackage[a4paper, margin=2.5cm]{geometry}
+\usepackage[parfill]{parskip} % Begin paragraphs with an empty line rather than an indent
+\usepackage[justification = raggedright,
+            labelfont = bf,
+            font = small,
+            textfont = it]{caption}
+
+\usepackage{natbib} % Package for citations and refrences
+\usepackage[autostyle, english = american]{csquotes}
+\MakeOuterQuote{"}
+\usepackage[english]{babel}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{float} % Positioning
+\usepackage{framed}
+\usepackage{subfiles}       % Link tex files in the same document
+\usepackage[normalem]{ulem} % Strikethrough text \sout{}
+\usepackage{chngcntr}       % figure and table numbering
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+\usepackage{xcolor}
+
+\usepackage{titlesec} % Start sections on new page
+\newcommand{\sectionbreak}{\clearpage}
+
+\usepackage{hyperref} % Create links - refrences
+\hypersetup{
+  pdffitwindow = false,     % window fit to page when opened
+  pdfstartview = {Fit},     % fits the width of the page to the window
+  pdfnewwindow = true,      % links in new window
+  colorlinks = true,        % false: boxed links; true: colored links
+  linkcolor  = blue,        % color of internal links
+  citecolor  = blue,        % color of links to bibliography
+  filecolor  = blue,        % color of file links
+  urlcolor   = blue         % color of external links
+}
+
+\renewcommand{\baselinestretch}{1.1}
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\linespread{1.5}
+% --------------------------------------------------
+
+\begin{document}
+
+%---- Text ------------
+\subfile{T1_Manuscript}
+\subfile{T2_Figures}
+\subfile{T3_Tables}
+
+%---- Bibliography ----
+\bibliographystyle{apalike}
+\bibliography{./references/MEM_REFS}
+
+%---- Appendix --------
+\subfile{T4_Appendix_A}
+\subfile{T4_Appendix_B}
+
+\end{document}
