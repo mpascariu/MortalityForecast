@@ -26,4 +26,6 @@ You can track and contribute to the development of `MortalityForecast` on [GitHu
 ## Help
 All functions are documented in the standard way, which means that once you load the package using ```library(MortalityForecast)``` you can just type ```?model.Oeppen``` to see the help file. 
 
+## Support
+<a href="https://www.buymeacoffee.com/rpascariu" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: 30px !important;width: 100px !important;" ></a>
 
