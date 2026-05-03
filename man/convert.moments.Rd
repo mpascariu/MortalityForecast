@@ -4,8 +4,12 @@
 \alias{convert.moments}
 \title{Convert Statistical Moments}
 \usage{
-convert.moments(data, from = c("raw", "central", "normalized"),
-  to = c("raw", "central", "normalized"), eta = NULL)
+convert.moments(
+  data,
+  from = c("raw", "central", "normalized"),
+  to = c("raw", "central", "normalized"),
+  eta = NULL
+)
 }
 \arguments{
 \item{data}{data.frame containing statistical moments.}

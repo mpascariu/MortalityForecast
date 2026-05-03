@@ -4,9 +4,17 @@
 \alias{predict.LeeCarter}
 \title{Forecast age-specific death rates using the Lee-Carter model.}
 \usage{
-\method{predict}{LeeCarter}(object, h, order = c(0, 1, 0),
-  include.drift = TRUE, level = c(80, 95), jumpchoice = c("actual",
-  "fit"), method = "ML", verbose = TRUE, ...)
+\method{predict}{LeeCarter}(
+  object,
+  h,
+  order = c(0, 1, 0),
+  include.drift = TRUE,
+  level = c(80, 95),
+  jumpchoice = c("actual", "fit"),
+  method = "ML",
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{An object of class \code{LeeCarter}.}

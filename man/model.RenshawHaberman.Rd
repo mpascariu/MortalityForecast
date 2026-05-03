@@ -4,9 +4,16 @@
 \alias{model.RenshawHaberman}
 \title{The Renshaw-Haberman Mortality Model imported from StMoMo package}
 \usage{
-model.RenshawHaberman(data, x, y, link = c("log", "logit"),
-  cohortAgeFun = c("1", "NP"), approxConst = FALSE, radix = 1e+05,
-  verbose = FALSE)
+model.RenshawHaberman(
+  data,
+  x,
+  y,
+  link = c("log", "logit"),
+  cohortAgeFun = c("1", "NP"),
+  approxConst = FALSE,
+  radix = 1e+05,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{data}{A data.frame or a matrix containing mortality data 
@@ -30,9 +37,9 @@ term or \code{"1"} for \eqn{\beta_x^{(0)}=1} (the default).}
 \item{approxConst}{defines if the approximate identifiability constraint of 
 Hunt and Villegas (2015) is applied or not. If \code{TRUE}, the output object 
 is of class \code{rh} and subsequent model fitting is performed with 
-\code{\link{fit.rh}}. If \code{FALSE}, the output object is of class 
+\code{\link[StMoMo]{fit.rh}}. If \code{FALSE}, the output object is of class 
 \code{StMoMo} and subsequent model fitting is performed with 
-\code{\link{fit.StMoMo}}.}
+\code{\link[StMoMo]{fit.StMoMo}}.}
 
 \item{radix}{Radix.}
 

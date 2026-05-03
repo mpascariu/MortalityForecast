@@ -4,11 +4,19 @@
 \alias{predict.LiLee}
 \title{Forecast age-specific death rates using the Li-Lee model}
 \usage{
-\method{predict}{LiLee}(object, h, order.B = c(0, 1, 0),
-  include.drift.B = TRUE, order.D = c(1, 0, 0),
-  include.drift.D = FALSE, level = c(80, 95),
-  jumpchoice = c("actual", "fit"), method = "ML", verbose = TRUE,
-  ...)
+\method{predict}{LiLee}(
+  object,
+  h,
+  order.B = c(0, 1, 0),
+  include.drift.B = TRUE,
+  order.D = c(1, 0, 0),
+  include.drift.D = FALSE,
+  level = c(80, 95),
+  jumpchoice = c("actual", "fit"),
+  method = "ML",
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{An object of class \code{LiLee}.}

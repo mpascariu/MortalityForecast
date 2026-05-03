@@ -4,8 +4,7 @@
 \alias{plot.BackTesting}
 \title{Plot method for objects of the class \code{BackTesting}}
 \usage{
-\method{plot}{BackTesting}(x, data.out, facet = c("x", "y"),
-  which = NULL, ...)
+\method{plot}{BackTesting}(x, data.out, facet = c("x", "y"), which = NULL, ...)
 }
 \arguments{
 \item{x}{An object of the class \code{do.BackTesting}.}

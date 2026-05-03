@@ -4,8 +4,15 @@
 \alias{predict.MEM}
 \title{Forecast the age-at-death distribution using the Maximum-Entropy Mortality Model}
 \usage{
-\method{predict}{MEM}(object, h, x.h = NULL, level = 95,
-  jumpchoice = c("actual", "fit"), verbose = FALSE, ...)
+\method{predict}{MEM}(
+  object,
+  h,
+  x.h = NULL,
+  level = 95,
+  jumpchoice = c("actual", "fit"),
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{object}{An object of class \code{MEM};}

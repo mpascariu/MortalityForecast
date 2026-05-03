@@ -4,11 +4,19 @@
 \alias{predict.OeppenC}
 \title{Forecast the age-at-death distribution using the Coherent Oeppen model}
 \usage{
-\method{predict}{OeppenC}(object, h, order.B = c(0, 1, 0),
-  include.drift.B = TRUE, order.D = c(1, 0, 0),
-  include.drift.D = FALSE, level = c(80, 95),
-  jumpchoice = c("actual", "fit"), method = "ML", verbose = TRUE,
-  ...)
+\method{predict}{OeppenC}(
+  object,
+  h,
+  order.B = c(0, 1, 0),
+  include.drift.B = TRUE,
+  order.D = c(1, 0, 0),
+  include.drift.D = FALSE,
+  level = c(80, 95),
+  jumpchoice = c("actual", "fit"),
+  method = "ML",
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{An object of class \code{Oeppen};}

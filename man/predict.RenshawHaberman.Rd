@@ -4,9 +4,16 @@
 \alias{predict.RenshawHaberman}
 \title{Forecast age-specific death rates using the Renshaw-Haberman model}
 \usage{
-\method{predict}{RenshawHaberman}(object, h, order = c(2, 1, 0),
-  include.drift = TRUE, level = c(80, 95), jumpchoice = c("actual",
-  "fit"), verbose = TRUE, ...)
+\method{predict}{RenshawHaberman}(
+  object,
+  h,
+  order = c(2, 1, 0),
+  include.drift = TRUE,
+  level = c(80, 95),
+  jumpchoice = c("actual", "fit"),
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{An object of class \code{RenshawHaberman}.}

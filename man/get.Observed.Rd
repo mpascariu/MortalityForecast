@@ -4,8 +4,14 @@
 \alias{get.Observed}
 \title{Get Observed Values}
 \usage{
-get.Observed(object = NULL, data.out = c("qx", "mx", "dx", "lx", "Lx",
-  "Tx", "ex"), data.in = NULL, data = NULL, x = NULL, ...)
+get.Observed(
+  object = NULL,
+  data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+  data.in = NULL,
+  data = NULL,
+  x = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{An object of class \code{MortalityModels}.}

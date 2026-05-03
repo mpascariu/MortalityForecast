@@ -4,9 +4,15 @@
 \alias{plot.predict.MEM}
 \title{Plot the Predicted Age-at-Death Distribution}
 \usage{
-\method{plot}{predict.MEM}(x, y = NULL, plotType = c("mean", "lower",
-  "upper", "raw_moments", "normalised_moments", "scaled_moments"),
-  ny = 7, level = 80, ...)
+\method{plot}{predict.MEM}(
+  x,
+  y = NULL,
+  plotType = c("mean", "lower", "upper", "raw_moments", "normalised_moments",
+    "scaled_moments"),
+  ny = 7,
+  level = 80,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of the class \code{\link{predict.MEM}}.}

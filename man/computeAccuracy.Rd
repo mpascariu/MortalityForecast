@@ -4,8 +4,15 @@
 \alias{computeAccuracy}
 \title{Get Measures of Forecast Accuracy}
 \usage{
-computeAccuracy(u, u.hat, b, measures = NULL, xa = NULL, ya = NULL,
-  na.rm = TRUE)
+computeAccuracy(
+  u,
+  u.hat,
+  b,
+  measures = NULL,
+  xa = NULL,
+  ya = NULL,
+  na.rm = TRUE
+)
 }
 \arguments{
 \item{u}{Validation dataset.}

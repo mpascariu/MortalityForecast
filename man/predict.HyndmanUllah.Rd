@@ -4,8 +4,14 @@
 \alias{predict.HyndmanUllah}
 \title{Forecast age-specific death rates using the Hyndman-Ullah mortality model}
 \usage{
-\method{predict}{HyndmanUllah}(object, h, level = 95,
-  jumpchoice = c("actual", "fit"), verbose = TRUE, ...)
+\method{predict}{HyndmanUllah}(
+  object,
+  h,
+  level = 95,
+  jumpchoice = c("actual", "fit"),
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{object}{An object of class \code{HyndmanUllah}.}

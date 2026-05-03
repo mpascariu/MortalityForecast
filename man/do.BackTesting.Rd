@@ -4,9 +4,19 @@
 \alias{do.BackTesting}
 \title{Perform Out-of-Sample Testing of Mortality Forecasts Over One Time Period}
 \usage{
-do.BackTesting(data, data.B = NULL, x, y.fit, y.for, data.in = c("qx",
-  "mx", "dx", "lx"), models, level = 95, jumpchoice = c("actual",
-  "fit"), verbose = FALSE, ...)
+do.BackTesting(
+  data,
+  data.B = NULL,
+  x,
+  y.fit,
+  y.for,
+  data.in = c("qx", "mx", "dx", "lx"),
+  models,
+  level = 95,
+  jumpchoice = c("actual", "fit"),
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{data}{A data.frame or a matrix containing mortality data 

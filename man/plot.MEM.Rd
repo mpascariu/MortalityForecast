@@ -6,14 +6,11 @@
 \alias{plot.OeppenC}
 \title{Plot the Observed and Fitted Age-at-Death Distribution}
 \usage{
-\method{plot}{MEM}(x, plotType = c("fitted", "observed"), ny = 7,
-  level = 80, ...)
+\method{plot}{MEM}(x, plotType = c("fitted", "observed"), ny = 7, level = 80, ...)
 
-\method{plot}{Oeppen}(x, plotType = c("fitted", "observed"), ny = 7,
-  level = 80, ...)
+\method{plot}{Oeppen}(x, plotType = c("fitted", "observed"), ny = 7, level = 80, ...)
 
-\method{plot}{OeppenC}(x, plotType = c("fitted", "observed"), ny = 7,
-  level = 80, ...)
+\method{plot}{OeppenC}(x, plotType = c("fitted", "observed"), ny = 7, level = 80, ...)
 }
 \arguments{
 \item{x}{A fitted mortality model.}

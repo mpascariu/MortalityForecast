@@ -4,9 +4,12 @@
 \alias{evalRobustness.BBackTesting}
 \title{Evaluating the Robustness of the Forecasting Mortality Models}
 \usage{
-\method{evalRobustness}{BBackTesting}(object, data.out = c("qx", "mx",
-  "dx", "lx", "Lx", "Tx", "ex"), measures = c("MD", "MAD", "sMRAD",
-  "MASD"), ...)
+\method{evalRobustness}{BBackTesting}(
+  object,
+  data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+  measures = c("MD", "MAD", "sMRAD", "MASD"),
+  ...
+)
 }
 \arguments{
 \item{object}{An object of class \code{BBackTesting}.}

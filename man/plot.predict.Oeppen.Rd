@@ -5,11 +5,9 @@
 \alias{plot.predict.OeppenC}
 \title{Plot the Predicted Age-at-Death Distribution}
 \usage{
-\method{plot}{predict.Oeppen}(x, plotType = c("mean", "lower", "upper"),
-  ny = 7, level = 80, ...)
+\method{plot}{predict.Oeppen}(x, plotType = c("mean", "lower", "upper"), ny = 7, level = 80, ...)
 
-\method{plot}{predict.OeppenC}(x, plotType = c("mean", "lower", "upper"),
-  ny = 7, level = 80, ...)
+\method{plot}{predict.OeppenC}(x, plotType = c("mean", "lower", "upper"), ny = 7, level = 80, ...)
 }
 \arguments{
 \item{x}{An object generated using the \code{predict} function;}

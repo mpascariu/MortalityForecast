@@ -12,9 +12,17 @@ All the credit goes to it's authors:
 and Vladimir Kaishev.
 }
 \usage{
-\method{plot}{residMF}(x, plotType = c("scatter", "colourmap",
-  "signplot"), reslim = NULL, plotAge = TRUE, plotYear = TRUE,
-  plotCohort = TRUE, pch = 20, col = NULL, ...)
+\method{plot}{residMF}(
+  x,
+  plotType = c("scatter", "colourmap", "signplot"),
+  reslim = NULL,
+  plotAge = TRUE,
+  plotYear = TRUE,
+  plotCohort = TRUE,
+  pch = 20,
+  col = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{residMF}.}

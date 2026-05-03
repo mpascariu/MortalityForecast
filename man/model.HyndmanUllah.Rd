@@ -7,7 +7,8 @@
 model.HyndmanUllah(data, x, y, order = 1, transform = TRUE, ...)
 }
 \arguments{
-\item{data}{demogdata object. Output from read.demogdata.}
+\item{data}{A data.frame or a matrix containing mortality data 
+with ages \code{x} as row and time \code{y} as column.}
 
 \item{x}{Numerical vector indicating the ages in input \code{data}. 
 Optional. Default: \code{NULL}.}
@@ -17,9 +18,10 @@ Optional. Default: \code{NULL}.}
 
 \item{order}{Number of basis functions to fit.}
 
-\item{transform}{If TRUE, the data are transformed with a Box-Cox transformation before the model is fitted.}
+\item{transform}{If TRUE, the data are transformed with a Box-Cox
+transformation before the model is fitted.}
 
-\item{...}{Extra arguments passed to \code{\link[ftsa]{ftsm}}.}
+\item{...}{Arguments to be passed to or from other methods.}
 }
 \value{
 The output is a list with the components:

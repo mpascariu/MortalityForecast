@@ -4,8 +4,12 @@
 \alias{evalAccuracy.BBackTesting}
 \title{Get Accuracy Measures from a \code{BBackTesting} object}
 \usage{
-\method{evalAccuracy}{BBackTesting}(object, data.out = c("qx", "mx",
-  "dx", "lx", "Lx", "Tx", "ex"), measures = NULL, ...)
+\method{evalAccuracy}{BBackTesting}(
+  object,
+  data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+  measures = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{An object of class \code{BBackTesting}.}

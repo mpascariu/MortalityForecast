@@ -51,13 +51,12 @@ plot.MEM <- function(x,
 #' @inheritParams model.MEM
 #' @keywords internal
 ggplotDistribConvergence <- function(mat, x, y, ny, level) {
-  dx = ..quantile.. <- NULL # hack CRAN note
   
   Z  <- fitted2dens(mat, x, y, ny = ny)
   rx <- range(x)
   quant <- abs(c(0, -1) + (1 - level/100)/2)
   
-  P <- ggplot(Z, aes(x = dx, y = y, fill = factor(..quantile..))) +
+  P <- ggplot(Z, aes(x = dx, y = y, fill = after_stat(quantile))) +
     stat_density_ridges(geom = "density_ridges_gradient", calc_ecdf = T, 
                         quantiles = quant, quantile_lines = F) +
     scale_fill_manual(name = "Prob.",

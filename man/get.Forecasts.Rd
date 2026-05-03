@@ -4,8 +4,11 @@
 \alias{get.Forecasts}
 \title{Get Predicted Values}
 \usage{
-get.Forecasts(object, data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx",
-  "ex"), ...)
+get.Forecasts(
+  object,
+  data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"),
+  ...
+)
 }
 \arguments{
 \item{object}{An object of class \code{MortalityForecasts}.}

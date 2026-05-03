@@ -4,8 +4,7 @@
 \alias{get.Fitted}
 \title{Get Fitted Values}
 \usage{
-get.Fitted(object, data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx",
-  "ex"), ...)
+get.Fitted(object, data.out = c("qx", "mx", "dx", "lx", "Lx", "Tx", "ex"), ...)
 }
 \arguments{
 \item{object}{An object of class \code{MortalityModels}.}

@@ -7,8 +7,7 @@
 \usage{
 \method{summary}{get.Fitted}(object, ..., digits = NULL)
 
-\method{summary}{get.Residuals}(object, ..., digits = max(4L,
-  getOption("digits") - 2L))
+\method{summary}{get.Residuals}(object, ..., digits = max(4L, getOption("digits") - 2L))
 }
 \arguments{
 \item{object}{An object of class \code{\link{get.Residuals}}.}

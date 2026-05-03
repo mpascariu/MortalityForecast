@@ -4,9 +4,11 @@
 \alias{which_model_is_in}
 \title{Determine which model is included in input}
 \usage{
-which_model_is_in(X, M = c("MRW", "MRWD", "LeeCarter", "HyndmanUllah",
-  "RenshawHaberman", "Oeppen", "MEM2", "MEM3", "MEM4", "MEM5", "MEM6",
-  "MEM7", "LiLee", "OeppenC"))
+which_model_is_in(
+  X,
+  M = c("MRW", "MRWD", "LeeCarter", "HyndmanUllah", "RenshawHaberman", "Oeppen", "MEM2",
+    "MEM3", "MEM4", "MEM5", "MEM6", "MEM7", "LiLee", "OeppenC")
+)
 }
 \arguments{
 \item{X}{Models in input}

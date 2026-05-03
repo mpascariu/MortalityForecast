@@ -8,8 +8,14 @@ The original implementation of this function was taken from
 \code{StMoMo} R package.
 }
 \usage{
-model.MRW(data, x = NULL, y = NULL, include.drift = TRUE,
-  lowess.smooth = TRUE, ...)
+model.MRW(
+  data,
+  x = NULL,
+  y = NULL,
+  include.drift = TRUE,
+  lowess.smooth = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data}{Numeric matrix with a multivariate time series.
